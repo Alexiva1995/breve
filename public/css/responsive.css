@@ -1,0 +1,16 @@
+/*** Móvil ***/
+.register{
+	text-align: left;
+	padding-bottom: 10px;
+}
+.login{
+	text-align: right;
+}
+@media (min-width: 320px) and (max-width: 640px) {
+	.register{
+		text-align: center;
+	}
+	.login{
+		text-align: center;
+	}
+}

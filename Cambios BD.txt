@@ -1,0 +1,23 @@
+/******* 16-09-2020 ********/
+TABLA REMEMBER_DATA
+*Nuevo campo alias_admin (varchar 255 NULL)
+*Nuevo campo admin (boolean predeterminado 0)
+
+/******* 21-09-2020 ********/
+TABLA SERVICES
+*Poner como NULL campos rate y total
+*Agregar campo rate_status (boolean predefinido 1)
+
+RECUERDA VERIFICAR LAS RUTAS DE LOS ARCHIVOS EN LAS CONSULTAS AJAX
+
+/******* 06-10-2020 ********/
+TABLA SERVICES
+*Nuevos campos sender y receiver (255 NULL)
+
+TABLA REMEMBER DATA
+*Nuevo campo identification (255 NULL)
+*Poner como nulos name y phone
+
+-->CORRER SCRIPT PARA COPIAR DATOS DE NOMBRE Y TELEFONO EN CAMPO SENDER (TABLA SERVICES Y REMEMBER DATA)
+
+/*******ACTUALIZADOS SERVIDOR ORIGINAL BREVE 14-10-2020 ***************/
