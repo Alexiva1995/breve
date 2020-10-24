@@ -57,10 +57,9 @@
                 </div>
                 <ul class="nav navbar-nav float-right">
                     @if (Auth::user()->role_id == 2)
-                        <li class="dropdown dropdown-notification nav-item d-block d-sm-none" style="padding-right: 10px; border: solid red 2px; border-right: solid red 1px;">
+                        <li class="dropdown dropdown-notification nav-item d-block d-sm-none" style="padding-right: 10px;">
                             <a class="nav-link nav-link-label" href="#" data-toggle="dropdown">
-                                Asignados<br>
-                                <center><span class="badge badge-pill badge-danger" style="margin-top: 5px;">{{ $cantServiciosAsignadosHeader }}</span></center>
+                                <i class="ficon far fa-check-square"></i><span class="badge badge-pill badge-danger badge-up" style="right: -10px !important;">{{ $cantServiciosAsignadosHeader }}</span></a>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-media dropdown-menu-right">
                                 <li class="dropdown-menu-header">
@@ -86,10 +85,9 @@
                             </ul>
                         </li>
                         @if (Auth::user()->vip == 1)
-                            <li class="dropdown dropdown-notification nav-item d-block d-sm-none" style="padding-right: 10px; border: solid red 2px; border-left: solid red 1px;">
+                            <li class="dropdown dropdown-notification nav-item d-block d-sm-none" style="padding-right: 10px;">
                                 <a class="nav-link nav-link-label" href="#" data-toggle="dropdown">
-                                    Disponibles<br>
-                                    <center><span class="badge badge-pill badge-danger" style="margin-top: 5px;">{{ $cantServiciosNuevosHeader }}</span></center>
+                                    <i class="ficon far fa-plus-square"></i><span class="badge badge-pill badge-success badge-up" style="right: -10px !important;">{{ $cantServiciosNuevosHeader }}</span></a>
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-media dropdown-menu-right">
                                     <li class="dropdown-menu-header">

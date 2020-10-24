@@ -45,6 +45,7 @@
                                             <th>Total</th>
                                             <th>Brever</th>
                                             <th>Estado</th>
+                                            <th>Acción</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -82,6 +83,9 @@
                                                         <i class="fa fa-circle font-small-3 text-danger mr-50"></i> Declinado
                                                     @endif
                                                 </td>
+                                                <td>
+                                                <a type="button" class="btn btn-outline-info" href="{{ route('services.show', $servicio->id) }}"><i class="fa fa-search"></i> Ver Detalles</a>
+                                                </td>
                                            </tr>
                                         @endforeach
                                     </tbody>
@@ -95,6 +99,7 @@
                                             <th>Total</th>
                                             <th>Brever</th>
                                             <th>Estado</th>
+                                            <th>Acción</th>
                                         </tr>
                                     </tfoot>
                                 </table>

@@ -550,8 +550,13 @@ class ServiceController extends Controller
 
     /**** Admin / Servicios / Servicios Asignados / Iniciar ****/
     /**** Brever / Servicios / Servicios Asignados / Iniciar ****/
-    public function start($id){
-        $servicio = Service::find($id);
+    public function start($id = 0, Request $request){
+        if ($id == 0){
+            $servicio = Service::find($request->service_id);
+        }else{
+           $servicio = Service::find($id); 
+        }
+        
         $servicio->status = 2;
         $servicio->save();
 
@@ -639,8 +644,13 @@ class ServiceController extends Controller
     }
 
     /**** Admin / Servicios / Servicios Confirmados / Completar ****/
-    public function complete($id){
-        $servicio = Service::find($id);
+    public function complete($id = 0, Request $request){
+        if ($id == 0){
+            $servicio = Service::find($request->service_id);
+        }else{
+           $servicio = Service::find($id); 
+        }
+
         $servicio->status = 4;
         $servicio->save();
 
@@ -697,7 +707,7 @@ class ServiceController extends Controller
         $notificacion2->save();
 
         if (Auth::user()->role_id == 2){
-            return redirect('brever/services/completed')->with('msj-exitoso', 'El servicio ha sido completado con éxito.');
+            return redirect('brever')->with('msj-exitoso', 'El servicio ha sido completado con éxito.');
         }else{
             return redirect('admin/services/started')->with('msj-exitoso', 'El servicio ha sido completado con éxito.');
         }

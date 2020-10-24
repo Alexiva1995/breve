@@ -75,9 +75,9 @@ Route::group(['middleware' => 'https'], function(){
 				Route::post('take', 'ServiceController@take')->name('brever.services.take');
 				Route::get('show/{id}', 'ServiceController@show')->name('brever.services.show');
 				Route::get('assigned', 'ServiceController@assigned')->name('brever.services.assigned');
-				Route::get('start/{id}', 'ServiceController@start')->name('brever.services.start');
+				Route::get('start/{id?}', 'ServiceController@start')->name('brever.services.start');
 				Route::get('started', 'ServiceController@started')->name('brever.services.started');
-				Route::get('complete/{id}', 'ServiceController@complete')->name('brever.services.complete');
+				Route::get('complete/{id?}', 'ServiceController@complete')->name('brever.services.complete');
 				Route::get('completed', 'ServiceController@completed')->name('brever.services.completed');
 				Route::get('canceled', 'ServiceController@canceled')->name('brever.services.canceled');
 			});

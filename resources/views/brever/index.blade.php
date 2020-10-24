@@ -1,6 +1,5 @@
 @extends('layouts.brever')
 
-@php $servicio =0; @endphp
 @push('scripts')
     <script>
         $(window).on("load", function(){
@@ -230,11 +229,12 @@
         });
 
         function loadConfirmModal($servicio, $accion){
+            document.getElementById("service_id").value = $servicio;
             if ($accion == 1){
-                document.getElementById("confirm-form").setAttribute('action', ' {{ route('brever.services.start', $servicio) }}');
+                document.getElementById("confirm-form").setAttribute('action', ' {{ route('brever.services.start') }}');
                 document.getElementById("confirm-text").innerHTML = "¿Está seguro de iniciar este servicio?";
             }else{
-                document.getElementById("confirm-form").setAttribute('action', '{{ route('brever.services.complete', $servicio) }}');
+                document.getElementById("confirm-form").setAttribute('action', '{{ route('brever.services.complete') }}');
                 document.getElementById("confirm-text").innerHTML = "¿Está seguro de completar este servicio?";
             }
             $("#confirmModal").modal("show");
@@ -615,6 +615,7 @@
     <div class="modal fade text-left show" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel110" aria-modal="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
             <form method="GET" id="confirm-form">
+                <input type="hidden" name="service_id" id="service_id">
                 <div class="modal-content">
                     <div class="modal-header bg-success white">
                         <h5 class="modal-title" id="myModalLabel110">Tomar Servicio</h5>
