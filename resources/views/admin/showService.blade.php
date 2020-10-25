@@ -171,7 +171,14 @@
                                             </p>
                                             <span>Total: <b> @if ($servicio->rate_status == 1) ${{ $servicio->total }} @else SIn Calcular @endif</b></span>
                                         </li>
-                            		</ul>
+                                    </ul>
+                                    
+                                    @if ( ($servicio->status == 4) && ($servicio->logs_count > 0) )
+                                        <div class="text-center">
+                                            <br>
+                                            <a href="#reportModal" data-toggle="modal" type="button" class="btn btn-icon btn-primary mr-1 mb-1 waves-effect waves-light"><i class="feather icon-check"></i> Ver Reporte de Entrega</a>
+                                        </div>
+                                    @endif
                             	</div>
                             </div>
                         </div>
@@ -180,4 +187,39 @@
             </div>
         </div>
     </section>
+
+    <div class="modal fade text-left show" id="reportModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel110" aria-modal="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document"><div class="modal-content">
+            <div class="modal-header bg-success white">
+                <h5 class="modal-title" id="myModalLabel110">Reporte de Entrega</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <ul class="list-group">
+                    <a href="#" class="list-group-item active"><strong>Detalles</strong></a>
+                    @foreach ($servicio->logs as $log)
+                        <li class="list-group-item d-flex">
+                            <p class="float-left mb-0">
+                                <i class="feather icon-check mr-1"></i>
+                            </p>
+                            <span>{{ $log->action }} <b>({{ date('d-m-Y H:i A', strtotime("$log->created_at -5 Hours")) }})</b></span>
+                        </li>
+                    @endforeach
+                </ul><br>
+                @if (!is_null($servicio->delivery_photo))
+                    <ul class="list-group text-center">
+                        <a href="#" class="list-group-item active"><strong>Foto de Entrega</strong></a>
+                        <li class="list-group-item d-flex ">
+                            <img src="{{ asset('images/services/'.$servicio->delivery_photo) }}" alt="" style="width: 100%; height: 250px;">
+                        </li>
+                    </ul>
+                @endif
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger waves-effect waves-light" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
 @endsection

@@ -40,12 +40,19 @@
         }
 
         function loadConfirmModal($servicio, $accion){
+            document.getElementById("service_id").value = $servicio;
             if ($accion == 1){
-                document.getElementById("confirm-form").setAttribute('action', ' {{ route('brever.services.start', $servicio) }}');
+                document.getElementById("confirm-form").setAttribute('action', ' {{ route('brever.services.start') }}');
+                document.getElementById("confirm-text").innerHTML = "¿Está seguro de marcar la llegada al punto inicial?";
+                document.getElementById("photo_div").style.display = 'none';
+            }else if($accion == 2){
+                document.getElementById("confirm-form").setAttribute('action', '{{ route('brever.services.confirm') }}');
                 document.getElementById("confirm-text").innerHTML = "¿Está seguro de iniciar este servicio?";
+                document.getElementById("photo_div").style.display = 'none';
             }else{
-                document.getElementById("confirm-form").setAttribute('action', '{{ route('brever.services.complete', $servicio) }}');
+                document.getElementById("confirm-form").setAttribute('action', '{{ route('brever.services.complete') }}');
                 document.getElementById("confirm-text").innerHTML = "¿Está seguro de completar este servicio?";
+                document.getElementById("photo_div").style.display = 'block';
             }
             $("#confirmModal").modal("show");
         }
@@ -240,10 +247,12 @@
                             </div>
                             <div class="col-md-12 text-right">
                                 <br>
-                                @if ( ($servicio->status == 1) || ($servicio->status == 3))
-                                    <a href="javascript:;" type="button" class="btn btn-icon btn-primary mr-1 mb-1 waves-effect waves-light" onclick="loadConfirmModal({{$servicio->id}},1);"><i class="feather icon-check"></i> Iniciar</a>
-                                @elseif ($servicio->status == 2)
-                                    <a href="javascript:;" type="button" class="btn btn-icon btn-primary mr-1 mb-1 waves-effect waves-light" onclick="loadConfirmModal({{$servicio->id}},2);"><i class="feather icon-check"></i> Completar</a>
+                                @if ($servicio->status == 1)
+                                    <a href="javascript:;" type="button" class="btn btn-icon btn-primary mr-1 mb-1 waves-effect waves-light" onclick="loadConfirmModal({{$servicio->id}},1);"><i class="feather icon-check"></i> Llegada a Punto Inicial</a>
+                                @elseif ($servicio->status == 2)  
+                                    <a href="javascript:;" type="button" class="btn btn-icon btn-primary mr-1 mb-1 waves-effect waves-light" onclick="loadConfirmModal({{$servicio->id}},2);"><i class="feather icon-check"></i> Iniciar Servicio</a>  
+                                @elseif ($servicio->status == 3)
+                                    <a href="javascript:;" type="button" class="btn btn-icon btn-primary mr-1 mb-1 waves-effect waves-light" onclick="loadConfirmModal({{$servicio->id}},3);"><i class="feather icon-check"></i> Entrega en Punto Final</a>
                                 @endif
                             </div>
                         </div>
@@ -255,16 +264,22 @@
 
     <div class="modal fade text-left show" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel110" aria-modal="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
-            <form method="GET" id="confirm-form">
+            <form method="POST" id="confirm-form" enctype="multipart/form-data">
+                @csrf
+                <input type="hidden" name="service_id" id="service_id">
                 <div class="modal-content">
                     <div class="modal-header bg-success white">
-                        <h5 class="modal-title" id="myModalLabel110">Tomar Servicio</h5>
+                        <h5 class="modal-title" id="myModalLabel110">Actualizar Progreso de Servicio</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">×</span>
                         </button>
                     </div>
-                    <div class="modal-body" id="confirm-text">
-                        
+                    <div class="modal-body">
+                        <div class="form-group" id="photo_div" style="display:none;">
+                            <label for="photo">Foto de Entrega</label>
+                            <input type="file" class="form-control" name="photo" accept="image/*;capture=camera">
+                        </div>
+                        <div class="text-center" id="confirm-text"></div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger waves-effect waves-light" data-dismiss="modal">NO</button>

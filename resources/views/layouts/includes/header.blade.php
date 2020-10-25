@@ -1,8 +1,9 @@
 @php
     if (Auth::user()->role_id == 3){
-        $notificaciones = \App\Models\AdminNotification::where('status', '=', 0)
-                        ->orderBy('id', 'DESC')
-                        ->get();
+        $notificaciones = App\Models\Notification::where('user_id', '=', 0)
+                            ->where('status', '=', 0)
+                            ->orderBy('id', 'DESC')
+                            ->get();
     }else{
         $notificaciones = \App\Models\Notification::where('status', '=', 0)
                                 ->where('user_id', '=', Auth::user()->id)
@@ -119,64 +120,35 @@
                     @endif
                     
                     {{-- Notificaciones --}}
-                    @if (Auth::user()->role_id == 3)
-                        <li class="dropdown dropdown-notification nav-item"><a class="nav-link nav-link-label" href="#" data-toggle="dropdown"><i class="ficon feather icon-bell"></i><span class="badge badge-pill badge-primary badge-up">{{ $cantNotificaciones }}</span></a>
-                            <ul class="dropdown-menu dropdown-menu-media dropdown-menu-right">
-                                <li class="dropdown-menu-header">
-                                    <div class="dropdown-header m-0 p-2">
-                                        <h3 class="white">{{ $cantNotificaciones }} Nuevas</h3><span class="notification-title">Notificaciones</span>
-                                    </div>
-                                </li>
-                                <li class="scrollable-container media-list">
-                                    @foreach ($notificaciones as $notificacion)
+                    <li class="dropdown dropdown-notification nav-item"><a class="nav-link nav-link-label" href="#" data-toggle="dropdown"><i class="ficon feather icon-bell"></i><span class="badge badge-pill badge-primary badge-up">{{ $cantNotificaciones }}</span></a>
+                        <ul class="dropdown-menu dropdown-menu-media dropdown-menu-right">
+                            <li class="dropdown-menu-header">
+                                <div class="dropdown-header m-0 p-2">
+                                    <h3 class="white">{{ $cantNotificaciones }} Nuevas</h3><span class="notification-title">Notificaciones</span>
+                                </div>
+                            </li>
+                            <li class="scrollable-container media-list">
+                                @foreach ($notificaciones as $notificacion)
+                                    @if (Auth::user()->role_id == 1)
+                                        <a href="{{ route('services.show', $notificacion->service_id) }}" class="d-flex justify-content-between" href="javascript:void(0)">
+                                    @elseif (Auth::user()->role_id == 2)
+                                        <a href="{{ route('brever.services.show', $notificacion->service_id) }}" class="d-flex justify-content-between" href="javascript:void(0)">
+                                    @else
                                         <a href="{{ route('admin.services.show', $notificacion->service_id) }}" class="d-flex justify-content-between" href="javascript:void(0)">
-                                            <div class="media d-flex align-items-start">
-                                                @if ($notificacion->brever_id == 0)
-                                                    <div class="media-left"><i class="feather icon-plus-square font-medium-5 primary"></i></div>
-                                                    <div class="media-body">
-                                                        <h6 class="primary media-heading">Nueva Solicitud de Servicio</h6><small class="notification-text">{{ $notificacion->service->sender_neighborhood }} - {{ $notificacion->service->receiver_neighborhood }} ( {{ date('d-m-Y', strtotime($notificacion->service->date)) }} {{ date('H:i A', strtotime($notificacion->service->time)) }})</small>
-                                                    </div>
-                                                @else
-                                                    <div class="media-left"><i class="feather icon-check font-medium-5 primary"></i></div>
-                                                    <div class="media-body">
-                                                        <h6 class="primary media-heading">Un Brever ha tomado un servicio</h6><small class="notification-text"> <b>({{ $notificacion->brever->name }})</b> {{ $notificacion->service->sender_neighborhood }} - {{ $notificacion->service->receiver_neighborhood }} ( {{ date('d-m-Y', strtotime($notificacion->service->date)) }} {{ date('H:i A', strtotime($notificacion->service->time)) }})</small>
-                                                    </div>
-                                                @endif
-                                                <small><time class="media-meta">{{ date('d-m-Y', strtotime($notificacion->created_at)) }}</time></small>
+                                    @endif
+                                        <div class="media d-flex align-items-start">
+                                            <div class="media-left"><i class="{{ $notificacion->icon }} font-medium-5 primary"></i></div>
+                                            <div class="media-body">
+                                                <h6 class="primary media-heading">{{ $notificacion->title }}</h6><small class="notification-text">{{ $notificacion->service->sender_neighborhood }} - {{ $notificacion->service->receiver_neighborhood }} ( {{ date('d-m-Y', strtotime($notificacion->service->date)) }} {{ date('H:i A', strtotime($notificacion->service->time)) }})</small>
                                             </div>
-                                        </a>
-                                    @endforeach
-                                </li>
-                            </ul>
-                        </li>
-                    @else
-                        <li class="dropdown dropdown-notification nav-item"><a class="nav-link nav-link-label" href="#" data-toggle="dropdown"><i class="ficon feather icon-bell"></i><span class="badge badge-pill badge-primary badge-up">{{ $cantNotificaciones }}</span></a>
-                            <ul class="dropdown-menu dropdown-menu-media dropdown-menu-right">
-                                <li class="dropdown-menu-header">
-                                    <div class="dropdown-header m-0 p-2">
-                                        <h3 class="white">{{ $cantNotificaciones }} Nuevas</h3><span class="notification-title">Notificaciones</span>
-                                    </div>
-                                </li>
-                                <li class="scrollable-container media-list">
-                                    @foreach ($notificaciones as $notificacion)
-                                        @if (Auth::user()->role_id == 1)
-                                            <a href="{{ route('services.show', $notificacion->service_id) }}" class="d-flex justify-content-between" href="javascript:void(0)">
-                                        @else
-                                            <a href="{{ route('brever.services.show', $notificacion->service_id) }}" class="d-flex justify-content-between" href="javascript:void(0)">
-                                        @endif
-                                            <div class="media d-flex align-items-start">
-                                                <div class="media-left"><i class="{{ $notificacion->icon }} font-medium-5 primary"></i></div>
-                                                <div class="media-body">
-                                                    <h6 class="primary media-heading">{{ $notificacion->title }}</h6><small class="notification-text">{{ $notificacion->service->sender_neighborhood }} - {{ $notificacion->service->receiver_neighborhood }} ( {{ date('d-m-Y', strtotime($notificacion->service->date)) }} {{ date('H:i A', strtotime($notificacion->service->time)) }})</small>
-                                                </div>
-                                                <small><time class="media-meta">{{ date('d-m-Y', strtotime($notificacion->created_at)) }}</time></small>
-                                            </div>
-                                        </a>
-                                    @endforeach
-                                </li>
-                            </ul>
-                        </li>
-                    @endif
+                                            <small><time class="media-meta">{{ date('d-m-Y', strtotime($notificacion->created_at)) }}</time></small>
+                                        </div>
+                                    </a>
+                                @endforeach
+                            </li>
+                        </ul>
+                    </li>
+                    
                     {{-- Menú de Usuario --}}
                     <li class="dropdown dropdown-user nav-item">
                         <a class="dropdown-toggle nav-link dropdown-user-link" href="#" data-toggle="dropdown">

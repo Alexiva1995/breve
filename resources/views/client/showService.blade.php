@@ -161,7 +161,14 @@
                                             </p>
                                             <span>Total: <b> @if ($servicio->rate_status == 1) ${{ $servicio->total }} @else Sin Calcular @endif</b></span>
                                         </li>
-                            		</ul>
+                                    </ul>
+                                    
+                                    @if ( ($servicio->status == 4) && (!is_null($servicio->delivery_photo)) )
+                                        <div class="text-center">
+                                            <br>
+                                            <a href="#photoModal" data-toggle="modal" type="button" class="btn btn-icon btn-primary mr-1 mb-1 waves-effect waves-light"><i class="feather icon-check"></i> Ver Foto de Entrega</a>
+                                        </div>
+                                    @endif
                             	</div>
                             </div>
                         </div>
@@ -170,4 +177,21 @@
             </div>
         </div>
     </section>
+
+    <div class="modal fade text-left show" id="photoModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel110" aria-modal="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document"><div class="modal-content">
+            <div class="modal-header bg-success white">
+                <h5 class="modal-title" id="myModalLabel110">Foto de Entrega</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body text-center">
+                <img src="{{ asset('images/services/'.$servicio->delivery_photo) }}" alt="" style="width: 250px; height: 250px;">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger waves-effect waves-light" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
 @endsection

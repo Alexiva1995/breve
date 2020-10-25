@@ -357,6 +357,16 @@
             document.getElementById("refund_amount2").value = parseInt(document.getElementById("refund_amount").value) + parseInt(document.getElementById("rate").value);
         }
 
+        function rememberMarkers(){
+            if (document.getElementById('remember_markers').checked){
+                $("#markers_alias_div").css('display', 'block');
+                $("#markers_alias").prop('required', true);
+            }else{
+                $("#markers_alias_div").css('display', 'none');
+                $("#markers_alias").prop('required', false);
+            } 
+        }
+
         function cargarDomicilio(){
             //var path = "http://localhost:8000/services/load-address/"+document.getElementById("address").value;
             var path = "https://www.breve.com.co/services/load-address/"+document.getElementById("address").value;
@@ -555,7 +565,32 @@
                                             <input type="hidden" class="form-control" name="rate" id="rate" value="0">
                                             <span id="rate_span" style="font-weight: bold; font-size: 22px;">Tarifa: $0.0</span>
                                         </div>
-                                    </div><br>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12 text-center">
+                                            <ul class="list-unstyled mb-0">
+                                                <li class="d-inline-block mr-2">
+                                                    <fieldset>
+                                                        <div class="vs-checkbox-con vs-checkbox-primary">
+                                                            <input type="checkbox" name="remember_markers" id="remember_markers" onclick="rememberMarkers();">
+                                                            <span class="vs-checkbox">
+                                                                <span class="vs-checkbox--check">
+                                                                    <i class="vs-icon feather icon-check"></i>
+                                                                </span>
+                                                            </span>
+                                                            <span class="">Recordar Marcadores</span>
+                                                        </div>
+                                                    </fieldset>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-md-12 text-center" id="markers_alias_div" style="display: none;">
+                                            <div class="form-group">
+                                                <label for="sender_data_alias">Alias Marcadores Frecuentes</label>
+                                                <input type="text" class="form-control" name="markers_alias" id="markers_alias">
+                                            </div>
+                                        </div>
+                                    </div>
                                 </fieldset>
                                 
                                 <!-- Step 1 -->

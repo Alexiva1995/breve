@@ -72,4 +72,8 @@ class User extends Authenticatable
     public function brever_transfers(){
         return $this->hasMany('App\Models\Transfer', 'brever_id', 'id');
     }
+
+    public function logs(){
+        return $this->hasMany('App\Models\Log');
+    }
 }
