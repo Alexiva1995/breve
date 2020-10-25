@@ -10,7 +10,7 @@ class Service extends Model{
     protected $fillable = ['user_id', 'client_name', 'sender', 'sender_name', 'sender_phone', 'sender_neighborhood', 'sender_address', 'sender_address_opc', 'sender_latitude', 'sender_longitude', 'receiver', 'receiver_name', 'receiver_phone', 
         'receiver_neighborhood',  'receiver_address', 'receiver_address_opc', 'receiver_latitude', 
         'receiver_longitude', 'date', 'time', 'article', 'equipment_type', 'payment_type', 'payment_method', 
-        'payment_status', 'refund_amount', 'rate', 'additional_cost', 'total', 'observations', 'brever_id', 'status', 'rate_status'];
+        'payment_status', 'refund_amount', 'rate', 'additional_cost', 'total', 'observations', 'brever_id', 'status', 'rate_status', 'delivery_photo'];
 
     public function user(){
     	return $this->belongsTo('App\Models\User');
@@ -26,6 +26,10 @@ class Service extends Model{
 
     public function notifications(){
         return $this->hasMany('App\Models\Notification');
+    }
+
+    public function logs(){
+        return $this->hasMany('App\Models\Log');
     }
 
     public function scopeClient($query, $client){
