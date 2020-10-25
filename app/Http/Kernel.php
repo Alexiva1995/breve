@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\NotificacionChat;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -19,6 +20,7 @@ class Kernel extends HttpKernel
         \App\Http\Middleware\CheckForMaintenanceMode::class,
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
         \App\Http\Middleware\TrimStrings::class,
+        \App\Http\Middleware\Chat::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
     ];
 
@@ -66,5 +68,6 @@ class Kernel extends HttpKernel
         'client' => \App\Http\Middleware\Client::class,
         'brever' => \App\Http\Middleware\Brever::class,
         'admin' => \App\Http\Middleware\Admin::class,
+        'noti.chat' => \App\Http\Middleware\NotificacionChat::class
     ];
 }

@@ -21,3 +21,6 @@ TABLA REMEMBER DATA
 -->CORRER SCRIPT PARA COPIAR DATOS DE NOMBRE Y TELEFONO EN CAMPO SENDER (TABLA SERVICES Y REMEMBER DATA)
 
 /*******ACTUALIZADOS SERVIDOR ORIGINAL BREVE 14-10-2020 ***************/
+
+Dev: Carlos Gonzalez
+* Agregar a la bd las tablas de conversation y message, que este en la carpeta para el uso del chat

@@ -45,37 +45,9 @@
         <link rel="stylesheet" type="text/css" href="{{ asset('themeforest/assets/css/style.css') }}">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 
-        <style>
-            .contenedor{
-                width:90px;
-                height:240px;
-                position:absolute;
-                right:0px;
-                bottom:0px;
-            }
-            .botonF1{
-                width:50px;
-                height:50px;
-                border-radius:100%;
-                background:#4caf50;
-                right:0;
-                bottom:0;
-                position:fixed;
-                margin-right:16px;
-                margin-bottom:16px;
-                border:none;
-                outline:none;
-                color:#FFF;
-                font-size:28px;
-                box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
-                transition:.3s;  
-            }
-            span{
-                transition:.5s;  
-            }
-        </style>
         
         <!-- END: Custom CSS-->
+        @yield('css-styles')
         @stack('styles')
     </head>
     <!-- END: Head-->
@@ -108,9 +80,10 @@
         <div class="drag-target"></div>
 
         <div class="contenedor">
-            <button class="botonF1">
+            @include('layouts.includes.users_support')
+            {{-- <button class="botonF1">
                 <a href="https://wa.me/573508663301" target="_blank" style="color: white;"><span><i class="fab fa-whatsapp"></i></span></a>
-            </button>
+            </button> --}}
         </div>
 
         <!-- BEGIN: Footer-->
@@ -158,7 +131,7 @@
 
         <!-- BEGIN: Page JS-->
         <script src="{{ asset('themeforest/app-assets/js/scripts/pages/dashboard-analytics.js') }}"></script>
-
+        @yield('js-scripts')
         @stack('scripts')
         <!-- END: Page JS-->
     </body>

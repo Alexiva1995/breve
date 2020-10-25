@@ -107,9 +107,10 @@
         <div class="drag-target"></div>
 
         <div class="contenedor">
-            <button class="botonF1">
+            @include('layouts.includes.users_support')
+            {{-- <button class="botonF1">
                 <a href="https://wa.me/573508663303" target="_blank" style="color: white;"><span><i class="fab fa-whatsapp"></i></span></a>
-            </button>
+            </button> --}}
         </div>
 
          <!-- BEGIN: Footer-->

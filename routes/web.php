@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -35,9 +37,21 @@ Route::group(['middleware' => 'https'], function(){
 	Route::get('new-service', 'HomeController@guest_service');
 	Route::post('new-service', 'ServiceController@store')->name('guest.new-service');
 
-	Route::group(['middleware' => 'auth'], function(){
+	Route::group(['middleware' => ['auth', 'noti.chat']], function(){
 
 		Route::get('services/show-route/{id}', 'ServiceController@show_route')->name('services.show-route');
+
+		Route::prefix('messenger')->group(function () {
+				Route::get('t/{id}', 'MessageController@laravelMessenger')->name('messenger');
+				Route::post('send', 'MessageController@store')->name('message.store');
+				Route::get('threads', 'MessageController@loadThreads')->name('threads');
+				Route::get('more/messages', 'MessageController@moreMessages')->name('more.messages');
+				Route::delete('delete/{id}', 'MessageController@destroy')->name('delete');
+				// AJAX requests.
+				Route::prefix('ajax')->group(function () {
+					Route::post('make-seen', 'MessageController@makeSeen')->name('make-seen');
+				});
+			});
 		
 		Route::group(['middleware' => 'client'], function(){
 			Route::get('dashboard', 'UserController@index')->name('dashboard');
