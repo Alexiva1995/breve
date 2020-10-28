@@ -68,6 +68,8 @@
                     var address=results[0]['formatted_address'];
                     document.getElementById("sender_address").value = address;
                     document.getElementById("sender_address_aux").value = address;
+                    document.getElementById("sender_address_opc").value = address;
+
                 }
             });
             geocoder.geocode({'latLng': {lng: coords.lng+0.002, lat: coords.lat+0.002}}, function(results, status) {
@@ -75,6 +77,8 @@
                     var address=results[0]['formatted_address'];
                     document.getElementById("receiver_address").value = address;
                     document.getElementById("receiver_address_aux").value = address;
+                    document.getElementById("receiver_address_opc").value = address;
+
                 }
             });
 
@@ -101,6 +105,8 @@
                         }
                         document.getElementById("sender_address").value = address;
                         document.getElementById("sender_address_aux").value = address;
+                        document.getElementById("sender_address_opc").value = address;
+
                     }
                 });
             });
@@ -128,6 +134,8 @@
                         }
                         document.getElementById("receiver_address").value = address;
                         document.getElementById("receiver_address_aux").value = address;
+                        document.getElementById("receiver_address_opc").value = address;
+
                     }
                 });
             });
@@ -166,6 +174,7 @@
                             for (var i = 0; i < results[0].address_components.length; i++ ){
                                 if (results[0].address_components[i].long_name == 'Cali'){
                                     document.getElementById("check_sender").value = "1";
+                                    document.getElementById("sender_address_opc").value = address;
                                 }
                             }
                         }
@@ -191,6 +200,7 @@
                             for (var i = 0; i < results[0].address_components.length; i++ ){
                                 if (results[0].address_components[i].long_name == 'Cali'){
                                     document.getElementById("check_receiver").value = "1";
+                                    document.getElementById("receiver_address_opc").value = address;
                                 }
                             }
                         }
@@ -324,6 +334,7 @@
                             }
                         }
                         document.getElementById("sender_address").value = address;
+                        document.getElementById("sender_address_opc").value = address;
                     }
                 });
             });
@@ -345,6 +356,7 @@
                             }
                         }
                         document.getElementById("receiver_address").value = address;
+                        document.getElementById("receiver_address_opc").value = address;
                     }
                 });
             });
@@ -382,7 +394,7 @@
 
         function cargarDomicilio(){
             //var path = "http://localhost:8000/services/load-address/"+document.getElementById("address").value;
-            var path = "https://www.breve.com.co/services/load-address/"+document.getElementById("address").value;
+            var path = "https://www.breve.com.co/breve2/services/load-address/"+document.getElementById("address").value;
 
             $.ajax({
                 type:"GET",
@@ -394,43 +406,14 @@
                     document.getElementById("receiver_longitude").value = ans.receiver_longitude;
                     document.getElementById("sender_address").value = ans.sender_address;
                     document.getElementById("sender_address_opc").value = ans.sender_address;
+                    document.getElementById("sender_address_aux").value = ans.sender_address;
                     document.getElementById("receiver_address").value = ans.receiver_address;
                     document.getElementById("receiver_address_opc").value = ans.receiver_address;
+                    document.getElementById("receiver_address_aux").value = ans.receiver_address;
                     document.getElementById("sender_neighborhood").value = ans.sender_neighborhood;
                     document.getElementById("receiver_neighborhood").value = ans.receiver_neighborhood;
-
-                    var request = {
-                        origin: ans.sender_address,
-                        destination: ans.receiver_address,
-                        travelMode: google.maps.DirectionsTravelMode['DRIVING'],
-                        unitSystem: google.maps.DirectionsUnitSystem['METRIC'],
-                        provideRouteAlternatives: false
-                    };
-
-                    directionsDisplay = new google.maps.DirectionsRenderer();
-                    directionsService = new google.maps.DirectionsService();
-
-                    directionsService.route(request, function (response, status) {
-                        if (status == google.maps.DirectionsStatus.OK) {
-                            directionsDisplay.setMap(map);
-                            directionsDisplay.setDirections(response);
-                            var rate = getRate(response.routes[0].legs[0].distance.value/1000);
-                            document.getElementById("distance").innerHTML = response.routes[0].legs[0].distance.text;
-                            document.getElementById("rate").value = rate;
-                            document.getElementById("rate_span").innerHTML = "Tarifa: $"+rate;
-                            document.getElementById("rate_status").value = 1;
-                        }
-                    });
-
-                    marker.setVisible(false);
-                    marker2.setVisible(false);
-                    document.getElementById("sender_address").disabled = true;
-                    document.getElementById("receiver_address").disabled = true;
-                    document.getElementById("sender_search").disabled = true;
-                    document.getElementById("receiver_search").disabled = true;
-                    document.getElementById("ready").style.display = 'none';
-                    document.getElementById("restore_map").style.display = 'block';
-                    //$(".actions").show();
+                    marker.setPosition(new google.maps.LatLng(document.getElementById("sender_latitude").value,document.getElementById("sender_longitude").value));
+                    marker2.setPosition(new google.maps.LatLng(document.getElementById("receiver_latitude").value,document.getElementById("receiver_longitude").value));
                 }
             });
         }
@@ -457,7 +440,7 @@
 
         function loadSenderData(){
             //var path = "http://localhost:8000/services/load-data/"+document.getElementById("sender_data").value;
-            var path = "https://www.breve.com.co/services/load-data/"+document.getElementById("sender_data").value;
+            var path = "https://www.breve.com.co/breve2/services/load-data/"+document.getElementById("sender_data").value;
 
             $.ajax({
                 type:"GET",
@@ -472,7 +455,7 @@
         //
         function loadReceiverData(){
             //var path = "http://localhost:8000/services/load-data/"+document.getElementById("receiver_data").value;
-            var path = "https://www.breve.com.co/services/load-data/"+document.getElementById("receiver_data").value;
+            var path = "https://www.breve.com.co/breve2/services/load-data/"+document.getElementById("receiver_data").value;
 
             $.ajax({
                 type:"GET",

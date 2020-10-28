@@ -196,6 +196,8 @@ class ServiceController extends Controller
             if (!is_null($request->remember_markers)){
                 $domicilio = new Address($request->all());
                 $domicilio->user_id = Auth::user()->id;
+                $domicilio->sender_address = $servicio->sender_address;
+                $domicilio->receiver_address = $servicio->receiver_address;
                 $domicilio->name = $request->markers_alias;
                 $domicilio->save();
             }
@@ -600,6 +602,7 @@ class ServiceController extends Controller
             $servicios = Service::where('user_id', '=', Auth::user()->id)
                             ->where('status', '>=', 4)
                             ->orderBy('id', 'DESC')
+                            ->take(100)
                             ->get();
 
             return view('client.servicesRecord')->with(compact('servicios'));
@@ -608,6 +611,7 @@ class ServiceController extends Controller
                             ->where('status', '=', 4)
                             ->orderBy('date', 'DESC')
                             ->orderBy('time', 'DESC')
+                            ->take(100)
                             ->get();
 
             return view('brever.servicesCompleted')->with(compact('servicios'));
@@ -620,6 +624,7 @@ class ServiceController extends Controller
                             ->where('status', '=', 4)
                             ->orderBy('date', 'DESC')
                             ->orderBy('time', 'DESC')
+                            ->take(100)
                             ->get();
 
             $brevers = DB::table('users')
