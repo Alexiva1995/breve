@@ -6,6 +6,19 @@
             width: 100%;
             height: 500px;
         }
+        .checkeable input {
+            display: none;
+        }
+        .checkeable img {
+            width: 130px;
+            border: 1px solid gray;
+        }
+        .checkeable input {
+            display: none;
+        }
+        .checkeable input:checked  + img {
+            border: 3px solid green;
+        }
     </style>
 @endpush
 
@@ -157,8 +170,8 @@
     <script>
         var map;
         var coords = {};
-        var marker;   
-        var marker2; 
+        var marker;
+        var marker2;
         var geocoder;
         var directionsDisplay;
         var directionsService;
@@ -178,8 +191,8 @@
                 }
             );
         }
- 
-         function setMapa (coords){   
+
+         function setMapa (coords){
             map = new google.maps.Map(document.getElementById('mapa'),
             {
                 zoom: 13,
@@ -262,7 +275,7 @@
                 });
             });
         }
- 
+
         function toggleBounce() {
             if (marker.getAnimation() !== null) {
                 marker.setAnimation(null);
@@ -287,7 +300,7 @@
                     document.getElementById("sender_latitude").value = results[0].geometry.location.lat();
                     document.getElementById("sender_longitude").value = results[0].geometry.location.lng();
                     marker.setPosition(results[0].geometry.location);
-                    map.setCenter(marker.getPosition()); 
+                    map.setCenter(marker.getPosition());
 
                     document.getElementById("check_sender").value = "0";
                     geocoder.geocode({'latLng': marker.getPosition()}, function(results, status) {
@@ -313,7 +326,7 @@
                     document.getElementById("receiver_latitude").value = results[0].geometry.location.lat();
                     document.getElementById("receiver_longitude").value = results[0].geometry.location.lng();
                     marker2.setPosition(results[0].geometry.location);
-                    map.setCenter(marker2.getPosition()); 
+                    map.setCenter(marker2.getPosition());
 
                     document.getElementById("check_receiver").value = "0";
                     geocoder.geocode({'latLng': marker2.getPosition()}, function(results, status) {
@@ -348,7 +361,7 @@
                     type: "error",
                     confirmButtonClass: 'btn btn-primary',
                     buttonsStyling: false,
-                });   
+                });
                 //$(".actions").hide();
             }else{
                 var request = {
@@ -383,7 +396,7 @@
                 document.getElementById("ready").style.display = 'none';
                 document.getElementById("restore_map").style.display = 'block';
                 //$(".actions").show();
-            }     
+            }
         }
 
         function restoreMap(){
@@ -424,7 +437,7 @@
 
         $(document).ready(function () {
             //$(".actions").hide();
-            
+
             autocomplete = new google.maps.places.Autocomplete((document.getElementById("sender_address_aux")), {
                 types: ['geocode'],
                  componentRestrictions: {
@@ -444,7 +457,7 @@
                 document.getElementById('sender_latitude').value = near_place.geometry.location.lat();
                 document.getElementById('sender_longitude').value = near_place.geometry.location.lng();
                 marker.setPosition(near_place.geometry.location);
-                map.setCenter(marker.getPosition()); 
+                map.setCenter(marker.getPosition());
 
                 document.getElementById("check_sender").value = "0";
                 geocoder.geocode({'latLng': marker.getPosition()}, function(results, status) {
@@ -467,7 +480,7 @@
                 document.getElementById('receiver_latitude').value = near_place.geometry.location.lat();
                 document.getElementById('receiver_longitude').value = near_place.geometry.location.lng();
                 marker2.setPosition(near_place.geometry.location);
-                map.setCenter(marker2.getPosition()); 
+                map.setCenter(marker2.getPosition());
 
                 document.getElementById("check_receiver").value = "0";
                 geocoder.geocode({'latLng': marker2.getPosition()}, function(results, status) {
@@ -513,7 +526,7 @@
             }else{
                 $("#markers_alias_div").css('display', 'none');
                 $("#markers_alias").prop('required', false);
-            } 
+            }
         }
         function cargarDomicilio(){
             //var path = "http://localhost:8000/services/load-address/"+document.getElementById("address").value;
@@ -535,11 +548,11 @@
                     document.getElementById("receiver_address_aux").value = ans.receiver_address;
                     document.getElementById("sender_neighborhood").value = ans.sender_neighborhood;
                     document.getElementById("receiver_neighborhood").value = ans.receiver_neighborhood;
-                    
+
                     marker.setPosition(new google.maps.LatLng(document.getElementById("sender_latitude").value,document.getElementById("sender_longitude").value));
                     marker2.setPosition(new google.maps.LatLng(document.getElementById("receiver_latitude").value,document.getElementById("receiver_longitude").value));
-                } 
-            }); 
+                }
+            });
         }
 //
         function rememberCheck($opcion){
@@ -573,8 +586,8 @@
                     document.getElementById("sender").value = ans.identification;
                     document.getElementById("sender_address_opc").value = ans.address_opc;
                     document.getElementById("sender_neighborhood").value = ans.neighborhood;
-                } 
-            }); 
+                }
+            });
         }
 
         function loadReceiverData(){
@@ -588,8 +601,8 @@
                     document.getElementById("receiver").value = ans.identification;
                     document.getElementById("receiver_address_opc").value = ans.address_opc;
                     document.getElementById("receiver_neighborhood").value = ans.neighborhood;
-                } 
-            }); 
+                }
+            });
         }
 
         function loadConfirmModal($servicio){
@@ -598,7 +611,7 @@
         }
     </script>
 @endpush
-    
+
 @section('content')
     @if (Session::has('msj-exitoso'))
         <div class="col-md-12">
@@ -627,7 +640,7 @@
                         </div>
                     </div>
                 </a>
-            </div> 
+            </div>
             <div class="col-lg-6 col-sm-12 col-12">
                 <a href="{{ route('services.record') }}">
                     <div class="card">
@@ -795,7 +808,7 @@
 
                                                     <br class="d-block d-sm-none">
                                                 </div>
-                                                
+
                                                 <div class="col-md-6 col-sm-12">
                                                     <fieldset>
                                                         <div class="input-group">
@@ -820,7 +833,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            
+
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <span id="distance" style="font-weight: bold;">0.0 Kilómetros</span>
@@ -857,7 +870,7 @@
                                                 </div>
                                             </div>
                                         </fieldset>
-                                        
+
                                         <!-- Step 1 -->
                                         <h6><i class="step-icon feather icon-user"></i>Paso 2</h6>
                                         <fieldset>
@@ -913,7 +926,7 @@
                                                         <input type="text" class="form-control" name="sender_data_alias" id="sender_data_alias">
                                                     </div>
                                                 </div>
-                            
+
                                                 <div class="col-md-8 text-right">
                                                     <ul class="list-unstyled mb-0">
                                                         <li class="d-inline-block mr-2">
@@ -985,7 +998,7 @@
                                                         <input type="text" class="form-control" name="receiver_data_alias" id="receiver_data_alias">
                                                     </div>
                                                 </div>
-                            
+
                                                 <div class="col-md-8 text-right">
                                                     <ul class="list-unstyled mb-0">
                                                         <li class="d-inline-block mr-2">
@@ -1036,39 +1049,30 @@
                                                         <li class="d-inline-block mr-2">
                                                             <fieldset>
                                                                 <div class="vs-checkbox-con vs-checkbox-primary">
-                                                                    <input type="checkbox" name="equipment_type[]" checked="" value="Maletin" required>
-                                                                    <span class="vs-checkbox">
-                                                                        <span class="vs-checkbox--check">
-                                                                            <i class="vs-icon feather icon-check"></i>
-                                                                        </span>
-                                                                    </span>
-                                                                    <span class="">Maletín (Morral Convencional)</span>
+                                                                    <label class="checkeable">
+                                                                        <input type="checkbox" name="equipment_type[]" value="Maletin"/>
+                                                                        <img src="{{ asset('images/maletin.png') }}"/>
+                                                                    </label>
                                                                 </div>
                                                             </fieldset>
                                                         </li>
                                                         <li class="d-inline-block mr-2">
                                                             <fieldset>
                                                                 <div class="vs-checkbox-con vs-checkbox-primary">
-                                                                    <input type="checkbox" name="equipment_type[]" value="MB" required>
-                                                                    <span class="vs-checkbox">
-                                                                        <span class="vs-checkbox--check">
-                                                                            <i class="vs-icon feather icon-check"></i>
-                                                                        </span>
-                                                                    </span>
-                                                                    <span class="">Maleta Breve (Especial para Domicilios)</span>
+                                                                    <label class="checkeable">
+                                                                        <input type="checkbox" name="equipment_type[]" value="MB"/>
+                                                                        <img src="{{ asset('images/maleta.png') }}"/>
+                                                                    </label>
                                                                 </div>
                                                             </fieldset>
                                                         </li>
                                                          <li class="d-inline-block mr-2">
                                                             <fieldset>
                                                                 <div class="vs-checkbox-con vs-checkbox-primary">
-                                                                    <input type="checkbox" name="equipment_type[]" value="Canasta" required>
-                                                                    <span class="vs-checkbox">
-                                                                        <span class="vs-checkbox--check">
-                                                                            <i class="vs-icon feather icon-check"></i>
-                                                                        </span>
-                                                                    </span>
-                                                                    <span class="">Canasta</span>
+                                                                    <label class="checkeable">
+                                                                        <input type="checkbox" name="equipment_type[]" value="Canasta"/>
+                                                                        <img src="{{ asset('images/canasta.png') }}"/>
+                                                                    </label>
                                                                 </div>
                                                             </fieldset>
                                                         </li>
