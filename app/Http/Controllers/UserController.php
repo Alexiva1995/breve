@@ -121,8 +121,8 @@ class UserController extends Controller
                 array_push($datosGraficoServiciosCancelados, $sca->total);
             }
 
-            $serviciosProximos = Service::where('date', '=', date('Y-m-d'))
-                                    ->where('status', '<=', 3)
+            $serviciosProximos = Service::where('status', '<=', 3)
+                                    ->orderBy('date', 'ASC')
                                     ->orderBy('time', 'ASC')
                                     ->get();
             
@@ -648,9 +648,9 @@ class UserController extends Controller
     }
 
     //**** Admin / Usuarios / Administradores / Eliminar *****/
-    public function delete($id){
+    /*public function delete($id){
         User::destroy($id);
 
         return redirect('admin/users/admins')->with('msj-exitoso', ' El administrador ha sido eliminado con éxito');
-    }
+    }*/
 }

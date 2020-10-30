@@ -74,9 +74,9 @@
                                                         @if ($usuario->status == 2)
                                                             <a type="button" class="btn btn-outline-primary" href="{{ route('admin.users.change-status', [$usuario->id, 1]) }}"><i class="fa fa-check"> Aprobar</i></a>
                                                         @endif
-                                                        @if ($tipo_usuario == 'Administradores')
+                                                        <!--@if ($tipo_usuario == 'Administradores')
                                                             <a type="button" class="btn btn-outline-danger" href="{{ route('admin.users.delete', $usuario->id) }}"><i class="fa fa-times"> Eliminar</i></a>
-                                                        @endif
+                                                        @endif-->
                                                     </div>
                                                 </td>
                                            </tr>

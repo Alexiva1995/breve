@@ -140,7 +140,7 @@ Route::group(['middleware' => 'https'], function(){
 				Route::get('make-vip/{usuario}/{accion}', 'UserController@make_vip')->name('admin.users.make-vip');
 				Route::get('change-status/{usuario}/{accion}', 'UserController@change_status')->name('admin.users.change-status');
 				Route::get('admins', 'UserController@admins')->name('admin.users.admins');
-				Route::get('delete/{id}', 'UserController@delete')->name('admin.users.delete');
+				//Route::get('delete/{id}', 'UserController@delete')->name('admin.users.delete');
 			});
 
 			Route::group(['prefix' => 'financial'], function(){
