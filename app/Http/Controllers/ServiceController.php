@@ -245,6 +245,7 @@ class ServiceController extends Controller
             ["datosEnvio" => $datosEnvio,  "datosRecogida" => $datosRecogida, "cantDatosEnvio" => $cantDatosEnvio, "cantDatosRecogida" => $cantDatosRecogida]
         );
     }
+
     /**** Admin / Servicios / Listado de Servicios / Asignar Brever ****/
     public function add_brever(Request $request){
         $servicio = Service::find($request->service_id);
@@ -721,7 +722,7 @@ class ServiceController extends Controller
             $notificacion2->status = 0;
             $notificacion2->save();
 
-            return redirect('brever/services/show/'.$servicio->id)->with('msj-exitoso', 'La llegada al punto inicial ha sido marcada con éxito.');
+            return redirect('brever')->with('msj-exitoso', 'La llegada al punto inicial ha sido marcada con éxito.');
         }else{
             if ($servicio->user_id != 0){
                 $notificacion = new Notification();
@@ -812,7 +813,7 @@ class ServiceController extends Controller
             $notificacion2->status = 0;
             $notificacion2->save();
 
-            return redirect('brever/services/show/'.$servicio->id)->with('msj-exitoso', 'El servicio ha sido marcado como iniciado con éxito.');
+            return redirect('brever')->with('msj-exitoso', 'El servicio ha sido marcado como iniciado con éxito.');
         }else{
             if ($servicio->user_id != 0){
                 $notificacion = new Notification();
@@ -1068,7 +1069,7 @@ class ServiceController extends Controller
         $notificacion2->status = 0;
         $notificacion2->save();
 
-        return redirect('brever/services/show/'.$request->service_id)->with('msj-exitoso', 'El servicio le ha sido asignado con éxito');
+        return redirect('brever')->with('msj-exitoso', 'El servicio le ha sido asignado con éxito');
     }
 
     public function load_address($id){
