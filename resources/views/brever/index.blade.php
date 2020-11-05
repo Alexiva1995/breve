@@ -341,7 +341,6 @@
         </div>
 
         <div class="row">
-            @if (Auth::user()->vip == 1)
                 <div class="col-lg-12 col-12">
                     <div class="card">
                         <div class="card-header">
@@ -545,7 +544,6 @@
                         </div>
                     </div>
                 </div>
-            @endif
             
             <div class="col-sm-12 col-12 d-block d-md-none">
                 <a href="{{ route('brever.services.assigned') }}">
@@ -617,7 +615,7 @@
                     <div class="modal-body">
                         <div class="form-group" id="photo_div" style="display:none;">
                             <label for="photo">Foto de Entrega</label>
-                            <input type="file" class="form-control" name="photo" accept="image/*;capture=camera">
+                            <input type="file" class="form-control" name="photo" capture="camera" accept="image/*" required>
                         </div>
                         <div class="text-center" id="confirm-text"></div>
                     </div>

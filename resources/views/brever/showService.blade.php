@@ -277,7 +277,7 @@
                     <div class="modal-body">
                         <div class="form-group" id="photo_div" style="display:none;">
                             <label for="photo">Foto de Entrega</label>
-                            <input type="file" class="form-control" name="photo" accept="image/*;capture=camera">
+                            <input type="file" class="form-control" name="photo" capture="camera" accept="image/*" required>
                         </div>
                         <div class="text-center" id="confirm-text"></div>
                     </div>

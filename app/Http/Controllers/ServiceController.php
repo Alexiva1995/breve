@@ -208,7 +208,7 @@ class ServiceController extends Controller
             $notificacion->user_id = 0;
             $notificacion->service_id = $servicio->id;
             $notificacion->title = 'Nueva solicitud de servicio';
-            $notificacion->title = 'feather icon-plus-square';
+            $notificacion->icon = 'feather icon-plus-square';
             $notificacion->status = 0;
             $notificacion->save();
         }
@@ -356,8 +356,9 @@ class ServiceController extends Controller
 
     /**** Admin / Servicios / Listado de Servicios / Ver - Editar ****/
     public function update(Request $request){
+       
         $servicio = Service::find($request->service_id);
-
+ 
         $checkCompleted = 0;
         if ( ($servicio->status != 4) && ($request->status == 4) ){
             $checkCompleted = 1;
@@ -365,6 +366,10 @@ class ServiceController extends Controller
         $checkStatus = 0;
         if ($servicio->status != $request->status){
             $checkStatus = 1;
+        }
+        $checkRate = 0;
+        if ( ($servicio->rate_status == 0) && ($request->rate_status == "1") ){
+           $checkRate = 1;
         }
 
         $servicio->fill($request->all());
@@ -539,6 +544,16 @@ class ServiceController extends Controller
                     $notificacion2->save();
                 }
             }
+        }
+
+        if ($checkRate == 1){
+            $notificacion3 = new Notification();
+            $notificacion3->user_id = $servicio->user_id;
+            $notificacion3->service_id = $servicio->id;
+            $notificacion3->title = 'Se ha establecido la tarifa de su servicio';
+            $notificacion3->icon = 'feather icon-check-circle';
+            $notificacion3->status = 0;
+            $notificacion3->save();
         }
 
         if (Auth::user()->role_id == 1){

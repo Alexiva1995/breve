@@ -72,14 +72,16 @@
                                 <li class="scrollable-container media-list">
                                     @foreach ($serviciosAsignadosHeader as $servicioAsignadoHeader)
                                         <div class="media d-flex align-items-start">
-                                            <div class="media-body">
-                                                <div>
-                                                    Fecha: <b>{{ date('d-m-Y', strtotime($servicioAsignadoHeader->date)) }}</b> Hora: <b>{{ date('H:i A', strtotime($servicioAsignadoHeader->time)) }}</b>
+                                            <a href="{{ route('brever.services.show', $servicioAsignadoHeader->id) }}">
+                                                <div class="media-body" style="color: #626262 !important;">
+                                                    <div>
+                                                        Fecha: <b>{{ date('d-m-Y', strtotime($servicioAsignadoHeader->date)) }}</b> Hora: <b>{{ date('H:i A', strtotime($servicioAsignadoHeader->time)) }}</b>
+                                                    </div>
+                                                    <div style="padding-top: 10px;">
+                                                        {{ $servicioAsignadoHeader->sender_neighborhood }} - {{ $servicioAsignadoHeader->receiver_neighborhood }} ({{ $servicioAsignadoHeader->equipment_type }})
+                                                    </div>
                                                 </div>
-                                                <div style="padding-top: 10px;">
-                                                    {{ $servicioAsignadoHeader->sender_neighborhood }} - {{ $servicioAsignadoHeader->receiver_neighborhood }} ({{ $servicioAsignadoHeader->equipment_type }})
-                                                </div>
-                                            </div>
+                                            </a>
                                         </div>
                                     @endforeach
                                 </li>

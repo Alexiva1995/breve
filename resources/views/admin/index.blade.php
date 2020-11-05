@@ -25,7 +25,14 @@
             dom: 'frtip',
             "order": [
                 [1, 'asc']
-            ]
+            ],
+            drawCallback: function() {
+                $(".page-item .page-link").on('click', function(){
+                    $('html, body').animate({
+                        scrollTop: $("#card-table").offset().top
+                    }, 1000); 
+                });
+            }
         });
 
         $(".status").on('change', function(){
@@ -523,6 +530,14 @@
         }
 
     </script>
+
+    <script>
+        $(".page-item .page-link").on('click', function(){
+            $('html, body').animate({
+                scrollTop: $("#card-table").offset().top
+            }, 1000); 
+        });
+    </script>
 @endpush
     
 @section('content')
@@ -609,7 +624,7 @@
         </div>
     </div>
 
-    <div class="row">
+    <div class="row" id="card-table">
         <div class="col-lg-12 col-12">
             <div class="card">
                 <div class="card-header">
@@ -703,349 +718,346 @@
     <div class="row">
         <div class="col-lg-12 col-12">
             <section id="validation">
-        <input type="hidden" id="check_sender" value="1">
-        <input type="hidden" id="check_receiver" value="1">
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h4 class="card-title">Nuevo Servicio</h4>
-                        <span>Si tu servicio es para lo más pronto posible por favor comunícate con nosotros haciendo clic en el botón flotante de WhatsApp.</span>
-                    </div>
-                    <div class="card-content">
-                        <div class="card-body">
-                            <form action="{{ route('admin.services.store') }}" method="POST" class="steps-validation wizard-circle" id="form-validation">
-                                @csrf
-                                <input type="hidden" name="sender_latitude" id="sender_latitude">
-                                <input type="hidden" name="sender_longitude" id="sender_longitude">
-                                <input type="hidden" name="receiver_latitude" id="receiver_latitude">
-                                <input type="hidden" name="receiver_longitude" id="receiver_longitude">
-                                <!-- Paso 1 (Mapa) -->
-                                <h6><i class="step-icon feather icon-map-pin"></i>Paso 1</h6>
-                                <fieldset>
-                                    <div class="row">
-                                        <div class="col-md-6 col-sm-12">
-                                            <fieldset>
-                                                <div class="input-group">
-                                                    <input type="hidden" class="form-control" name="sender_address" id="sender_address">
-                                                    <input type="text" class="form-control" id="sender_address_aux">
-                                                    <div class="input-group-append" id="button-addon2">
-                                                        <button class="btn waves-effect waves-light" type="button" id="sender_search" style="background-color: #3BCD3F; color:white;" onclick="senderSearch();"><i class="fa fa-search"></i></button>
+                <input type="hidden" id="check_sender" value="1">
+                <input type="hidden" id="check_receiver" value="1">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">Nuevo Servicio</h4>
+                                <span>Si tu servicio es para lo más pronto posible por favor comunícate con nosotros haciendo clic en el botón flotante de WhatsApp.</span>
+                            </div>
+                            <div class="card-content">
+                                <div class="card-body">
+                                    <form action="{{ route('admin.services.store') }}" method="POST" class="steps-validation wizard-circle" id="form-validation">
+                                        @csrf
+                                        <input type="hidden" name="sender_latitude" id="sender_latitude">
+                                        <input type="hidden" name="sender_longitude" id="sender_longitude">
+                                        <input type="hidden" name="receiver_latitude" id="receiver_latitude">
+                                        <input type="hidden" name="receiver_longitude" id="receiver_longitude">
+                                        <h6><i class="step-icon feather icon-map-pin"></i>Paso 1</h6>
+                                        <fieldset>
+                                            <div class="row">
+                                                <div class="col-md-6 col-sm-12">
+                                                    <fieldset>
+                                                        <div class="input-group">
+                                                            <input type="hidden" class="form-control" name="sender_address" id="sender_address">
+                                                            <input type="text" class="form-control" id="sender_address_aux">
+                                                            <div class="input-group-append" id="button-addon2">
+                                                                <button class="btn waves-effect waves-light" type="button" id="sender_search" style="background-color: #3BCD3F; color:white;" onclick="senderSearch();"><i class="fa fa-search"></i></button>
+                                                            </div>
+                                                        </div>
+                                                    </fieldset>
+
+                                                    <br class="d-block d-sm-none">
+                                                </div>
+                                                
+                                                <div class="col-md-6 col-sm-12">
+                                                    <fieldset>
+                                                        <div class="input-group">
+                                                            <input type="hidden" class="form-control" name="receiver_address" id="receiver_address">
+                                                            <input type="text" class="form-control" id="receiver_address_aux">
+                                                            <div class="input-group-append" id="button-addon2">
+                                                                <button class="btn waves-effect waves-light" type="button" id="receiver_search" style="background-color: #768ADE; color:white;" onclick="receiverSearch();"><i class="fa fa-search"></i></button>
+                                                            </div>
+                                                        </div>
+                                                    </fieldset><bR>
+                                                </div>
+
+                                                <div class="col-md-12">
+                                                    <div class="form-group text-center" id="ready">
+                                                        <a class="btn btn-primary" onclick="route();" style="color: white;">¡Listo!<br> Consultar Tarifa</a>
+                                                    </div>
+                                                    <div class="form-group text-center" id="restore_map" style="display: none;">
+                                                        <a class="btn btn-warning" onclick="restoreMap();" style="color: white;">Editar Direcciones</a>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <div id="mapa"></div>
                                                     </div>
                                                 </div>
-                                            </fieldset>
-
-                                            <br class="d-block d-sm-none">
-                                        </div>
+                                            </div>
+                                            
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <span id="distance" style="font-weight: bold;">0.0 Kilómetros</span>
+                                                </div>
+                                                <div class="col-md-6 text-right">
+                                                    <input type="hidden" class="form-control" name="rate" id="rate">
+                                                    <span id="rate_span" style="font-weight: bold; font-size: 22px;">Tarifa: $0.0</span>
+                                                </div>
+                                            </div>
+                                            <br>
+                                        </fieldset>
                                         
-                                        <div class="col-md-6 col-sm-12">
-                                            <fieldset>
-                                                <div class="input-group">
-                                                    <input type="hidden" class="form-control" name="receiver_address" id="receiver_address">
-                                                    <input type="text" class="form-control" id="receiver_address_aux">
-                                                    <div class="input-group-append" id="button-addon2">
-                                                        <button class="btn waves-effect waves-light" type="button" id="receiver_search" style="background-color: #768ADE; color:white;" onclick="receiverSearch();"><i class="fa fa-search"></i></button>
+                                        <h6><i class="step-icon feather icon-user"></i>Paso 2</h6>
+                                        <fieldset>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="user_id"> Cliente</label>
+                                                        <select class="form-control" name="user_id" id="user_id">
+                                                            <option value="0" selected>No Registrado</option>
+                                                            @foreach ($clientes as $cliente)
+                                                                <option value="{{ $cliente->id }}">@if (!is_null($cliente->tradename)) {{ $cliente->tradename}} @else {{ $cliente->name }} @endif</option>
+                                                            @endforeach
+                                                        </select>
                                                     </div>
                                                 </div>
-                                            </fieldset><bR>
-                                        </div>
 
-                                        <div class="col-md-12">
-                                            <div class="form-group text-center" id="ready">
-                                                <a class="btn btn-primary" onclick="route();" style="color: white;">¡Listo!<br> Consultar Tarifa</a>
-                                            </div>
-                                            <div class="form-group text-center" id="restore_map" style="display: none;">
-                                                <a class="btn btn-warning" onclick="restoreMap();" style="color: white;">Editar Direcciones</a>
-                                            </div>
-                                            <div class="form-group">
-                                                <div id="mapa"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <span id="distance" style="font-weight: bold;">0.0 Kilómetros</span>
-                                        </div>
-                                        <div class="col-md-6 text-right">
-                                            <input type="hidden" class="form-control" name="rate" id="rate">
-                                            <span id="rate_span" style="font-weight: bold; font-size: 22px;">Tarifa: $0.0</span>
-                                        </div>
-                                    </div>
-                                    <br>
-                                </fieldset>
-                                
-                                <!-- Step 1 -->
-                                <h6><i class="step-icon feather icon-user"></i>Paso 2</h6>
-                                <fieldset>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="user_id"> Cliente</label>
-                                                <select class="form-control" name="user_id" id="user_id">
-                                                    <option value="0" selected>No Registrado</option>
-                                                    @foreach ($clientes as $cliente)
-                                                        <option value="{{ $cliente->id }}">@if (!is_null($cliente->tradename)) {{ $cliente->tradename}} @else {{ $cliente->name }} @endif</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-6" id="client_name_div">
-                                           <div class="form-group">
-                                                <label for="client_name">Nombre del Cliente</label>
-                                                <input type="text" class="form-control" id="client_name" name="client_name" required>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <h4 class="card-title">Datos de quien envía</h4>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-12" id="sender_data_div" style="display: none;">
-                                            <div class="form-group">
-                                                <label for="address">Datos de Envío Guardados</label>
-                                                <div class="position-relative has-icon-left">
-                                                    <select class="form-control" id="sender_data" onchange="loadSenderData();">
-                                                    </select>
-                                                    <div class="form-control-position">
-                                                        <i class="feather icon-map-pin"></i>
+                                                <div class="col-md-6" id="client_name_div">
+                                                <div class="form-group">
+                                                        <label for="client_name">Nombre del Cliente</label>
+                                                        <input type="text" class="form-control" id="client_name" name="client_name" required>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label for="sender"> Nombre y Teléfono</label>
-                                                <input type="text" class="form-control" id="sender" name="sender">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <h4 class="card-title">Datos de quien envía</h4>
+                                                </div>
                                             </div>
-                                        </div>
-
-                                        <div class="col-md-8">
-                                            <div class="form-group">
-                                                <label for="sender_address_opc">Dirección como la conoces</label>
-                                                <input type="text" class="form-control" id="sender_address_opc" name="sender_address_opc">
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label for="sender_neighborhood">Barrio</label>
-                                                <input type="text" class="form-control required" id="sender_neighborhood" name="sender_neighborhood">
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-4" id="sender_data_alias_div" style="visibility: hidden;">
-                                            <div class="form-group">
-                                                <label for="sender_data_alias">Alias Datos de Envío</label>
-                                                <input type="text" class="form-control" name="sender_data_alias" id="sender_data_alias">
-                                            </div>
-                                        </div>
-                    
-                                        <div class="col-md-8 text-right">
-                                            <ul class="list-unstyled mb-0">
-                                                <li class="d-inline-block mr-2">
-                                                    <fieldset>
-                                                        <div class="vs-checkbox-con vs-checkbox-primary">
-                                                            <input type="checkbox" name="remember_sender_data" id="remember_sender_check" onclick="rememberCheck(1);" disabled>
-                                                            <span class="vs-checkbox">
-                                                                <span class="vs-checkbox--check">
-                                                                    <i class="vs-icon feather icon-check"></i>
-                                                                </span>
-                                                            </span>
-                                                            <span class="">Recordar datos de envío</span>
+                                            <div class="row">
+                                                <div class="col-md-12" id="sender_data_div" style="display: none;">
+                                                    <div class="form-group">
+                                                        <label for="address">Datos de Envío Guardados</label>
+                                                        <div class="position-relative has-icon-left">
+                                                            <select class="form-control" id="sender_data" onchange="loadSenderData();">
+                                                            </select>
+                                                            <div class="form-control-position">
+                                                                <i class="feather icon-map-pin"></i>
+                                                            </div>
                                                         </div>
-                                                    </fieldset>
-                                                </li>
-                                            </ul><br>
-                                        </div>
-                                    </div>
+                                                    </div>
+                                                </div>
 
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <h4 class="card-title">Datos de quien recibe</h4>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-12" id="receiver_data_div" style="display: none;">
-                                            <div class="form-group">
-                                                <label for="address">Datos de Entrega Guardados</label>
-                                                <div class="position-relative has-icon-left">
-                                                    <select class="form-control" id="receiver_data" onchange="loadReceiverData();">
-                                                    </select>
-                                                    <div class="form-control-position">
-                                                        <i class="feather icon-map-pin"></i>
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <label for="sender"> Nombre y Teléfono</label>
+                                                        <input type="text" class="form-control" id="sender" name="sender">
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-8">
+                                                    <div class="form-group">
+                                                        <label for="sender_address_opc">Dirección como la conoces</label>
+                                                        <input type="text" class="form-control" id="sender_address_opc" name="sender_address_opc">
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <label for="sender_neighborhood">Barrio</label>
+                                                        <input type="text" class="form-control required" id="sender_neighborhood" name="sender_neighborhood">
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-4" id="sender_data_alias_div" style="visibility: hidden;">
+                                                    <div class="form-group">
+                                                        <label for="sender_data_alias">Alias Datos de Envío</label>
+                                                        <input type="text" class="form-control" name="sender_data_alias" id="sender_data_alias">
+                                                    </div>
+                                                </div>
+                            
+                                                <div class="col-md-8 text-right">
+                                                    <ul class="list-unstyled mb-0">
+                                                        <li class="d-inline-block mr-2">
+                                                            <fieldset>
+                                                                <div class="vs-checkbox-con vs-checkbox-primary">
+                                                                    <input type="checkbox" name="remember_sender_data" id="remember_sender_check" onclick="rememberCheck(1);" disabled>
+                                                                    <span class="vs-checkbox">
+                                                                        <span class="vs-checkbox--check">
+                                                                            <i class="vs-icon feather icon-check"></i>
+                                                                        </span>
+                                                                    </span>
+                                                                    <span class="">Recordar datos de envío</span>
+                                                                </div>
+                                                            </fieldset>
+                                                        </li>
+                                                    </ul><br>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <h4 class="card-title">Datos de quien recibe</h4>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-12" id="receiver_data_div" style="display: none;">
+                                                    <div class="form-group">
+                                                        <label for="address">Datos de Entrega Guardados</label>
+                                                        <div class="position-relative has-icon-left">
+                                                            <select class="form-control" id="receiver_data" onchange="loadReceiverData();">
+                                                            </select>
+                                                            <div class="form-control-position">
+                                                                <i class="feather icon-map-pin"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <label for="receiver_name"> Nombre y Teléfono</label>
+                                                        <input type="text" class="form-control" id="receiver" name="receiver">
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-8">
+                                                    <div class="form-group">
+                                                        <label for="sender_address_opc">Dirección como la conoces</label>
+                                                        <input type="text" class="form-control" id="receiver_address_opc" name="receiver_address_opc">
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <label for="receiver_neighborhood">Barrio</label>
+                                                        <input type="text" class="form-control required" id="receiver_neighborhood" name="receiver_neighborhood">
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-4" id="receiver_data_alias_div" style="visibility: hidden;">
+                                                    <div class="form-group">
+                                                        <label for="receiver_data_alias">Alias Datos de Entrega</label>
+                                                        <input type="text" class="form-control" name="receiver_data_alias" id="receiver_data_alias">
+                                                    </div>
+                                                </div>
+                            
+                                                <div class="col-md-8 text-right">
+                                                    <ul class="list-unstyled mb-0">
+                                                        <li class="d-inline-block mr-2">
+                                                            <fieldset>
+                                                                <div class="vs-checkbox-con vs-checkbox-primary">
+                                                                    <input type="checkbox" name="remember_receiver_data" id="remember_receiver_check" onclick="rememberCheck(2);" disabled>
+                                                                    <span class="vs-checkbox">
+                                                                        <span class="vs-checkbox--check">
+                                                                            <i class="vs-icon feather icon-check"></i>
+                                                                        </span>
+                                                                    </span>
+                                                                    <span class="">Recordar datos de entrega</span>
+                                                                </div>
+                                                            </fieldset>
+                                                        </li>
+                                                    </ul><br>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+
+                                        <h6><i class="step-icon feather icon-briefcase"></i> Paso 3</h6>
+                                        <fieldset>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="date">Fecha</label>
+                                                        <input type="date" class="form-control required" id="date" name="date" min="{{ date('Y-m-d') }}" value="{{ date('Y-m-d') }}">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="time">Hora <i class="fas fa-info-circle" data-toggle="tooltip" title="2 Horas de Anticipación"></i></label>
+                                                        <input type="time" class="form-control required" id="time" name="time" value="{{ date('H:i') }}">
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label for="receiver_name"> Nombre y Teléfono</label>
-                                                <input type="text" class="form-control" id="receiver" name="receiver">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="article">Artículo <i class="fas fa-info-circle" data-toggle="tooltip" title="CANASTA: 40cm de ancho. 60cm de largo. 20cm de profundidad. (Máximo 18kg de peso). MALETA BREVE: 42cm de ancho. 38cm de largo. 50cm de profundidad. (Máximo 15kg de peso). MALETÍN CONVENCIONAL: 27cm de ancho. 14cm de largo. 40cm de profundidad. (Máximo 15kg de peso)."></i></label>
+                                                        <input type="text" class="form-control" id="article" name="article">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="date">Equipo Breve</label>
+                                                    <ul class="list-unstyled mb-0">
+                                                        <li class="d-inline-block mr-2">
+                                                            <fieldset>
+                                                                <div class="vs-checkbox-con vs-checkbox-primary">
+                                                                    <input type="checkbox" name="equipment_type[]" checked="" value="Maletin" required>
+                                                                    <span class="vs-checkbox">
+                                                                        <span class="vs-checkbox--check">
+                                                                            <i class="vs-icon feather icon-check"></i>
+                                                                        </span>
+                                                                    </span>
+                                                                    <span class="">Maletín (Morral Convencional)</span>
+                                                                </div>
+                                                            </fieldset>
+                                                        </li>
+                                                        <li class="d-inline-block mr-2">
+                                                            <fieldset>
+                                                                <div class="vs-checkbox-con vs-checkbox-primary">
+                                                                    <input type="checkbox" name="equipment_type[]" value="MB" required>
+                                                                    <span class="vs-checkbox">
+                                                                        <span class="vs-checkbox--check">
+                                                                            <i class="vs-icon feather icon-check"></i>
+                                                                        </span>
+                                                                    </span>
+                                                                    <span class="">Maleta (Especial para Domicilios)</span>
+                                                                </div>
+                                                            </fieldset>
+                                                        </li>
+                                                        <li class="d-inline-block mr-2">
+                                                            <fieldset>
+                                                                <div class="vs-checkbox-con vs-checkbox-primary">
+                                                                    <input type="checkbox" name="equipment_type[]" value="Canasta" required>
+                                                                    <span class="vs-checkbox">
+                                                                        <span class="vs-checkbox--check">
+                                                                            <i class="vs-icon feather icon-check"></i>
+                                                                        </span>
+                                                                    </span>
+                                                                    <span class="">Canasta</span>
+                                                                </div>
+                                                            </fieldset>
+                                                        </li>
+                                                    </ul>
+                                                </div>
                                             </div>
-                                        </div>
-
-                                        <div class="col-md-8">
-                                            <div class="form-group">
-                                                <label for="sender_address_opc">Dirección como la conoces</label>
-                                                <input type="text" class="form-control" id="receiver_address_opc" name="receiver_address_opc">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="payment_method">Método de Pago</label>
+                                                        <select class="custom-select form-control" id="payment_method" name="payment_method" onchange="checkPaymentMethod();">
+                                                            <option value="transferencia" checked>Transferencia</option>
+                                                            <option value="efectivo">Efectivo</option>
+                                                            <option value="reembolso">Contra Entrega</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3" id="refund_div" style="display: none;">
+                                                    <div class="form-group">
+                                                        <label for="refund_amount">Monto</label>
+                                                        <input type="number" class="form-control" name="refund_amount" id="refund_amount" onkeyup="updateAmount();">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3" id="refund_div2" style="display: none;">
+                                                    <div class="form-group">
+                                                        <label for="refund_amount">Cobrar al Final</label>
+                                                        <input type="number" class="form-control" id="refund_amount2" disabled>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6" id="payment_type_div" style="display: none;">
+                                                    <div class="form-group">
+                                                        <label for="payment_type">El servicio se paga al:</label>
+                                                        <select class="custom-select form-control" id="payment_type" name="payment_type">
+                                                            <option value="inicio" checked>Inicio</option>
+                                                            <option value="final">Final</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="observations">Observaciones</label>
+                                                        <textarea name="observations" id="observations" rows="4" class="form-control"></textarea>
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
-
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label for="receiver_neighborhood">Barrio</label>
-                                                <input type="text" class="form-control required" id="receiver_neighborhood" name="receiver_neighborhood">
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-4" id="receiver_data_alias_div" style="visibility: hidden;">
-                                            <div class="form-group">
-                                                <label for="receiver_data_alias">Alias Datos de Entrega</label>
-                                                <input type="text" class="form-control" name="receiver_data_alias" id="receiver_data_alias">
-                                            </div>
-                                        </div>
-                    
-                                        <div class="col-md-8 text-right">
-                                            <ul class="list-unstyled mb-0">
-                                                <li class="d-inline-block mr-2">
-                                                    <fieldset>
-                                                        <div class="vs-checkbox-con vs-checkbox-primary">
-                                                            <input type="checkbox" name="remember_receiver_data" id="remember_receiver_check" onclick="rememberCheck(2);" disabled>
-                                                            <span class="vs-checkbox">
-                                                                <span class="vs-checkbox--check">
-                                                                    <i class="vs-icon feather icon-check"></i>
-                                                                </span>
-                                                            </span>
-                                                            <span class="">Recordar datos de entrega</span>
-                                                        </div>
-                                                    </fieldset>
-                                                </li>
-                                            </ul><br>
-                                        </div>
-                                    </div>
-                                </fieldset>
-
-                                <!-- Step 2 -->
-                                <h6><i class="step-icon feather icon-briefcase"></i> Paso 3</h6>
-                                <fieldset>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="date">Fecha</label>
-                                                <input type="date" class="form-control required" id="date" name="date" min="{{ date('Y-m-d') }}" value="{{ date('Y-m-d') }}">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="time">Hora <i class="fas fa-info-circle" data-toggle="tooltip" title="2 Horas de Anticipación"></i></label>
-                                                <input type="time" class="form-control required" id="time" name="time" value="{{ date('H:i') }}">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="article">Artículo <i class="fas fa-info-circle" data-toggle="tooltip" title="CANASTA: 40cm de ancho. 60cm de largo. 20cm de profundidad. (Máximo 18kg de peso). MALETA BREVE: 42cm de ancho. 38cm de largo. 50cm de profundidad. (Máximo 15kg de peso). MALETÍN CONVENCIONAL: 27cm de ancho. 14cm de largo. 40cm de profundidad. (Máximo 15kg de peso)."></i></label>
-                                                <input type="text" class="form-control" id="article" name="article">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label for="date">Equipo Breve</label>
-                                            <ul class="list-unstyled mb-0">
-                                                <li class="d-inline-block mr-2">
-                                                    <fieldset>
-                                                        <div class="vs-checkbox-con vs-checkbox-primary">
-                                                            <input type="checkbox" name="equipment_type[]" checked="" value="Maletin" required>
-                                                            <span class="vs-checkbox">
-                                                                <span class="vs-checkbox--check">
-                                                                    <i class="vs-icon feather icon-check"></i>
-                                                                </span>
-                                                            </span>
-                                                            <span class="">Maletín (Morral Convencional)</span>
-                                                        </div>
-                                                    </fieldset>
-                                                </li>
-                                                <li class="d-inline-block mr-2">
-                                                    <fieldset>
-                                                        <div class="vs-checkbox-con vs-checkbox-primary">
-                                                            <input type="checkbox" name="equipment_type[]" value="MB" required>
-                                                            <span class="vs-checkbox">
-                                                                <span class="vs-checkbox--check">
-                                                                    <i class="vs-icon feather icon-check"></i>
-                                                                </span>
-                                                            </span>
-                                                            <span class="">Maleta (Especial para Domicilios)</span>
-                                                        </div>
-                                                    </fieldset>
-                                                </li>
-                                                 <li class="d-inline-block mr-2">
-                                                    <fieldset>
-                                                        <div class="vs-checkbox-con vs-checkbox-primary">
-                                                            <input type="checkbox" name="equipment_type[]" value="Canasta" required>
-                                                            <span class="vs-checkbox">
-                                                                <span class="vs-checkbox--check">
-                                                                    <i class="vs-icon feather icon-check"></i>
-                                                                </span>
-                                                            </span>
-                                                            <span class="">Canasta</span>
-                                                        </div>
-                                                    </fieldset>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="payment_method">Método de Pago</label>
-                                                <select class="custom-select form-control" id="payment_method" name="payment_method" onchange="checkPaymentMethod();">
-                                                    <option value="transferencia" checked>Transferencia</option>
-                                                    <option value="efectivo">Efectivo</option>
-                                                    <option value="reembolso">Contra Entrega</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3" id="refund_div" style="display: none;">
-                                            <div class="form-group">
-                                                <label for="refund_amount">Monto</label>
-                                                <input type="number" class="form-control" name="refund_amount" id="refund_amount" onkeyup="updateAmount();">
-                                            </div>
-                                        </div>
-                                         <div class="col-md-3" id="refund_div2" style="display: none;">
-                                            <div class="form-group">
-                                                <label for="refund_amount">Cobrar al Final</label>
-                                                <input type="number" class="form-control" id="refund_amount2" disabled>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6" id="payment_type_div" style="display: none;">
-                                            <div class="form-group">
-                                                <label for="payment_type">El servicio se paga al:</label>
-                                                <select class="custom-select form-control" id="payment_type" name="payment_type">
-                                                    <option value="inicio" checked>Inicio</option>
-                                                    <option value="final">Final</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="observations">Observaciones</label>
-                                                <textarea name="observations" id="observations" rows="4" class="form-control"></textarea>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </fieldset>
-                            </form>
+                                        </fieldset>
+                                    </form>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </section>
+            </section>
         </div>
     </div>
     
