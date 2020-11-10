@@ -234,14 +234,17 @@
                 document.getElementById("confirm-form").setAttribute('action', ' {{ route('brever.services.start') }}');
                 document.getElementById("confirm-text").innerHTML = "¿Está seguro de marcar la llegada al punto inicial?";
                 document.getElementById("photo_div").style.display = 'none';
+                $("#photo").prop('required', false);
             }else if($accion == 2){
                 document.getElementById("confirm-form").setAttribute('action', '{{ route('brever.services.confirm') }}');
                 document.getElementById("confirm-text").innerHTML = "¿Está seguro de iniciar este servicio?";
                 document.getElementById("photo_div").style.display = 'none';
+                $("#photo").prop('required', false);
             }else{
                 document.getElementById("confirm-form").setAttribute('action', '{{ route('brever.services.complete') }}');
                 document.getElementById("confirm-text").innerHTML = "¿Está seguro de completar este servicio?";
                 document.getElementById("photo_div").style.display = 'block';
+                $("#photo").prop('required', true);
             }
             $("#confirmModal").modal("show");
         }
@@ -341,209 +344,383 @@
         </div>
 
         <div class="row">
-                <div class="col-lg-12 col-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <h4 class="mb-0">Mis Servicios Asignados</h4>
-                        </div>
-                        <div class="card-content">
-                            <div class="table-responsive mt-1">
-                                <table class="table table-hover-animation mb-0">
-                                    <thead>
-                                        <tr>
-                                            <th class="text-center">Fecha</th>
-                                            <th class="text-center">Hora</th>
-                                            <th class="text-center">Punto Inicial</th>
-                                            <th class="text-center">Punto Final</th>
-                                            <th class="text-center">Equipamiento</th>
-                                            <th class="text-center">Acción</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @if ($cantServiciosAsignados > 0)
-                                            @foreach ($serviciosAsignados as $servicioAsignado)
-                                                <tr>
-                                                    <td class="text-center">{{ date('Y-m-d', strtotime($servicioAsignado->date)) }}</td>
-                                                    <td class="text-center">{{ date('H:i', strtotime($servicioAsignado->time)) }}</td>
-                                                    <td class="text-center">{{ $servicioAsignado->sender_neighborhood }}</td>
-                                                    <td class="text-center">{{ $servicioAsignado->receiver_neighborhood }}</td>
-                                                    <td class="text-center">{{ $servicioAsignado->equipment_type }}</td>
-                                                    <td class="text-center">
-                                                        <a data-toggle="collapse" href="#collapse-{{$servicioAsignado->id}}"><i class="far fa-caret-square-down" style="font-size: 22px;"></i></a>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td colspan="6">
-                                                        <div id="collapse-{{$servicioAsignado->id}}" class="collapse">
-                                                            <div class="row">
-                                                                <div class="col-12 col-md-4">
-                                                                    <ul class="list-group">
-                                                                        <a href="#" class="list-group-item"><strong>Datos de Envío y Recogida</strong></a>
-                                                                        <li class="list-group-item d-flex">
-                                                                            <p class="float-left mb-0">
-                                                                                <i class="fas fa-id-card mr-1"></i>
-                                                                            </p>
-                                                                            <span>Nombre y teléfono de quién envía: <b>{{ $servicioAsignado->sender }}</b></span>
-                                                                        </li>
-                                                                        <li class="list-group-item d-flex">
-                                                                            <p class="float-left mb-0">
-                                                                                <i class="feather icon-map-pin mr-1"></i>
-                                                                            </p>
-                                                                            <span>Dirección de quién envía: <b>{{ $servicioAsignado->sender_address_opc }}</b></span>
-                                                                        </li>
-                                                                        <li class="list-group-item d-flex">
-                                                                            <p class="float-left mb-0">
-                                                                                <i class="feather icon-map-pin mr-1"></i>
-                                                                            </p>
-                                                                            <span>Barrio de quién envía: <b>{{ $servicioAsignado->sender_neighborhood }}</b></span>
-                                                                        </li>
-                                                                        <li class="list-group-item d-flex">
-                                                                            <p class="float-left mb-0">
-                                                                                <i class="fas fa-id-card mr-1"></i>
-                                                                            </p>
-                                                                            <span>Nombre y teléfono de quién recive: <b>{{ $servicioAsignado->receiver }}</b></span>
-                                                                        </li>
-                                                                        <li class="list-group-item d-flex">
-                                                                            <p class="float-left mb-0">
-                                                                                <i class="feather icon-map-pin mr-1"></i>
-                                                                            </p>
-                                                                            <span>Dirección de quién recibe: <b>{{ $servicioAsignado->receiver_address_opc }}</b></span>
-                                                                        </li>
-                                                                        <li class="list-group-item d-flex">
-                                                                            <p class="float-left mb-0">
-                                                                                <i class="feather icon-map-pin mr-1"></i>
-                                                                            </p>
-                                                                            <span>Barrio de quién recibe: <b>{{ $servicioAsignado->receiver_neighborhood }}</b></span>
-                                                                        </li>
-                                                                    </ul>
-                                                                </div>
-                                                                <div class="col-12 col-md-4">
-                                                                    <ul class="list-group">
-                                                                        <a href="#" class="list-group-item"><strong>Datos del Servicio</strong></a>
-                                                                        <li class="list-group-item d-flex">
-                                                                            <p class="float-left mb-0">
-                                                                                <i class="feather icon-calendar mr-1"></i>
-                                                                            </p>
-                                                                            <span>Cliente: @if ($servicioAsignado->user_id == 0) <b>{{ $servicioAsignado->client_name }}</b> (No Registrado) @else @if (!is_null($servicioAsignado->user->tradename)) <b>{{ $servicioAsignado->user->tradename}}</b> @else <b>{{ $servicioAsignado->user->name }}</b> @endif @endif</span>
-                                                                        </li>
-                                                                        <li class="list-group-item d-flex">
-                                                                            <p class="float-left mb-0">
-                                                                                <i class="feather icon-calendar mr-1"></i>
-                                                                            </p>
-                                                                            <span>Fecha: <b>{{ date('d-m-Y', strtotime($servicioAsignado->date)) }}</b></span>
-                                                                        </li>
-                                                                        <li class="list-group-item d-flex">
-                                                                            <p class="float-left mb-0">
-                                                                                <i class="feather icon-clock mr-1"></i>
-                                                                            </p>
-                                                                            <span>Hora: <b>{{ date('H:i', strtotime($servicioAsignado->time)) }}</b></span>
-                                                                        </li>
-                                                                        <li class="list-group-item d-flex">
-                                                                            <p class="float-left mb-0">
-                                                                                <i class="feather icon-package mr-1"></i>
-                                                                            </p>
-                                                                            <span>Artículo: <b>{{ $servicioAsignado->article }}</b></span>
-                                                                        </li>
-                                                                        <li class="list-group-item d-flex">
-                                                                            <p class="float-left mb-0">
-                                                                                <i class="feather icon-file-text mr-1"></i>
-                                                                            </p>
-                                                                            <span>Observaciones: <b>{{ $servicioAsignado->observations }}</b></span>
-                                                                        </li>
-                                                                        <li class="list-group-item d-flex">
-                                                                            <p class="float-left mb-0">
-                                                                                <i class="feather icon-briefcase mr-1"></i>
-                                                                            </p>
-                                                                            <span>Tipo de Equipo: <b>{{ $servicioAsignado->equipment_type }}</b></span>
-                                                                        </li>
-                                                                        <li class="list-group-item d-flex">
-                                                                            <p class="float-left mb-0">
-                                                                                <i class="feather icon-disc mr-1"></i>
-                                                                            </p>
-                                                                            <span>Estado: <b>@if ($servicioAsignado->status == 0) Pendiente @elseif ($servicioAsignado->status == 1) Asignado @elseif ($servicioAsignado->status == 2) Iniciado @elseif ($servicioAsignado->status == 3) Confirmado @elseif ($servicioAsignado->status == 4) Completado @else Declinado @endif</b></span>
-                                                                        </li>
-                                                                    </ul>
-                                                                </div>
-                                                                <div class="col-12 col-md-4">
-                                                                    <ul class="list-group">
-                                                                        <a href="#" class="list-group-item"><strong>Datos de Pago</strong></a>
-                                                                        <li class="list-group-item d-flex">
-                                                                            <p class="float-left mb-0">
-                                                                                <i class="feather icon-watch mr-1"></i>
-                                                                            </p>
-                                                                            <span>Forma de Pago: <b>{{ $servicioAsignado->payment_type }}</b></span>
-                                                                        </li>
+            <div class="col-lg-12 col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="mb-0">Mis Servicios Asignados</h4>
+                    </div>
+                    <div class="card-content">
+                        <!-- VERSIÓN PC -->
+                        <div class="table-responsive mt-1 d-none d-sm-block">
+                            <table class="table table-hover-animation mb-0">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">Fecha</th>
+                                        <th class="text-center">Hora</th>
+                                        <th class="text-center">Punto Inicial</th>
+                                        <th class="text-center">Punto Final</th>
+                                        <th class="text-center">Equipamiento</th>
+                                        <th class="text-center">Acción</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if ($cantServiciosAsignados > 0)
+                                        @foreach ($serviciosAsignados as $servicioAsignado)
+                                            <tr>
+                                                <td class="text-center">{{ date('Y-m-d', strtotime($servicioAsignado->date)) }}</td>
+                                                <td class="text-center">{{ date('H:i', strtotime($servicioAsignado->time)) }}</td>
+                                                <td class="text-center">{{ $servicioAsignado->sender_neighborhood }}</td>
+                                                <td class="text-center">{{ $servicioAsignado->receiver_neighborhood }}</td>
+                                                <td class="text-center">{{ $servicioAsignado->equipment_type }}</td>
+                                                <td class="text-center">
+                                                    <a data-toggle="collapse" href="#collapse-{{$servicioAsignado->id}}"><i class="far fa-caret-square-down" style="font-size: 22px;"></i></a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="6">
+                                                    <div id="collapse-{{$servicioAsignado->id}}" class="collapse">
+                                                        <div class="row">
+                                                            <div class="col-12 col-md-4">
+                                                                <ul class="list-group">
+                                                                    <a href="#" class="list-group-item"><strong>Datos de Envío y Recogida</strong></a>
+                                                                    <li class="list-group-item d-flex">
+                                                                        <p class="float-left mb-0">
+                                                                            <i class="fas fa-id-card mr-1"></i>
+                                                                        </p>
+                                                                        <span>Nombre y teléfono de quién envía: <b>{{ $servicioAsignado->sender }}</b></span>
+                                                                    </li>
+                                                                    <li class="list-group-item d-flex">
+                                                                        <p class="float-left mb-0">
+                                                                            <i class="feather icon-map-pin mr-1"></i>
+                                                                        </p>
+                                                                        <span>Dirección de quién envía: <b>{{ $servicioAsignado->sender_address_opc }}</b></span>
+                                                                    </li>
+                                                                    <li class="list-group-item d-flex">
+                                                                        <p class="float-left mb-0">
+                                                                            <i class="feather icon-map-pin mr-1"></i>
+                                                                        </p>
+                                                                        <span>Barrio de quién envía: <b>{{ $servicioAsignado->sender_neighborhood }}</b></span>
+                                                                    </li>
+                                                                    <li class="list-group-item d-flex">
+                                                                        <p class="float-left mb-0">
+                                                                            <i class="fas fa-id-card mr-1"></i>
+                                                                        </p>
+                                                                        <span>Nombre y teléfono de quién recibe: <b>{{ $servicioAsignado->receiver }}</b></span>
+                                                                    </li>
+                                                                    <li class="list-group-item d-flex">
+                                                                        <p class="float-left mb-0">
+                                                                            <i class="feather icon-map-pin mr-1"></i>
+                                                                        </p>
+                                                                        <span>Dirección de quién recibe: <b>{{ $servicioAsignado->receiver_address_opc }}</b></span>
+                                                                    </li>
+                                                                    <li class="list-group-item d-flex">
+                                                                        <p class="float-left mb-0">
+                                                                            <i class="feather icon-map-pin mr-1"></i>
+                                                                        </p>
+                                                                        <span>Barrio de quién recibe: <b>{{ $servicioAsignado->receiver_neighborhood }}</b></span>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                            <div class="col-12 col-md-4">
+                                                                <ul class="list-group">
+                                                                    <a href="#" class="list-group-item"><strong>Datos del Servicio</strong></a>
+                                                                    <li class="list-group-item d-flex">
+                                                                        <p class="float-left mb-0">
+                                                                            <i class="feather icon-calendar mr-1"></i>
+                                                                        </p>
+                                                                        <span>Cliente: @if ($servicioAsignado->user_id == 0) <b>{{ $servicioAsignado->client_name }}</b> (No Registrado) @else @if (!is_null($servicioAsignado->user->tradename)) <b>{{ $servicioAsignado->user->tradename}}</b> @else <b>{{ $servicioAsignado->user->name }}</b> @endif @endif</span>
+                                                                    </li>
+                                                                    <li class="list-group-item d-flex">
+                                                                        <p class="float-left mb-0">
+                                                                            <i class="feather icon-calendar mr-1"></i>
+                                                                        </p>
+                                                                        <span>Fecha: <b>{{ date('d-m-Y', strtotime($servicioAsignado->date)) }}</b></span>
+                                                                    </li>
+                                                                    <li class="list-group-item d-flex">
+                                                                        <p class="float-left mb-0">
+                                                                            <i class="feather icon-clock mr-1"></i>
+                                                                        </p>
+                                                                        <span>Hora: <b>{{ date('H:i', strtotime($servicioAsignado->time)) }}</b></span>
+                                                                    </li>
+                                                                    <li class="list-group-item d-flex">
+                                                                        <p class="float-left mb-0">
+                                                                            <i class="feather icon-package mr-1"></i>
+                                                                        </p>
+                                                                        <span>Artículo: <b>{{ $servicioAsignado->article }}</b></span>
+                                                                    </li>
+                                                                    <li class="list-group-item d-flex">
+                                                                        <p class="float-left mb-0">
+                                                                            <i class="feather icon-file-text mr-1"></i>
+                                                                        </p>
+                                                                        <span>Observaciones: <b>{{ $servicioAsignado->observations }}</b></span>
+                                                                    </li>
+                                                                    <li class="list-group-item d-flex">
+                                                                        <p class="float-left mb-0">
+                                                                            <i class="feather icon-briefcase mr-1"></i>
+                                                                        </p>
+                                                                        <span>Tipo de Equipo: <b>{{ $servicioAsignado->equipment_type }}</b></span>
+                                                                    </li>
+                                                                    <li class="list-group-item d-flex">
+                                                                        <p class="float-left mb-0">
+                                                                            <i class="feather icon-disc mr-1"></i>
+                                                                        </p>
+                                                                        <span>Estado: <b>@if ($servicioAsignado->status == 0) Pendiente @elseif ($servicioAsignado->status == 1) Asignado @elseif ($servicioAsignado->status == 2) Iniciado @elseif ($servicioAsignado->status == 3) Confirmado @elseif ($servicioAsignado->status == 4) Completado @else Declinado @endif</b></span>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                            <div class="col-12 col-md-4">
+                                                                <ul class="list-group">
+                                                                    <a href="#" class="list-group-item"><strong>Datos de Pago</strong></a>
+                                                                    <li class="list-group-item d-flex">
+                                                                        <p class="float-left mb-0">
+                                                                            <i class="feather icon-watch mr-1"></i>
+                                                                        </p>
+                                                                        <span>Forma de Pago: <b>{{ $servicioAsignado->payment_type }}</b></span>
+                                                                    </li>
+                                                                    <li class="list-group-item d-flex">
+                                                                        <p class="float-left mb-0">
+                                                                            <i class="feather icon-credit-card mr-1"></i>
+                                                                        </p>
+                                                                        <span>Método de Pago: <b>@if ($servicioAsignado->payment_method == 'reembolso') Contra Entrega @else {{ $servicioAsignado->payment_method }} @endif</b></span>
+                                                                    </li>
+                                                                    @if ($servicioAsignado->payment_method == 'reembolso')
                                                                         <li class="list-group-item d-flex">
                                                                             <p class="float-left mb-0">
                                                                                 <i class="feather icon-credit-card mr-1"></i>
                                                                             </p>
-                                                                            <span>Método de Pago: <b>@if ($servicioAsignado->payment_method == 'reembolso') Contra Entrega @else {{ $servicioAsignado->payment_method }} @endif</b></span>
+                                                                            <span>Monto de Entrega: <b>${{ $servicioAsignado->refund_amount }}</b></span>
                                                                         </li>
-                                                                        @if ($servicioAsignado->payment_method == 'reembolso')
-                                                                            <li class="list-group-item d-flex">
-                                                                                <p class="float-left mb-0">
-                                                                                    <i class="feather icon-credit-card mr-1"></i>
-                                                                                </p>
-                                                                                <span>Monto de Entrega: <b>${{ $servicioAsignado->refund_amount }}</b></span>
-                                                                            </li>
-                                                                        @endif
-                                                                        <li class="list-group-item d-flex">
-                                                                            <p class="float-left mb-0">
-                                                                                <i class="feather icon-tag mr-1"></i>
-                                                                            </p>
-                                                                            <span>Tarifa: <b>@if ($servicioAsignado->rate_status == 1) ${{ $servicioAsignado->rate }} @else Sin Calcular @endif</b></span>
-                                                                        </li>
-                                                                        <li class="list-group-item d-flex">
-                                                                            <p class="float-left mb-0">
-                                                                                <i class="feather icon-plus-circle mr-1"></i>
-                                                                            </p>
-                                                                            <span>Costo Adicional: <b>${{ $servicioAsignado->additional_cost }}</b></span>
-                                                                        </li>
-                                                                        <li class="list-group-item d-flex">
-                                                                            <p class="float-left mb-0">
-                                                                                <i class="feather icon-tag mr-1"></i>
-                                                                            </p>
-                                                                            <span>Total: <b> @if ($servicioAsignado->rate_status == 1) ${{ $servicioAsignado->total }} @else Sin Calcular @endif</b></span>
-                                                                        </li>
-                                                                    </ul>
-                                                                </div>
-                                                                <div class="col-12 col-md-12 text-right">
-                                                                    <br>
-                                                                    @if ($servicioAsignado->status == 1)
-                                                                        <a href="javascript:;" type="button" class="btn btn-icon btn-primary mr-1 mb-1 waves-effect waves-light" onclick="loadConfirmModal({{$servicioAsignado->id}},1);"><i class="feather icon-check"></i> Llegada a Punto Inicial</a>
-                                                                    @elseif ($servicioAsignado->status == 2)  
-                                                                        <a href="javascript:;" type="button" class="btn btn-icon btn-primary mr-1 mb-1 waves-effect waves-light" onclick="loadConfirmModal({{$servicioAsignado->id}},2);"><i class="feather icon-check"></i> Iniciar Servicio</a>  
-                                                                    @elseif ($servicioAsignado->status == 3)
-                                                                        <a href="javascript:;" type="button" class="btn btn-icon btn-primary mr-1 mb-1 waves-effect waves-light" onclick="loadConfirmModal({{$servicioAsignado->id}},3);"><i class="feather icon-check"></i> Entrega en Punto Final</a>
                                                                     @endif
-                                                                </div>
+                                                                    <li class="list-group-item d-flex">
+                                                                        <p class="float-left mb-0">
+                                                                            <i class="feather icon-tag mr-1"></i>
+                                                                        </p>
+                                                                        <span>Tarifa: <b>@if ($servicioAsignado->rate_status == 1) ${{ $servicioAsignado->rate }} @else Sin Calcular @endif</b></span>
+                                                                    </li>
+                                                                    <li class="list-group-item d-flex">
+                                                                        <p class="float-left mb-0">
+                                                                            <i class="feather icon-plus-circle mr-1"></i>
+                                                                        </p>
+                                                                        <span>Costo Adicional: <b>${{ $servicioAsignado->additional_cost }}</b></span>
+                                                                    </li>
+                                                                    <li class="list-group-item d-flex">
+                                                                        <p class="float-left mb-0">
+                                                                            <i class="feather icon-tag mr-1"></i>
+                                                                        </p>
+                                                                        <span>Total: <b> @if ($servicioAsignado->rate_status == 1) ${{ $servicioAsignado->total }} @else Sin Calcular @endif</b></span>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                            <div class="col-12 col-md-12 text-right">
+                                                                <br>
+                                                                @if ($servicioAsignado->status == 1)
+                                                                    <a href="javascript:;" type="button" class="btn btn-icon btn-primary mr-1 mb-1 waves-effect waves-light" onclick="loadConfirmModal({{$servicioAsignado->id}},1);"><i class="feather icon-check"></i> Llegada a Punto Inicial</a>
+                                                                @elseif ($servicioAsignado->status == 2)  
+                                                                    <a href="javascript:;" type="button" class="btn btn-icon btn-primary mr-1 mb-1 waves-effect waves-light" onclick="loadConfirmModal({{$servicioAsignado->id}},2);"><i class="feather icon-check"></i> Iniciar Servicio</a>  
+                                                                @elseif ($servicioAsignado->status == 3)
+                                                                    <a href="javascript:;" type="button" class="btn btn-icon btn-primary mr-1 mb-1 waves-effect waves-light" onclick="loadConfirmModal({{$servicioAsignado->id}},3);"><i class="feather icon-check"></i> Entrega en Punto Final</a>
+                                                                @endif
                                                             </div>
                                                         </div>
-                                                    </td>
-                                                </tr>
-                                            @endforeach
-                                        @else
-                                            <tr>
-                                                <td colspan="6" class="text-center">No posee ningún servicio programado...</td>
+                                                    </div>
+                                                </td>
                                             </tr>
-                                        @endif
-                                    </tbody>
-                                    <tfoot>
+                                        @endforeach
+                                    @else
                                         <tr>
-                                            <th class="text-center">Fecha</th>
-                                            <th class="text-center">Hora</th>
-                                            <th class="text-center">Punto Inicial</th>
-                                            <th class="text-center">Punto Final</th>
-                                            <th class="text-center">Equipamiento</th>
-                                            <th class="text-center">Acción</th>
+                                            <td colspan="6" class="text-center">No posee ningún servicio programado...</td>
                                         </tr>
-                                    </tfoot>
-                                </table>
-
-                            </div>
+                                    @endif
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th class="text-center">Fecha</th>
+                                        <th class="text-center">Hora</th>
+                                        <th class="text-center">Punto Inicial</th>
+                                        <th class="text-center">Punto Final</th>
+                                        <th class="text-center">Equipamiento</th>
+                                        <th class="text-center">Acción</th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <!-- VERSIÓN MÓVIL -->
+                        <div class="table-responsive mt-1 d-block d-sm-none">
+                            <table class="table table-hover-animation mb-0">
+                                <tbody>
+                                    @if ($cantServiciosAsignados > 0)
+                                        @foreach ($serviciosAsignados as $servicioAsignadoMovil)
+                                            <tr>
+                                                <td>
+                                                    {{ date('Y-m-d', strtotime($servicioAsignadoMovil->date)) }} - {{ date('H:i', strtotime($servicioAsignadoMovil->time)) }} <br>
+                                                    {{ $servicioAsignadoMovil->sender_neighborhood }} - {{ $servicioAsignadoMovil->receiver_neighborhood }} <br>
+                                                    ({{ $servicioAsignadoMovil->equipment_type }})
+                                                </td>
+                                                <td class="text-center">
+                                                    <a data-toggle="collapse" href="#collapse-movil-{{$servicioAsignadoMovil->id}}"><i class="far fa-caret-square-down" style="font-size: 22px;"></i></a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="2">
+                                                    <div id="collapse-movil-{{$servicioAsignadoMovil->id}}" class="collapse">
+                                                        <div class="row">
+                                                            <div class="col-12 col-md-4">
+                                                                <ul class="list-group">
+                                                                    <a href="#" class="list-group-item"><strong>Datos de Envío y Recogida</strong></a>
+                                                                    <li class="list-group-item d-flex">
+                                                                        <p class="float-left mb-0">
+                                                                            <i class="fas fa-id-card mr-1"></i>
+                                                                        </p>
+                                                                        <span>Nombre y teléfono de quién envía: <br><b>{{ $servicioAsignadoMovil->sender }}</b></span>
+                                                                    </li>
+                                                                    <li class="list-group-item d-flex">
+                                                                        <p class="float-left mb-0">
+                                                                            <i class="feather icon-map-pin mr-1"></i>
+                                                                        </p>
+                                                                        <span>Dirección de quién envía: <br><b>{{ $servicioAsignadoMovil->sender_address_opc }}</b></span>
+                                                                    </li>
+                                                                    <li class="list-group-item d-flex">
+                                                                        <p class="float-left mb-0">
+                                                                            <i class="feather icon-map-pin mr-1"></i>
+                                                                        </p>
+                                                                        <span>Barrio de quién envía: <br><b>{{ $servicioAsignadoMovil->sender_neighborhood }}</b></span>
+                                                                    </li>
+                                                                    <li class="list-group-item d-flex">
+                                                                        <p class="float-left mb-0">
+                                                                            <i class="fas fa-id-card mr-1"></i>
+                                                                        </p>
+                                                                        <span>Nombre y teléfono de quién recibe: <br><b>{{ $servicioAsignadoMovil->receiver }}</b></span>
+                                                                    </li>
+                                                                    <li class="list-group-item d-flex">
+                                                                        <p class="float-left mb-0">
+                                                                            <i class="feather icon-map-pin mr-1"></i>
+                                                                        </p>
+                                                                        <span>Dirección de quién recibe: <br><b>{{ $servicioAsignadoMovil->receiver_address_opc }}</b></span>
+                                                                    </li>
+                                                                    <li class="list-group-item d-flex">
+                                                                        <p class="float-left mb-0">
+                                                                            <i class="feather icon-map-pin mr-1"></i>
+                                                                        </p>
+                                                                        <span>Barrio de quién recibe: <br><b>{{ $servicioAsignadoMovil->receiver_neighborhood }}</b></span>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                            <div class="col-12 col-md-4">
+                                                                <ul class="list-group">
+                                                                    <a href="#" class="list-group-item"><strong>Datos del Servicio</strong></a>
+                                                                    <li class="list-group-item d-flex">
+                                                                        <p class="float-left mb-0">
+                                                                            <i class="feather icon-calendar mr-1"></i>
+                                                                        </p>
+                                                                        <span>Cliente: @if ($servicioAsignadoMovil->user_id == 0) <br><b>{{ $servicioAsignadoMovil->client_name }}</b> (No Registrado) @else @if (!is_null($servicioAsignadoMovil->user->tradename)) <b>{{ $servicioAsignadoMovil->user->tradename}}</b> @else <b>{{ $servicioAsignadoMovil->user->name }}</b> @endif @endif</span>
+                                                                    </li>
+                                                                    <li class="list-group-item d-flex">
+                                                                        <p class="float-left mb-0">
+                                                                            <i class="feather icon-calendar mr-1"></i>
+                                                                        </p>
+                                                                        <span>Fecha: <br><b>{{ date('d-m-Y', strtotime($servicioAsignadoMovil->date)) }}</b></span>
+                                                                    </li>
+                                                                    <li class="list-group-item d-flex">
+                                                                        <p class="float-left mb-0">
+                                                                            <i class="feather icon-clock mr-1"></i>
+                                                                        </p>
+                                                                        <span>Hora: <br><b>{{ date('H:i', strtotime($servicioAsignadoMovil->time)) }}</b></span>
+                                                                    </li>
+                                                                    <li class="list-group-item d-flex">
+                                                                        <p class="float-left mb-0">
+                                                                            <i class="feather icon-package mr-1"></i>
+                                                                        </p>
+                                                                        <span>Artículo: <br><b>{{ $servicioAsignadoMovil->article }}</b></span>
+                                                                    </li>
+                                                                    <li class="list-group-item d-flex">
+                                                                        <p class="float-left mb-0">
+                                                                            <i class="feather icon-file-text mr-1"></i>
+                                                                        </p>
+                                                                        <span>Observaciones: <br><b>{{ $servicioAsignadoMovil->observations }}</b></span>
+                                                                    </li>
+                                                                    <li class="list-group-item d-flex">
+                                                                        <p class="float-left mb-0">
+                                                                            <i class="feather icon-briefcase mr-1"></i>
+                                                                        </p>
+                                                                        <span>Tipo de Equipo: <br><b>{{ $servicioAsignadoMovil->equipment_type }}</b></span>
+                                                                    </li>
+                                                                    <li class="list-group-item d-flex">
+                                                                        <p class="float-left mb-0">
+                                                                            <i class="feather icon-disc mr-1"></i>
+                                                                        </p>
+                                                                        <span>Estado: <br><b>@if ($servicioAsignadoMovil->status == 0) Pendiente @elseif ($servicioAsignadoMovil->status == 1) Asignado @elseif ($servicioAsignadoMovil->status == 2) Iniciado @elseif ($servicioAsignadoMovil->status == 3) Confirmado @elseif ($servicioAsignadoMovil->status == 4) Completado @else Declinado @endif</b></span>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                            <div class="col-12 col-md-4">
+                                                                <ul class="list-group">
+                                                                    <a href="#" class="list-group-item"><strong>Datos de Pago</strong></a>
+                                                                    <li class="list-group-item d-flex">
+                                                                        <p class="float-left mb-0">
+                                                                            <i class="feather icon-watch mr-1"></i>
+                                                                        </p>
+                                                                        <span>Forma de Pago: <br><b>{{ $servicioAsignadoMovil->payment_type }}</b></span>
+                                                                    </li>
+                                                                    <li class="list-group-item d-flex">
+                                                                        <p class="float-left mb-0">
+                                                                            <i class="feather icon-credit-card mr-1"></i>
+                                                                        </p>
+                                                                        <span>Método de Pago: <br><b>@if ($servicioAsignadoMovil->payment_method == 'reembolso') Contra Entrega @else {{ $servicioAsignadoMovil->payment_method }} @endif</b></span>
+                                                                    </li>
+                                                                    @if ($servicioAsignadoMovil->payment_method == 'reembolso')
+                                                                        <li class="list-group-item d-flex">
+                                                                            <p class="float-left mb-0">
+                                                                                <i class="feather icon-credit-card mr-1"></i>
+                                                                            </p>
+                                                                            <span>Monto de Entrega: <br><b>${{ $servicioAsignadoMovil->refund_amount }}</b></span>
+                                                                        </li>
+                                                                    @endif
+                                                                    <li class="list-group-item d-flex">
+                                                                        <p class="float-left mb-0">
+                                                                            <i class="feather icon-tag mr-1"></i>
+                                                                        </p>
+                                                                        <span>Tarifa: <br><b>@if ($servicioAsignadoMovil->rate_status == 1) ${{ $servicioAsignadoMovil->rate }} @else Sin Calcular @endif</b></span>
+                                                                    </li>
+                                                                    <li class="list-group-item d-flex">
+                                                                        <p class="float-left mb-0">
+                                                                            <i class="feather icon-plus-circle mr-1"></i>
+                                                                        </p>
+                                                                        <span>Costo Adicional: <br><b>${{ $servicioAsignadoMovil->additional_cost }}</b></span>
+                                                                    </li>
+                                                                    <li class="list-group-item d-flex">
+                                                                        <p class="float-left mb-0">
+                                                                            <i class="feather icon-tag mr-1"></i>
+                                                                        </p>
+                                                                        <span>Total: <br><b> @if ($servicioAsignadoMovil->rate_status == 1) ${{ $servicioAsignadoMovil->total }} @else Sin Calcular @endif</b></span>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                            <div class="col-12 col-md-12 text-right">
+                                                                <br>
+                                                                @if ($servicioAsignadoMovil->status == 1)
+                                                                    <a href="javascript:;" type="button" class="btn btn-icon btn-primary mr-1 mb-1 waves-effect waves-light" onclick="loadConfirmModal({{$servicioAsignadoMovil->id}},1);"><i class="feather icon-check"></i> Llegada a Punto Inicial</a>
+                                                                @elseif ($servicioAsignadoMovil->status == 2)  
+                                                                    <a href="javascript:;" type="button" class="btn btn-icon btn-primary mr-1 mb-1 waves-effect waves-light" onclick="loadConfirmModal({{$servicioAsignadoMovil->id}},2);"><i class="feather icon-check"></i> Iniciar Servicio</a>  
+                                                                @elseif ($servicioAsignadoMovil->status == 3)
+                                                                    <a href="javascript:;" type="button" class="btn btn-icon btn-primary mr-1 mb-1 waves-effect waves-light" onclick="loadConfirmModal({{$servicioAsignadoMovil->id}},3);"><i class="feather icon-check"></i> Entrega en Punto Final</a>
+                                                                @endif
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    @else
+                                        <tr>
+                                            <td colspan="2" class="text-center">No posee ningún servicio programado...</td>
+                                        </tr>
+                                    @endif
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
+            </div>
             
             <div class="col-sm-12 col-12 d-block d-md-none">
                 <a href="{{ route('brever.services.assigned') }}">
@@ -615,7 +792,7 @@
                     <div class="modal-body">
                         <div class="form-group" id="photo_div" style="display:none;">
                             <label for="photo">Foto de Entrega</label>
-                            <input type="file" class="form-control" name="photo" capture="camera" accept="image/*" required>
+                            <input type="file" class="form-control" name="photo" id="photo" capture="camera" accept="image/*">
                         </div>
                         <div class="text-center" id="confirm-text"></div>
                     </div>

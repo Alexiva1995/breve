@@ -45,14 +45,17 @@
                 document.getElementById("confirm-form").setAttribute('action', ' {{ route('brever.services.start') }}');
                 document.getElementById("confirm-text").innerHTML = "¿Está seguro de marcar la llegada al punto inicial?";
                 document.getElementById("photo_div").style.display = 'none';
+                $("#photo").prop('required', false);
             }else if($accion == 2){
                 document.getElementById("confirm-form").setAttribute('action', '{{ route('brever.services.confirm') }}');
                 document.getElementById("confirm-text").innerHTML = "¿Está seguro de iniciar este servicio?";
                 document.getElementById("photo_div").style.display = 'none';
+                $("#photo").prop('required', false);
             }else{
                 document.getElementById("confirm-form").setAttribute('action', '{{ route('brever.services.complete') }}');
                 document.getElementById("confirm-text").innerHTML = "¿Está seguro de completar este servicio?";
                 document.getElementById("photo_div").style.display = 'block';
+                $("#photo").prop('required', true);
             }
             $("#confirmModal").modal("show");
         }
@@ -277,7 +280,7 @@
                     <div class="modal-body">
                         <div class="form-group" id="photo_div" style="display:none;">
                             <label for="photo">Foto de Entrega</label>
-                            <input type="file" class="form-control" name="photo" capture="camera" accept="image/*" required>
+                            <input type="file" class="form-control" name="photo" id="photo" capture="camera" accept="image/*">
                         </div>
                         <div class="text-center" id="confirm-text"></div>
                     </div>
