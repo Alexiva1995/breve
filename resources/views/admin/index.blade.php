@@ -35,22 +35,23 @@
             }
         });
 
-        $(".status").on('change', function(){
-            if ( ($(this).val() == 0) || ($(this).val() == 5) ){
-                $("#status2").val($(this).val());
-                $("#service_id2").val($(this).attr('data-service'));
+        function changeStatus($service_id){
+            $status = $("#service-"+$service_id).val();
+            if ( ($service_id == 0) || ($service_id == 5) ){
+                $("#status2").val($status);
+                $("#service_id2").val($service_id);
                 $("#status_form").submit();
             }else{
-                if ($(this).attr('data-brever') == ""){
-                    $('#service_id').val($(this).attr('data-service'));
+                if ($("#service-"+$service_id).attr('data-brever') == ""){
+                    $('#service_id').val($service_id);
                     $("#breverModal").modal('show');
                 }else{
-                    $("#status2").val($(this).val());
-                    $("#service_id2").val($(this).attr('data-service'));
+                    $("#status2").val($status);
+                    $("#service_id2").val($service_id);
                     $("#status_form").submit();
                 }
             }
-        });
+        }
 
         $(function() {
             $("#user_id").select2({
@@ -674,7 +675,7 @@
                                             @endif
                                         </td>
                                         <td >
-                                            <select style="width: 120px;" class="form-control status" name="status" data-service="{{$servicio->id}}" data-brever="{{$servicio->brever_id}}">
+                                            <select style="width: 120px;" class="form-control status" name="status" id="service-{{$servicio->id}}" data-brever="{{$servicio->brever_id}}" onchange="changeStatus({{$servicio->id}});">
                                                 <option value="0" @if ($servicio->status == 0) selected @endif>Pendiente</option>
                                                 <option value="1"@if ($servicio->status == 1) selected @endif>Asignado</option>
                                                 <option value="3"@if ($servicio->status == 3) selected @endif>Confirmado</option>
