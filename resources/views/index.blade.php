@@ -92,9 +92,9 @@
     <!-- END: Head-->
     
     <!-- BEGIN: Body-->
-    <body class="vertical-layout vertical-menu-modern 1-column  navbar-floating footer-static bg-full-screen-image  blank-page blank-page" data-open="click" data-menu="vertical-menu-modern" data-col="1-column">
+    <body class="vertical-layout vertical-menu-modern 1-column  navbar-floating footer-static bg-full-screen-image  blank-page blank-page" data-open="click"  data-menu="vertical-menu-modern" data-col="1-column">
         <div>
-            <img style="position: absolute;" src="https://www.breve.com.co/images/logo320.png">
+            <img style="position: absolute;z-index: 1;" src="https://www.breve.com.co/images/logo320.png">
         </div>
         <!-- BEGIN: Content-->
         <div class="app-content content">
@@ -102,10 +102,10 @@
             <div class="header-navbar-shadow"></div>
             <div class="content-wrapper">
                 <div class="content-header row"></div>
-                <div class="content-body">
+                <div class="content-body" style="background: url(https://www.breve.com.co/images/fondo_completo.jpg) no-repeat center center;background-size: cover;">
                    
-                    <section class="row flexbox-container">
-                        <div class="col-xl-8 col-11 justify-content-center" style="margin-top: 8%; margin-bottom: 5%;">
+                    <section class="row container" style="margin: 0 auto; text-align: center;">
+                        <div class="col-xl-12 col-12 justify-content-center" style="margin-top: 10%; margin-bottom: 5%; z-index: 1;">
                             <div class="card bg-authentication rounded-0 mb-0">
                                 <div class="row m-0">
                                     <div class="col-lg-12 col-12 p-0">
@@ -135,42 +135,42 @@
                                                                                         <div class="col-md-12">
                                                                                             <div class="form-group">
                                                                                                 <label for="client_name"> Tu Nombre (o el de tu Negocio/Emprendimiento) (*)</label>
-                                                                                                <input type="text" class="form-control required" id="client_name" name="client_name">
+                                                                                                <input type="text" class="form-control" id="client_name" name="client_name" required>
                                                                                                 <label class="label-small">Con este nombre registraremos el servicio</label>
                                                                                             </div>
                                                                                         </div>
                                                                                         <div class="col-md-6">
                                                                                             <div class="form-group">
                                                                                                 <label for="date">Fecha</label>
-                                                                                                <input type="date" class="form-control required" id="date" name="date" min="{{ date('Y-m-d') }}" value="{{ date('Y-m-d') }}">
+                                                                                                <input type="date" class="form-control" id="date" name="date" min="{{ date('Y-m-d') }}" value="{{ date('Y-m-d') }}" required>
                                                                                                 <label class="label-small">¿Que día debemos estar en el punto inicial?</label>
                                                                                             </div>
                                                                                         </div>
                                                                                         <div class="col-md-6">
                                                                                             <div class="form-group">
                                                                                                 <label for="time">Hora <i class="fas fa-info-circle" data-toggle="tooltip" title="2 Horas de Anticipación"></i></label>
-                                                                                                <input type="time" class="form-control required" id="time" name="time" min="07:00" max="19:00" value="{{ date('H:i') }}">
+                                                                                                <input type="time" class="form-control" id="time" name="time" min="07:00" max="19:00" value="{{ date('H:i') }}" required>
                                                                                                 <label class="label-small">¿A qué hora debemos estar en el punto inicial?</label>
                                                                                             </div>
                                                                                         </div>
                                                                                         <div class="col-md-12">
                                                                                             <div class="form-group">
                                                                                                 <label for="sender_address">Dirección inicial: (*)</label>
-                                                                                                <input type="text" class="form-control" id="sender_address" name="sender_address">
+                                                                                                <input type="text" class="form-control" id="sender_address" name="sender_address" required>
                                                                                                 <label class="label-small">Dirección Completa, nombre del barrio (no olvides unidad, bloque, apto u oficina, si aplica)</label>
                                                                                             </div>
                                                                                         </div>
                                                                                         <div class="col-md-12">
                                                                                             <div class="form-group">
                                                                                                 <label for="sender"> Nombre & número de 📲 de quien entrega: (*)</label>
-                                                                                                <input type="text" class="form-control required" id="sender" name="sender" pattern="[a-zA-Z ]{2,30}[0-9]{10}"  title="Nombre (mínimo 2 caracteres) Teléfono(10 números)">
+                                                                                                <input type="text" class="form-control" id="sender" name="sender" required>
                                                                                                 <label class="label-small">Nombre, apellido & número de contacto de quien entrega</label>
                                                                                             </div>
                                                                                         </div>
                                                                                         <div class="col-md-12">
                                                                                             <div class="form-group">
                                                                                                 <label for="article">Articulo a transportar: (*) <i class="fas fa-info-circle" data-toggle="tooltip" title="CANASTA: 40cm de ancho. 60cm de largo. 20cm de profundidad. (Máximo 18kg de peso). MALETA BREVE: 42cm de ancho. 38cm de largo. 50cm de profundidad. (Máximo 15kg de peso). MALETÍN CONVENCIONAL: 27cm de ancho. 14cm de largo. 40cm de profundidad. (Máximo 15kg de peso)."></i></label>
-                                                                                                <input type="text" class="form-control required" id="article" name="article">
+                                                                                                <input type="text" class="form-control" id="article" name="article" required>
                                                                                                 <label class="label-small">¿Qué vas a enviar?</label>
                                                                                             </div>
                                                                                         </div>
@@ -213,21 +213,21 @@
                                                                                          <div class="col-md-12">
                                                                                             <div class="form-group">
                                                                                                 <label for="receiver_address">Dirección final: (*)</label>
-                                                                                                <input type="text" class="form-control" id="receiver_address" name="receiver_address">
+                                                                                                <input type="text" class="form-control" id="receiver_address" name="receiver_address" required>
                                                                                                 <label class="label-small">Dirección Completa, nombre del barrio (no olvides unidad, bloque, apto u oficina, si aplica)</label>
                                                                                             </div>
                                                                                         </div>
                                                                                         <div class="col-md-12">
                                                                                             <div class="form-group">
                                                                                                 <label for="receiver"> Nombre & número de 📲 de quien recibe: (*)</label>
-                                                                                                <input type="text" class="form-control required" id="receiver" name="receiver" pattern="[a-zA-Z ]{2,30}[0-9]{10}"  title="Nombre (mínimo 2 caracteres) Teléfono(10 números)">
+                                                                                                <input type="text" class="form-control" id="receiver" name="receiver" required>
                                                                                                 <label class="label-small">Nombre, apellido & número de contacto de quien recibe:</label>
                                                                                             </div>
                                                                                         </div>
                                                                                         <div class="col-md-6">
                                                                                             <div class="form-group">
                                                                                                 <label for="payment_method">La tarifa se paga en</label>
-                                                                                                <select class="custom-select form-control required" id="payment_method" name="payment_method" onchange="checkPaymentMethod();">
+                                                                                                <select class="custom-select form-control" id="payment_method" name="payment_method" onchange="checkPaymentMethod();" required>
                                                                                                     <option value="transferencia">Transferencia</option>
                                                                                                     <option value="efectivo-inicio">Efectivo al Inicio</option>
                                                                                                     <option value="efectivo-final">Efectivo al Final</option>
