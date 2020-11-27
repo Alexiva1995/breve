@@ -1050,7 +1050,7 @@
                                                             <fieldset>
                                                                 <div class="vs-checkbox-con vs-checkbox-primary">
                                                                     <label class="checkeable">
-                                                                        <input type="checkbox" name="equipment_type[]" value="Maletin"/>
+                                                                        <input type="checkbox" class="equipment-checkbox" name="equipment_type[]" value="Maletin"/>
                                                                         <img src="{{ asset('images/maletin.png') }}"/>
                                                                     </label>
                                                                 </div>
@@ -1060,7 +1060,7 @@
                                                             <fieldset>
                                                                 <div class="vs-checkbox-con vs-checkbox-primary">
                                                                     <label class="checkeable">
-                                                                        <input type="checkbox" name="equipment_type[]" value="MB"/>
+                                                                        <input type="checkbox" class="equipment-checkbox" name="equipment_type[]" value="MB"/>
                                                                         <img src="{{ asset('images/maleta.png') }}"/>
                                                                     </label>
                                                                 </div>
@@ -1070,7 +1070,7 @@
                                                             <fieldset>
                                                                 <div class="vs-checkbox-con vs-checkbox-primary">
                                                                     <label class="checkeable">
-                                                                        <input type="checkbox" name="equipment_type[]" value="Canasta"/>
+                                                                        <input type="checkbox" class="equipment-checkbox" name="equipment_type[]" value="Canasta"/>
                                                                         <img src="{{ asset('images/canasta.png') }}"/>
                                                                     </label>
                                                                 </div>
