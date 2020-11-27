@@ -283,33 +283,22 @@ class ServiceController extends Controller
     /**** Admin / Servicios / Listado de Servicios / Ver Más ****/
     /**** Brever / Servicios / Listado de Servicios / Ver Más ****/
     public function show($id){
-        if (Auth::user()->role_id == 1){
-            $notificacionesPendientes = Notification::where('service_id','=', $id)
+        $notificacionesPendientes = Notification::where('service_id','=', $id)
                                             ->where('user_id', '=', Auth::user()->id)
                                             ->get();
-
-            foreach ($notificacionesPendientes as $not){
-                if ($not->status == 0){
-                    $not->status = 1;
-                    $not->save();
-                }
+        
+        foreach ($notificacionesPendientes as $not){
+            if ($not->status == 0){
+                $not->status = 1;
+                $not->save();
             }
-
+        }
+        
+        if (Auth::user()->role_id == 1){
             $servicio = Service::find($id);
 
             return view('client.showService')->with(compact('servicio'));
         }else if (Auth::user()->role_id == 2){
-            $notificacionesPendientes = Notification::where('service_id','=', $id)
-                                            ->where('user_id', '=', Auth::user()->id)
-                                            ->get();
-
-            foreach ($notificacionesPendientes as $not){
-                if ($not->status == 0){
-                    $not->status = 1;
-                    $not->save();
-                }
-            }
-            
             $servicio = Service::find($id);
 
             $servicio->sender_address_plus = str_replace(" ", "+", $servicio->sender_address);
@@ -317,15 +306,6 @@ class ServiceController extends Controller
 
             return view('brever.showService')->with(compact('servicio'));
         }else{
-            $notificacionesPendientes = AdminNotification::where('service_id','=', $id)->get();
-            
-            foreach ($notificacionesPendientes as $not){
-                if ($not->status == 0){
-                    $not->status = 1;
-                    $not->save();
-                }
-            }
-            
             $servicio = Service::where('id', '=', $id)
                             ->withCount('logs')
                             ->first();
@@ -468,7 +448,7 @@ class ServiceController extends Controller
                 $log->action = 'Llegada al punto inicial';
                 $log->save();
 
-                /*if ($servicio->user_id != 0){
+                if ($servicio->user_id != 0){
                     $notificacion2 = new Notification();
                     $notificacion2->user_id = $servicio->user_id;
                     $notificacion2->service_id = $servicio->id;
@@ -476,7 +456,7 @@ class ServiceController extends Controller
                     $notificacion2->icon = 'feather icon-check-circle';
                     $notificacion2->status = 0;
                     $notificacion2->save();
-                }*/
+                }
             }else if ($request->status == 3){
                 $log = new Log();
                 $log->service_id = $servicio->id;
@@ -484,7 +464,7 @@ class ServiceController extends Controller
                 $log->action = 'Servicio Iniciado y Confirmado';
                 $log->save();
 
-                /*if ($servicio->user_id != 0){
+                if ($servicio->user_id != 0){
                     $notificacion2 = new Notification();
                     $notificacion2->user_id = $servicio->user_id;
                     $notificacion2->service_id = $servicio->id;
@@ -492,7 +472,7 @@ class ServiceController extends Controller
                     $notificacion2->icon = 'feather icon-check-circle';
                     $notificacion2->status = 0;
                     $notificacion2->save();
-                }*/
+                }
             }else if ($request->status == 4 ){
                 $log = new Log();
                 $log->service_id = $servicio->id;
@@ -719,7 +699,7 @@ class ServiceController extends Controller
         $log->save();
 
         if (Auth::user()->role_id == 2){
-            /*if ($servicio->user_id != 0){
+            if ($servicio->user_id != 0){
                 $notificacion = new Notification();
                 $notificacion->user_id = $servicio->user_id;
                 $notificacion->service_id = $servicio->id;
@@ -735,11 +715,11 @@ class ServiceController extends Controller
             $notificacion2->title = 'El brever ha llegado al punto inicial';
             $notificacion2->icon = 'feather icon-check-circle';
             $notificacion2->status = 0;
-            $notificacion2->save();*/
+            $notificacion2->save();
 
             return redirect('brever')->with('msj-exitoso', 'La llegada al punto inicial ha sido marcada con éxito.');
         }else{
-            /*if ($servicio->user_id != 0){
+            if ($servicio->user_id != 0){
                 $notificacion = new Notification();
                 $notificacion->user_id = $servicio->user_id;
                 $notificacion->service_id = $servicio->id;
@@ -747,7 +727,7 @@ class ServiceController extends Controller
                 $notificacion->icon = 'feather icon-check-circle';
                 $notificacion->status = 0;
                 $notificacion->save();
-            }*/
+            }
 
             return redirect('admin/services/confirmed')->with('msj-exitoso', 'El servicio ha sido iniciado con éxito.');
         }
@@ -810,7 +790,7 @@ class ServiceController extends Controller
         $log->save();
 
         if (Auth::user()->role_id == 2){
-            /*if ($servicio->user_id != 0){
+            if ($servicio->user_id != 0){
                 $notificacion = new Notification();
                 $notificacion->user_id = $servicio->user_id;
                 $notificacion->service_id = $servicio->id;
@@ -826,11 +806,11 @@ class ServiceController extends Controller
             $notificacion2->title = 'El brever ha iniciado el servicio';
             $notificacion2->icon = 'feather icon-check-circle';
             $notificacion2->status = 0;
-            $notificacion2->save();*/
+            $notificacion2->save();
 
             return redirect('brever')->with('msj-exitoso', 'El servicio ha sido marcado como iniciado con éxito.');
         }else{
-            /*if ($servicio->user_id != 0){
+            if ($servicio->user_id != 0){
                 $notificacion = new Notification();
                 $notificacion->user_id = $servicio->user_id;
                 $notificacion->service_id = $servicio->id;
@@ -838,7 +818,7 @@ class ServiceController extends Controller
                 $notificacion->icon = 'feather icon-check-circle';
                 $notificacion->status = 0;
                 $notificacion->save();
-            }*/
+            }
 
             return redirect('admin/services/assigned')->with('msj-exitoso', 'El servicio ha sido confirmado con éxito.');
         }
@@ -1185,15 +1165,15 @@ class ServiceController extends Controller
             $log->action = 'Llegada al punto inicial';
             $log->save();
 
-            /*if ($servicio->user_id != 0){
+            if ($servicio->user_id != 0){
                 $notificacion = new Notification();
                 $notificacion->user_id = $servicio->user_id;
                 $notificacion->service_id = $servicio->id;
-                $notificacion->title = 'El Brever ha llegado al punto inicial';
+                $notificacion->title = 'El Brever ha lleado al punto inicial';
                 $notificacion->icon = 'feather icon-check-circle';
                 $notificacion->status = 0;
                 $notificacion->save();
-            }*/
+            }
         }else if ($request->status == 3){
             $log = new Log();
             $log->service_id = $servicio->id;
@@ -1201,7 +1181,7 @@ class ServiceController extends Controller
             $log->action = 'Servicio Iniciado';
             $log->save();
 
-            /*if ($servicio->user_id != 0){
+            if ($servicio->user_id != 0){
                 $notificacion = new Notification();
                 $notificacion->user_id = $servicio->user_id;
                 $notificacion->service_id = $servicio->id;
@@ -1209,7 +1189,7 @@ class ServiceController extends Controller
                 $notificacion->icon = 'feather icon-check-circle';
                 $notificacion->status = 0;
                 $notificacion->save();
-            }*/
+            }
         }else if ($request->status == 4 ){
             $log = new Log();
             $log->service_id = $servicio->id;

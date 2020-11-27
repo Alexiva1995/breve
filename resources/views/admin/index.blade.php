@@ -652,7 +652,7 @@
                                 @foreach ($serviciosProximos as $servicio)
                                     <tr>
                                         <td>{{ $servicio->id }}</td>
-                                        <td>{{ date('d-m-Y', strtotime($servicio->date)) }}</td>
+                                        <td>{{ date('Y-m-d', strtotime($servicio->date)) }}</td>
                                         <td>{{ date('H:i', strtotime($servicio->time)) }}</td>
                                         <td>
                                             @if ($servicio->user_id == 0)
