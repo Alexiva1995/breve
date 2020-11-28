@@ -24,3 +24,7 @@ TABLA REMEMBER DATA
 
 Dev: Carlos Gonzalez
 * Agregar a la bd las tablas de conversation y message, que este en la carpeta para el uso del chat
+
+/********* 27/11/2020 *********/
+TABLA SERVICES
+*Nuevo campo immediately tinyint(1) NULL Predeterminado = 0
