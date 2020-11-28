@@ -80,13 +80,6 @@
         <div class="sidenav-overlay"></div>
         <div class="drag-target"></div>
 
-        <div class="contenedor">
-            {{--@include('layouts.includes.users_support')--}}
-             <button class="botonF1">
-                <a href="https://wa.me/573508663301" target="_blank" style="color: white;"><span><i class="fab fa-whatsapp"></i></span></a>
-            </button> 
-        </div>
-
 
          <!-- BEGIN: Footer-->
          <footer class="footer footer-static footer-light">

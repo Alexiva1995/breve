@@ -283,22 +283,32 @@ class ServiceController extends Controller
     /**** Admin / Servicios / Listado de Servicios / Ver Más ****/
     /**** Brever / Servicios / Listado de Servicios / Ver Más ****/
     public function show($id){
-        $notificacionesPendientes = Notification::where('service_id','=', $id)
+        if (Auth::user()->role_id == 1){
+            $notificacionesPendientes = Notification::where('service_id','=', $id)
                                             ->where('user_id', '=', Auth::user()->id)
                                             ->get();
-        
-        foreach ($notificacionesPendientes as $not){
-            if ($not->status == 0){
-                $not->status = 1;
-                $not->save();
+            
+            foreach ($notificacionesPendientes as $not){
+                if ($not->status == 0){
+                    $not->status = 1;
+                    $not->save();
+                }
             }
-        }
-        
-        if (Auth::user()->role_id == 1){
+                                            
             $servicio = Service::find($id);
 
             return view('client.showService')->with(compact('servicio'));
         }else if (Auth::user()->role_id == 2){
+            $notificacionesPendientes = Notification::where('service_id','=', $id)
+                                            ->where('user_id', '=', Auth::user()->id)
+                                            ->get();
+            
+            foreach ($notificacionesPendientes as $not){
+                if ($not->status == 0){
+                    $not->status = 1;
+                    $not->save();
+                }
+            }
             $servicio = Service::find($id);
 
             $servicio->sender_address_plus = str_replace(" ", "+", $servicio->sender_address);
@@ -306,6 +316,16 @@ class ServiceController extends Controller
 
             return view('brever.showService')->with(compact('servicio'));
         }else{
+            $notificacionesPendientes = Notification::where('service_id','=', $id)
+                                            ->where('user_id', '=', 0)
+                                            ->get();
+            
+            foreach ($notificacionesPendientes as $not){
+                if ($not->status == 0){
+                    $not->status = 1;
+                    $not->save();
+                }
+            }
             $servicio = Service::where('id', '=', $id)
                             ->withCount('logs')
                             ->first();
@@ -313,6 +333,7 @@ class ServiceController extends Controller
             return view('admin.showService')->with(compact('servicio'));
         }
     }
+
 
     /**** Editar un Servicio ****/
     /**** Admin / Servicios / Listado de Servicios / Ver / Editar ****/
