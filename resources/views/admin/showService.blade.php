@@ -72,7 +72,7 @@
                                         @endif
                                     </ul><br>
                             	</div>
-                            	
+
                             	<div class="col-md-6">
                             		<ul class="list-group">
                                         <a href="#" class="list-group-item active"><strong>Datos del Servicio</strong></a>
@@ -92,7 +92,13 @@
                                             <p class="float-left mb-0">
                                                 <i class="feather icon-clock mr-1"></i>
                                             </p>
-                                            <span>Hora: <b>{{ date('H:i', strtotime($servicio->time)) }}</b></span>
+                                            <span>Hora:
+                                                @if ($servicio->immediately == 1 && is_null($servicio->time))
+                                                    <strong style="color: #EA5455">Inmediato</strong>
+                                                @else
+                                                    <b>{{ date('H:i', strtotime($servicio->time)) }}</b>
+                                                @endif
+                                            </span>
                                         </li>
                                         <li class="list-group-item d-flex">
                                             <p class="float-left mb-0">
@@ -172,7 +178,7 @@
                                             <span>Total: <b> @if ($servicio->rate_status == 1) ${{ $servicio->total }} @else SIn Calcular @endif</b></span>
                                         </li>
                                     </ul>
-                                    
+
                                     @if ( ($servicio->status == 4) && ($servicio->logs_count > 0) )
                                         <div class="text-center">
                                             <br>

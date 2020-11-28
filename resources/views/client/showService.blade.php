@@ -101,7 +101,7 @@
                                         </li>
                                     </ul><br>
                             	</div>
-                            	
+
                             	<div class="col-md-6">
                             		<ul class="list-group">
                                         <a href="#" class="list-group-item active"><strong>Datos del Servicio</strong></a>
@@ -115,7 +115,13 @@
                                             <p class="float-left mb-0">
                                                 <i class="feather icon-clock mr-1"></i>
                                             </p>
-                                            <span>Hora: <b>{{ date('H:i', strtotime($servicio->time)) }}</b></span>
+                                            <span>Hora:
+                                                @if ($servicio->immediately == 1 && is_null($servicio->time))
+                                                    <strong style="color: #EA5455">Inmediato</strong>
+                                                @else
+                                                    <b>{{ date('H:i', strtotime($servicio->time)) }}</b>
+                                                @endif
+                                            </span>
                                         </li>
                                         <li class="list-group-item d-flex">
                                             <p class="float-left mb-0">
@@ -140,7 +146,7 @@
 	                                            <i class="feather icon-disc mr-1"></i>
 	                                        </p>
 	                                        <span>Estado: <b>@if ($servicio->status == 0) Pendiente @elseif ($servicio->status == 1) Asignado @elseif ($servicio->status == 2) Iniciado @elseif ($servicio->status == 3) Confirmado @elseif ($servicio->status == 4) Completado @else Declinado @endif</b></span>
-	                                    </li>
+                                        </li>
 	                                    @if (!is_null($servicio->brever_id))
                                         	<li class="list-group-item d-flex">
 	                                            <p class="float-left mb-0">
@@ -151,7 +157,7 @@
                                         @endif
                                     </ul>
                                 </div>
-                                
+
                             	<div class="col-md-6">
                             		<ul class="list-group">
                             			<a href="#" class="list-group-item active"><strong>Datos de Pago</strong></a>
@@ -196,7 +202,7 @@
                                             <span>Total: <b> @if ($servicio->rate_status == 1) ${{ $servicio->total }} @else Sin Calcular @endif</b></span>
                                         </li>
                                     </ul>
-                                    
+
                                     @if ( ($servicio->status == 4) && (!is_null($servicio->delivery_photo)) )
                                         <div class="text-center">
                                             <br>
@@ -206,7 +212,7 @@
                             	</div>
                             		</ul>
                                 </div>
-                                
+
                                 @if (!is_null($servicio->brever_id) && $servicio->status < 4)
                                     <div class="col-md-12 mt-2">
                                         <ul class="list-group">
@@ -218,7 +224,7 @@
                                                     @else
                                                         <img class="round_" src="{{ asset('images/users/'.$servicio->brever->avatar) }}" alt="avatar" width="107" height="107">
                                                     @endif
-                                                </span>  
+                                                </span>
                                                 <div class="list-group-item d-flex list-data-brever first">
                                                     <p class="float-left mb-0">
                                                         <i class="feather icon-credit-card mr-1"></i>
@@ -237,7 +243,7 @@
                                                     </p>
                                                     <span>Licencia: <b> @if ($servicio->brever->license_plate) {{ $servicio->brever->license_plate }} @else Sin licencia @endif </b></span>
                                                 </div>
-                                            </li>  
+                                            </li>
                                         </ul>
                                     </div>
                                 @endif

@@ -575,6 +575,21 @@
             }
         }
 
+        function immediatelyCheck(){
+            if (document.getElementById('immediately_check').checked){
+                $("#time").attr("disabled", true);
+                $("#time").prop('required', false);
+                $("#time").removeClass("required");
+                $("#time").val("");
+                $("#immediately").val(1);
+            } else {
+                $("#time").attr("disabled", false);
+                $("#time").prop('required', true);
+                $("#time").addClass("required");
+                $("#immediately").val(0);
+            }
+        }
+
         function loadSenderData(){
             //var path = "http://localhost:8000/services/load-data/"+document.getElementById("sender_data").value;
             var path = "https://www.breve.com.co/breve2/services/load-data/"+document.getElementById("sender_data").value;
@@ -688,7 +703,13 @@
                                         @foreach ($serviciosPendientes as $servicio)
                                             <tr>
                                                 <td class="text-center">{{ date('Y-m-d', strtotime($servicio->date)) }}</td>
-                                                <td class="text-center">{{ date('H:i', strtotime($servicio->time)) }}</td>
+                                                <td class="text-center">
+                                                    @if ($servicio->immediately == 1 && is_null($servicio->time))
+                                                        <strong style="color: #EA5455">Inmediato</strong>
+                                                    @else
+                                                        <b>{{ date('H:i', strtotime($servicio->time)) }}</b>
+                                                    @endif
+                                                </td>
                                                 <td class="text-center">{{ $servicio->sender_neighborhood }} - {{ $servicio->receiver_neighborhood }}</td>
                                                 <td class="text-center">${{ number_format($servicio->rate, 0, '.', ',') }}</td>
                                                 <td class="text-center">
@@ -772,6 +793,7 @@
                                         <input type="hidden" name="receiver_latitude" id="receiver_latitude">
                                         <input type="hidden" name="receiver_longitude" id="receiver_longitude">
                                         <input type="hidden" name="user_id" id="user_id" value="{{ Auth::user()->id }}">
+                                        <input type="hidden" name="immediately" id="immediately">
                                         <!-- Paso 1 (Mapa) -->
                                         <h6><i class="step-icon feather icon-map-pin"></i>Paso 1</h6>
                                         <fieldset>
@@ -1023,17 +1045,34 @@
                                         <h6><i class="step-icon feather icon-briefcase"></i> Paso 3</h6>
                                         <fieldset>
                                             <div class="row">
-                                                <div class="col-md-6">
+                                                <div class="col-md-5">
                                                     <div class="form-group">
                                                         <label for="date">Fecha</label>
                                                         <input type="date" class="form-control required" id="date" name="date" min="{{ date('Y-m-d') }}" value="{{ date('Y-m-d') }}">
                                                     </div>
                                                 </div>
-                                                <div class="col-md-6">
+                                                <div class="col-md-4">
                                                     <div class="form-group">
                                                         <label for="time">Hora <i class="fas fa-info-circle" data-toggle="tooltip" title="2 Horas de Anticipación"></i></label>
                                                         <input type="time" class="form-control required" id="time" name="time" min="07:00" max="19:00" value="{{ date('H:i') }}">
                                                     </div>
+                                                </div>
+                                                <div class="col-md-3 text-right">
+                                                    <ul class="list-unstyled my-2">
+                                                        <li class="d-inline-block mr-2">
+                                                            <fieldset>
+                                                                <div class="vs-checkbox-con vs-checkbox-primary">
+                                                                    <input type="checkbox" name="immediately_check_data" id="immediately_check" onclick="immediatelyCheck();">
+                                                                    <span class="vs-checkbox">
+                                                                        <span class="vs-checkbox--check">
+                                                                            <i class="vs-icon feather icon-check"></i>
+                                                                        </span>
+                                                                    </span>
+                                                                    <span class="">Inmediatamente</span>
+                                                                </div>
+                                                            </fieldset>
+                                                        </li>
+                                                    </ul>
                                                 </div>
                                             </div>
                                             <div class="row">
@@ -1044,8 +1083,8 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <label for="date">Equipo Breve</label>
-                                                    <ul class="list-unstyled mb-0">
+                                                    <label for="equipment_type">Equipo Breve</label>
+                                                    <ul class="list-unstyled">
                                                         <li class="d-inline-block mr-2">
                                                             <fieldset>
                                                                 <div class="vs-checkbox-con vs-checkbox-primary">
@@ -1066,7 +1105,7 @@
                                                                 </div>
                                                             </fieldset>
                                                         </li>
-                                                         <li class="d-inline-block mr-2">
+                                                        <li class="d-inline-block mr-2">
                                                             <fieldset>
                                                                 <div class="vs-checkbox-con vs-checkbox-primary">
                                                                     <label class="checkeable">

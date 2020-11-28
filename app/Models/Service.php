@@ -7,10 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 class Service extends Model{
     protected $table = 'services';
 
-    protected $fillable = ['user_id', 'client_name', 'sender', 'sender_name', 'sender_phone', 'sender_neighborhood', 'sender_address', 'sender_address_opc', 'sender_latitude', 'sender_longitude', 'receiver', 'receiver_name', 'receiver_phone', 
-        'receiver_neighborhood',  'receiver_address', 'receiver_address_opc', 'receiver_latitude', 
-        'receiver_longitude', 'date', 'time', 'article', 'equipment_type', 'payment_type', 'payment_method', 
-        'payment_status', 'refund_amount', 'rate', 'additional_cost', 'total', 'observations', 'brever_id', 'status', 'rate_status', 'delivery_photo'];
+    protected $fillable = ['user_id', 'client_name', 'sender', 'sender_name', 'sender_phone', 'sender_neighborhood', 'sender_address', 'sender_address_opc', 'sender_latitude', 'sender_longitude', 'receiver', 'receiver_name', 'receiver_phone',
+        'receiver_neighborhood',  'receiver_address', 'receiver_address_opc', 'receiver_latitude',
+        'receiver_longitude', 'date', 'time', 'article', 'equipment_type', 'payment_type', 'payment_method',
+        'payment_status', 'refund_amount', 'rate', 'additional_cost', 'total', 'observations', 'brever_id', 'status', 'rate_status', 'delivery_photo', 'immediately'];
 
     public function user(){
     	return $this->belongsTo('App\Models\User');

@@ -5,7 +5,7 @@
         $('#myTable').DataTable( {
             dom: 'frtip',
             "order": [
-                [1, 'asc']
+                [2, 'desc']
             ],
             columnDefs: [ {
               targets: 0,
@@ -18,13 +18,13 @@
             $("#breverModal").modal('show');
         }
 
-        function copiar($servicio){   
+        function copiar($servicio){
             let copyText = document.getElementById('div_copy_'+$servicio).innerText
             const textArea = document.createElement('textarea');
             textArea.textContent = copyText;
-            document.body.append(textArea);      
-            textArea.select();      
-            document.execCommand("copy");    
+            document.body.append(textArea);
+            textArea.select();
+            document.execCommand("copy");
             textArea.remove();
 
         }
@@ -80,13 +80,13 @@
 
                                     <div class="col-md-6 col-sm-6 col-6 text-right">
                                         <button class="btn btn-primary waves-effect waves-light" type="submit"><i class="fa fa-search"></i> Buscar</button>
-                                    </div>   
+                                    </div>
                                     <div class="col-md-6 col-sm-6 col-6 text-left">
                                         <a class="btn btn-warning waves-effect waves-light" style="color: white;" href="{{ route('admin.services') }}"><i class="fas fa-redo-alt"></i> Limpiar Filtros</a>
-                                    </div>   
+                                    </div>
                                 </div><br>
                             </form>
-                            
+
                             <div class="table-responsive">
                                 <table class="table" id="myTable">
                                     <thead>
@@ -106,7 +106,13 @@
                                             <tr>
                                                 <td>{{ $servicio->id }}</td>
                                                 <td>{{ date('Y-m-d', strtotime($servicio->date)) }}</td>
-                                                <td>{{ date('H:i', strtotime($servicio->time)) }}</td>
+                                                <td>
+                                                    @if ($servicio->immediately == 1 && is_null($servicio->time))
+                                                        <strong style="color: #EA5455">Inmediato</strong>
+                                                    @else
+                                                        {{ date('H:i', strtotime($servicio->time)) }}
+                                                    @endif
+                                                </td>
                                                 <td>
                                                     @if ($servicio->user_id == 0)
                                                         {{ $servicio->client_name }} (No Registrado)
@@ -121,7 +127,7 @@
                                                 <td>
                                                     @if ($servicio->rate_status == 1)
                                                         ${{ $servicio->rate + $servicio->additional_cost }}
-                                                    @else  
+                                                    @else
                                                         Sin Calcular
                                                     @endif
                                                 </td>
@@ -171,7 +177,7 @@
             </div>
         </div>
     </section>
-    
+
     {{-- Modal para Asignar un Brever a un Servicio --}}
     <div class="modal fade text-left" id="breverModal" tabindex="-1" role="dialog" style="display: none;" aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document">

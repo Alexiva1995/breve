@@ -47,7 +47,7 @@ class ServiceController extends Controller
                             ->orderBy('date', 'ASC')
                             ->orderBy('time', 'ASC')
                             ->get();
-            
+
             $breves = DB::table('users')
                         ->select('id', 'name')
                         ->where('role_id', '=', 2)
@@ -91,7 +91,7 @@ class ServiceController extends Controller
             $cantDatosRecogida = $datosRecogida->count();
 
             $cantDomicilios = $domicilios->count();
-            
+
             return view('client.createService')->with(compact('domicilios', 'cantDomicilios', 'datosEnvio', 'cantDatosEnvio', 'datosRecogida', 'cantDatosRecogida'));
         }else{
             $clientes = DB::table('users')
@@ -121,7 +121,7 @@ class ServiceController extends Controller
                 $servicio->payment_type = 'final';
             }
         }
-        
+
         $equipment_type = "";
         if (!is_null($request->equipment_type)){
             foreach ($request->equipment_type as $equipo) {
@@ -130,7 +130,7 @@ class ServiceController extends Controller
                 }else{
                     $equipment_type = $equipment_type."; ".$equipo;
                 }
-                 
+
             }
         }else{
             $equipment_type = "Maletin; MB; Canasta";
@@ -171,7 +171,7 @@ class ServiceController extends Controller
                 $datosEnvio->address_opc = $request->sender_address_opc;
                 $datosEnvio->type = 'sender';
                 $datosEnvio->save();
-            } 
+            }
             //Guardar datos de recogida para futuros servicios
             if (!is_null($request->remember_receiver_data)){
                 $datosRecogida = new RememberData();
@@ -202,7 +202,7 @@ class ServiceController extends Controller
                 $domicilio->save();
             }
         }
-        
+
         if ( (Auth::guest()) || (Auth::user()->role_id != 3) ){
             $notificacion = new Notification();
             $notificacion->user_id = 0;
@@ -240,7 +240,7 @@ class ServiceController extends Controller
                             ->get();
 
         $cantDatosRecogida = $datosRecogida->count();
-            
+
         return response()->json(
             ["datosEnvio" => $datosEnvio,  "datosRecogida" => $datosRecogida, "cantDatosEnvio" => $cantDatosEnvio, "cantDatosRecogida" => $cantDatosRecogida]
         );
@@ -251,6 +251,10 @@ class ServiceController extends Controller
         $servicio = Service::find($request->service_id);
         $servicio->brever_id = $request->brever_id;
         $servicio->status = 1;
+        $date = Carbon::now();
+        $date->subHour(4);
+        $horaInicio = $date->format('H:i');
+        if ($servicio->immediately == 1) $servicio->time = $horaInicio;
         $servicio->save();
 
         $notificacion = new Notification();
@@ -270,12 +274,12 @@ class ServiceController extends Controller
             $notificacion2->status = 0;
             $notificacion2->save();
         }
-       
+
 
         if (isset($request->home)){
             return redirect('admin')->with('msj-exitoso', 'El brever ha sido asignado al servicio con éxito');
         }
-        
+
         return redirect('admin/services')->with('msj-exitoso', 'El brever ha sido asignado al servicio con éxito');
     }
 
@@ -286,14 +290,14 @@ class ServiceController extends Controller
         $notificacionesPendientes = Notification::where('service_id','=', $id)
                                             ->where('user_id', '=', Auth::user()->id)
                                             ->get();
-        
+
         foreach ($notificacionesPendientes as $not){
             if ($not->status == 0){
                 $not->status = 1;
                 $not->save();
             }
         }
-        
+
         if (Auth::user()->role_id == 1){
             $servicio = Service::find($id);
 
@@ -309,7 +313,7 @@ class ServiceController extends Controller
             $servicio = Service::where('id', '=', $id)
                             ->withCount('logs')
                             ->first();
-            
+
             return view('admin.showService')->with(compact('servicio'));
         }
     }
@@ -322,7 +326,7 @@ class ServiceController extends Controller
         $equipment_type = explode("; ", $servicio->equipment_type);
         if (Auth::user()->role_id == 1){
             return view('client.editService')->with(compact('servicio', 'equipment_type'));
-        }else{    
+        }else{
             $breves = DB::table('users')
                         ->select('id', 'name')
                         ->where('role_id', '=', 2)
@@ -336,9 +340,9 @@ class ServiceController extends Controller
 
     /**** Admin / Servicios / Listado de Servicios / Ver - Editar ****/
     public function update(Request $request){
-       
+
         $servicio = Service::find($request->service_id);
- 
+
         $checkCompleted = 0;
         if ( ($servicio->status != 4) && ($request->status == 4) ){
             $checkCompleted = 1;
@@ -356,7 +360,7 @@ class ServiceController extends Controller
         if ($request->status == "0"){
             $servicio->brever_id = null;
         }
-        
+
         if (!is_null($request->equipment_type)){
             $equipment_type = "";
             foreach ($request->equipment_type as $equipo) {
@@ -365,25 +369,25 @@ class ServiceController extends Controller
                 }else{
                     $equipment_type = $equipment_type."; ".$equipo;
                 }
-                 
+
             }
             $servicio->equipment_type = $equipment_type;
         }
-        
+
         if ($servicio->payment_method == 'reembolso'){
             $servicio->total = $servicio->rate + $servicio->additional_cost + $servicio->refund_amount;
         }else{
             $servicio->total = $servicio->rate + $servicio->additional_cost;
             $servicio->refund_amount = 0;
         }
-        
+
         $servicio->save();
 
         if ($checkCompleted == 1){
             $servicioMarcado = DB::table('balances')
                                 ->where('service_id', '=', $servicio->id)
                                 ->first();
-            
+
             if (is_null($servicioMarcado)){
                     $datosBrever = User::find($servicio->brever_id);
 
@@ -412,7 +416,7 @@ class ServiceController extends Controller
 
                     $datosBrever->balance = $saldoBrever->brever_balance;
                     $datosBrever->save();
-                
+
             }
         }
 
@@ -423,7 +427,7 @@ class ServiceController extends Controller
                 $log->user_id = Auth::user()->id;
                 $log->action = 'Servicio Asignado a Brever';
                 $log->save();
-                
+
                 $notificacion = new Notification();
                 $notificacion->user_id = $servicio->brever_id;
                 $notificacion->service_id = $servicio->id;
@@ -677,7 +681,7 @@ class ServiceController extends Controller
 
             return view('admin.servicesAssigned')->with(compact('servicios', 'clientes', 'brevers'));
         }
-       
+
     }
 
     /**** Admin / Servicios / Servicios Asignados / Iniciar ****/
@@ -686,9 +690,9 @@ class ServiceController extends Controller
         if ($id == 0){
             $servicio = Service::find($request->service_id);
         }else{
-           $servicio = Service::find($id); 
+           $servicio = Service::find($id);
         }
-        
+
         $servicio->status = 2;
         $servicio->save();
 
@@ -731,7 +735,7 @@ class ServiceController extends Controller
 
             return redirect('admin/services/confirmed')->with('msj-exitoso', 'El servicio ha sido iniciado con éxito.');
         }
-        
+
     }
 
     /**** Listado de Servicios Iniciados ****/
@@ -778,7 +782,7 @@ class ServiceController extends Controller
         if ($id == 0){
             $servicio = Service::find($request->service_id);
         }else{
-           $servicio = Service::find($id); 
+           $servicio = Service::find($id);
         }
         $servicio->status = 3;
         $servicio->save();
@@ -822,7 +826,7 @@ class ServiceController extends Controller
 
             return redirect('admin/services/assigned')->with('msj-exitoso', 'El servicio ha sido confirmado con éxito.');
         }
-        
+
     }
 
     /**** Listado de Servicios Confirmados ****/
@@ -859,7 +863,7 @@ class ServiceController extends Controller
         if ($id == 0){
             $servicio = Service::find($request->service_id);
         }else{
-           $servicio = Service::find($id); 
+           $servicio = Service::find($id);
         }
 
         $servicio->status = 4;
@@ -882,7 +886,7 @@ class ServiceController extends Controller
 
                 $saldoBrever = new Balance();
                 $saldoBrever->brever_id = $servicio->brever_id;
-                
+
                 $saldoBrever->type = 'Domicilio Breve';
                 $saldoBrever->brever_commission = (($servicio->rate + $servicio->additional_cost) * 0.75);
                 $saldoBrever->breve_commission = (($servicio->rate + $servicio->additional_cost) - $saldoBrever->brever_commission);
@@ -940,7 +944,7 @@ class ServiceController extends Controller
             $notificacion->icon = 'feather icon-check-circle';
             $notificacion->status = 0;
             $notificacion->save();
-            
+
             if ($servicio->user_id != 0){
                 $notificacion2 = new Notification();
                 $notificacion2->user_id = $servicio->user_id;
@@ -992,7 +996,7 @@ class ServiceController extends Controller
 
             return view('admin.servicesCanceled')->with(compact('servicios', 'clientes', 'brevers'));
         }
-        
+
     }
 
     /**** Histórico de Servicios ****/
@@ -1032,7 +1036,7 @@ class ServiceController extends Controller
         $servicio = Service::find($id);
         $servicio->payment_status = 1;
         $servicio->save();
-        
+
         return redirect('admin/financial/pending-payments')->with('msj-exitoso', 'El pago ha sido confirmado con éxito.');
     }
 
@@ -1108,7 +1112,7 @@ class ServiceController extends Controller
 
                 $saldoBrever = new Balance();
                 $saldoBrever->brever_id = $servicio->brever_id;
-                
+
                 $saldoBrever->type = 'Domicilio Breve';
                 $saldoBrever->brever_commission = (($servicio->rate + $servicio->additional_cost) * 0.75);
                 $saldoBrever->breve_commission = (($servicio->rate + $servicio->additional_cost) - $saldoBrever->brever_commission);

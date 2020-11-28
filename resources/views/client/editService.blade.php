@@ -15,8 +15,8 @@
 	<script>
 		var map;
         var coords = {};
-        var marker;   
-        var marker2; 
+        var marker;
+        var marker2;
         var geocoder;
         var directionsDisplay;
         var directionsService;
@@ -29,14 +29,14 @@
             //usamos la API para geolocalizar el usuario
             navigator.geolocation.getCurrentPosition(
                 function (position){
-                    mapaInicial(); 
+                    mapaInicial();
                 },function(error){
                     console.log(error);
                 }
             );
         }
- 
-        function mapaInicial(){  
+
+        function mapaInicial(){
             geocoder = new google.maps.Geocoder();
             if ( (document.getElementById("sender_address").value != "") && (document.getElementById("receiver_address").value != "") ){
                 var request = {
@@ -72,7 +72,7 @@
                             type: "error",
                             confirmButtonClass: 'btn btn-primary',
                             buttonsStyling: false,
-                        });  
+                        });
                        document.getElementById("submit-button").disabled = true;
                     }
                 });
@@ -91,7 +91,7 @@
             }
         }
 
-        function setMap(){   
+        function setMap(){
             document.getElementById("sender_search").disabled = false;
             document.getElementById("receiver_search").disabled = false;
             document.getElementById("sender_address_aux").disabled = false;
@@ -162,7 +162,7 @@
                 });
             });
         }
- 
+
         function toggleBounce() {
             if (marker.getAnimation() !== null) {
                 marker.setAnimation(null);
@@ -187,7 +187,7 @@
                     document.getElementById("sender_latitude").value = results[0].geometry.location.lat();
                     document.getElementById("sender_longitude").value = results[0].geometry.location.lng();
                     marker.setPosition(results[0].geometry.location);
-                    map.setCenter(marker.getPosition()); 
+                    map.setCenter(marker.getPosition());
 
                     document.getElementById("check_sender").value = "0";
                     geocoder.geocode({'latLng': marker.getPosition()}, function(results, status) {
@@ -212,7 +212,7 @@
                     document.getElementById("receiver_latitude").value = results[0].geometry.location.lat();
                     document.getElementById("receiver_longitude").value = results[0].geometry.location.lng();
                     marker2.setPosition(results[0].geometry.location);
-                    map.setCenter(marker2.getPosition()); 
+                    map.setCenter(marker2.getPosition());
 
                     document.getElementById("check_receiver").value = "0";
                     geocoder.geocode({'latLng': marker2.getPosition()}, function(results, status) {
@@ -246,7 +246,7 @@
                     type: "error",
                     confirmButtonClass: 'btn btn-primary',
                     buttonsStyling: false,
-                });   
+                });
                 document.getElementById("submit-button").disabled = true;
             }else{
                 var request = {
@@ -323,7 +323,7 @@
                 document.getElementById('sender_latitude').value = near_place.geometry.location.lat();
                 document.getElementById('sender_longitude').value = near_place.geometry.location.lng();
                 marker.setPosition( near_place.geometry.location);
-                map.setCenter(marker.getPosition()); 
+                map.setCenter(marker.getPosition());
 
                 document.getElementById("check_sender").value = "0";
                 geocoder.geocode({'latLng': marker.getPosition()}, function(results, status) {
@@ -344,7 +344,7 @@
                 document.getElementById('receiver_latitude').value = near_place.geometry.location.lat();
                 document.getElementById('receiver_longitude').value = near_place.geometry.location.lng();
                 marker2.setPosition(near_place.geometry.location);
-                map.setCenter(marker2.getPosition()); 
+                map.setCenter(marker2.getPosition());
 
                 document.getElementById("check_receiver").value = "0";
                 geocoder.geocode({'latLng': marker2.getPosition()}, function(results, status) {
@@ -379,6 +379,21 @@
 
         function updateTotal(){
             document.getElementById("total").value = parseInt(document.getElementById("total2").value) + parseInt(document.getElementById("refund_amount").value);
+        }
+
+        function immediatelyCheck(){
+            if (document.getElementById('immediately_check').checked){
+                $("#time").attr("disabled", true);
+                $("#time").prop('required', false);
+                $("#time").removeClass("required");
+                $("#time").val("");
+                $("#immediately").val(1);
+            } else {
+                $("#time").attr("disabled", false);
+                $("#time").prop('required', true);
+                $("#time").addClass("required");
+                $("#immediately").val(0);
+            }
         }
 	</script>
 @endpush
@@ -426,7 +441,7 @@
 
                                             <br class="d-block d-sm-none">
                                         </div>
-                                        
+
                                         <div class="col-md-6">
                                             <fieldset>
                                                 <div class="input-group">
@@ -472,7 +487,8 @@
                                         <input type="hidden" name="receiver_longitude" id="receiver_longitude" value="{{ $servicio->receiver_longitude }}">
                                         <input type="hidden" name="sender_address" id="sender_address" value="{{ $servicio->sender_address }}">
                                         <input type="hidden" name="receiver_address" id="receiver_address" value="{{ $servicio->receiver_address }}">
-						                <input type="hidden" class="form-control" name="rate" id="rate" value="{{ $servicio->rate }}">
+                                        <input type="hidden" class="form-control" name="rate" id="rate" value="{{ $servicio->rate }}">
+                                        <input type="hidden" name="immediately" id="immediately" value="{{ $servicio->immediately }}">
                                 		<div class="row">
 	                                	 	<div class="col-sm-12 col-12">
 	                                            <div class="text-bold-600 font-medium-2 mb-1">
@@ -556,12 +572,29 @@
 	                                                Hora del Servicio
 	                                            </div>
 	                                            <fieldset class="form-group position-relative has-icon-left">
-	                                                <input type="time" class="form-control" name="time" value="{{ $servicio->time }}" min="07:00" max="19:00">
+	                                                <input type="time" class="form-control" name="time" id="time" value="{{ $servicio->time }}" min="07:00" max="19:00" @if ($servicio->immediately == 1 && is_null($servicio->time)) disabled="" @endif>
 	                                                <div class="form-control-position">
 	                                                    <i class="fa fa-clock"></i>
 	                                                </div>
 	                                            </fieldset>
-	                                        </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <ul class="list-unstyled my-2">
+                                                    <li class="d-inline-block mr-2">
+                                                        <fieldset>
+                                                            <div class="vs-checkbox-con vs-checkbox-primary">
+                                                                <input type="checkbox" name="immediately_check_data" id="immediately_check" onclick="immediatelyCheck();" @if ($servicio->immediately == 1) checked="" @endif >
+                                                                <span class="vs-checkbox">
+                                                                    <span class="vs-checkbox--check">
+                                                                        <i class="vs-icon feather icon-check"></i>
+                                                                    </span>
+                                                                </span>
+                                                                <span>Inmediatamente</span>
+                                                            </div>
+                                                        </fieldset>
+                                                    </li>
+                                                </ul>
+                                            </div>
 	                                        <div class="col-sm-6 col-12">
 	                                            <div class="text-bold-600 font-medium-2 mb-1">
 	                                                Artículo a Transportar
@@ -581,7 +614,7 @@
                                                     <li class="d-inline-block mr-2">
                                                         <fieldset>
                                                             <div class="vs-checkbox-con vs-checkbox-primary">
-                                                                <input type="checkbox" name="equipment_type[]"  value="Maletin" @if (in_array("Maletin", $equipment_type)) checked="" @endif>
+                                                                <input type="checkbox" name="equipment_type[]"  value="Maletin" @if (in_array("Maletin", $equipment_type)) checked="true" @endif>
                                                                 <span class="vs-checkbox">
                                                                     <span class="vs-checkbox--check">
                                                                         <i class="vs-icon feather icon-check"></i>

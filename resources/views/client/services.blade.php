@@ -5,7 +5,7 @@
         $('#myTable').DataTable( {
             dom: 'frtip',
             "order": [
-                [0, 'asc']
+                [2, 'desc']
             ],
             columnDefs: [ {
               targets: 0,
@@ -57,7 +57,13 @@
                                         @foreach ($servicios as $servicio)
                                             <tr>
                                                 <td>{{ date('Y-m-d', strtotime($servicio->date)) }}</td>
-                                                <td>{{ date('H:i', strtotime($servicio->time)) }}</td>
+                                                <td>
+                                                    @if ($servicio->immediately == 1 && is_null($servicio->time))
+                                                        <strong style="color: #EA5455">Inmediato</strong>
+                                                    @else
+                                                        {{ date('H:i', strtotime($servicio->time)) }}
+                                                    @endif
+                                                </td>
                                                 <td>{{ $servicio->sender_neighborhood }} - {{ $servicio->receiver_neighborhood }}</td>
                                                 <td>
                                                     @if ($servicio->rate_status == 1)

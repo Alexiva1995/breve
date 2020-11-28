@@ -24,13 +24,13 @@
         $('#myTable').DataTable( {
             dom: 'frtip',
             "order": [
-                [1, 'asc']
+                [2, 'desc']
             ],
             drawCallback: function() {
                 $(".page-item .page-link").on('click', function(){
                     $('html, body').animate({
                         scrollTop: $("#card-table").offset().top
-                    }, 1000); 
+                    }, 1000);
                 });
             }
         });
@@ -88,21 +88,21 @@
                             $("#receiver_data").empty();
                             if (ans["cantDatosEnvio"] > 0){
                                 $("#sender_data").append('<option value="" selected disabled>Seleccione una opción...</option>');
-                                $.each(ans['datosEnvio'], function (ind, data) { 
+                                $.each(ans['datosEnvio'], function (ind, data) {
                                     if (data.alias_admin == null){
                                         $("#sender_data").append('<option value="'+data.id+'">'+data.alias+'</option>');
                                     }else{
                                         $("#sender_data").append('<option value="'+data.id+'">'+data.alias_admin+'</option>');
                                     }
-                                }); 
+                                });
                                 $("#sender_data_div").css('display', 'block');
                             }else{
                                 $("#sender_data_div").css('display', 'none');
                             }
-                            
+
                             if (ans["cantDatosEnvio"] > 0){
                                 $("#receiver_data").append('<option value="" selected disabled>Seleccione una opción...</option>');
-                                $.each(ans['datosRecogida'], function (ind, data) { 
+                                $.each(ans['datosRecogida'], function (ind, data) {
                                     if (data.alias_admin == null){
                                         $("#receiver_data").append('<option value="'+data.id+'">'+data.alias+'</option>');
                                     }else{
@@ -113,8 +113,8 @@
                             }else{
                                 $("#receiver_data_div").css('display', 'none');
                             }
-                        } 
-                    }); 
+                        }
+                    });
                     document.getElementById("client_name_div").style.display = 'none';
                     $('#client_name').removeAttr("required");
                     $('#remember_sender_check').removeAttr('disabled');
@@ -138,8 +138,8 @@
     <script>
         var map;
         var coords = {};
-        var marker;   
-        var marker2; 
+        var marker;
+        var marker2;
         var geocoder;
         var geocoder2;
         var directionsDisplay;
@@ -160,8 +160,8 @@
                 }
             );
         }
- 
-        function setMapa (coords){   
+
+        function setMapa (coords){
             map = new google.maps.Map(document.getElementById('mapa'),
             {
                 zoom: 13,
@@ -244,7 +244,7 @@
                 });
             });
         }
- 
+
         function toggleBounce() {
             if (marker.getAnimation() !== null) {
                 marker.setAnimation(null);
@@ -269,7 +269,7 @@
                     document.getElementById("sender_latitude").value = results[0].geometry.location.lat();
                     document.getElementById("sender_longitude").value = results[0].geometry.location.lng();
                     marker.setPosition(results[0].geometry.location);
-                    map.setCenter(marker.getPosition()); 
+                    map.setCenter(marker.getPosition());
 
                     document.getElementById("check_sender").value = "0";
                     geocoder.geocode({'latLng': marker.getPosition()}, function(results, status) {
@@ -294,7 +294,7 @@
                     document.getElementById("receiver_latitude").value = results[0].geometry.location.lat();
                     document.getElementById("receiver_longitude").value = results[0].geometry.location.lng();
                     marker2.setPosition(results[0].geometry.location);
-                    map.setCenter(marker2.getPosition()); 
+                    map.setCenter(marker2.getPosition());
 
                     document.getElementById("check_receiver").value = "0";
                     geocoder.geocode({'latLng': marker2.getPosition()}, function(results, status) {
@@ -328,7 +328,7 @@
                     type: "error",
                     confirmButtonClass: 'btn btn-primary',
                     buttonsStyling: false,
-                });   
+                });
                 $(".actions").hide();
             }else{
                 var request = {
@@ -362,7 +362,7 @@
                 document.getElementById("ready").style.display = 'none';
                 document.getElementById("restore_map").style.display = 'block';
                 $(".actions").show();
-            }     
+            }
         }
 
         function restoreMap(){
@@ -402,7 +402,7 @@
 
         $(document).ready(function () {
             $(".actions").hide();
-            
+
             autocomplete = new google.maps.places.Autocomplete((document.getElementById("sender_address_aux")), {
                 types: ['geocode'],
                  componentRestrictions: {
@@ -422,7 +422,7 @@
                 document.getElementById('sender_latitude').value = near_place.geometry.location.lat();
                 document.getElementById('sender_longitude').value = near_place.geometry.location.lng();
                 marker.setPosition(near_place.geometry.location);
-                map.setCenter(marker.getPosition()); 
+                map.setCenter(marker.getPosition());
 
                 document.getElementById("check_sender").value = "0";
                 geocoder.geocode({'latLng': marker.getPosition()}, function(results, status) {
@@ -443,7 +443,7 @@
                 document.getElementById('receiver_latitude').value = near_place.geometry.location.lat();
                 document.getElementById('receiver_longitude').value = near_place.geometry.location.lng();
                 marker2.setPosition(near_place.geometry.location);
-                map.setCenter(marker2.getPosition()); 
+                map.setCenter(marker2.getPosition());
 
                 document.getElementById("check_receiver").value = "0";
                 geocoder.geocode({'latLng': marker2.getPosition()}, function(results, status) {
@@ -511,8 +511,8 @@
                     $("#sender").val(ans.identification);
                     $("#sender_address_opc").val(ans.address_opc);
                     $("#sender_neighborhood").val(ans.neighborhood);
-                } 
-            }); 
+                }
+            });
         }
 
         function loadReceiverData(){
@@ -526,8 +526,8 @@
                     $("#receiver").val(ans.identification);
                     $("#receiver_address_opc").val(ans.address_opc);
                     $("#receiver_neighborhood").val(ans.neighborhood);
-                } 
-            }); 
+                }
+            });
         }
 
     </script>
@@ -536,11 +536,11 @@
         $(".page-item .page-link").on('click', function(){
             $('html, body').animate({
                 scrollTop: $("#card-table").offset().top
-            }, 1000); 
+            }, 1000);
         });
     </script>
 @endpush
-    
+
 @section('content')
     @if (Session::has('msj-exitoso'))
         <div class="col-md-12">
@@ -586,7 +586,7 @@
                     </div>
                 </div>
             </a>
-        </div> 
+        </div>
         <div class="col-lg-3 col-sm-6 col-12">
             <a href="{{ route('admin.services.completed') }}">
                 <div class="card">
@@ -653,7 +653,13 @@
                                     <tr>
                                         <td>{{ $servicio->id }}</td>
                                         <td>{{ date('Y-m-d', strtotime($servicio->date)) }}</td>
-                                        <td>{{ date('H:i', strtotime($servicio->time)) }}</td>
+                                        <td>
+                                            @if ($servicio->immediately == 1 && is_null($servicio->time))
+                                                <strong style="color: #EA5455">Inmediato</strong>
+                                            @else
+                                                {{ date('H:i', strtotime($servicio->time)) }}
+                                            @endif
+                                        </td>
                                         <td>
                                             @if ($servicio->user_id == 0)
                                                 {{ $servicio->client_name }} (No Registrado)
@@ -709,7 +715,7 @@
                             @csrf
                             <input type="hidden" name="service_id" id="service_id2">
                             <input type="hidden" name="status" id="status2">
-                        </form> 
+                        </form>
                     </div>
                 </div>
             </div>
@@ -752,7 +758,7 @@
 
                                                     <br class="d-block d-sm-none">
                                                 </div>
-                                                
+
                                                 <div class="col-md-6 col-sm-12">
                                                     <fieldset>
                                                         <div class="input-group">
@@ -777,7 +783,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            
+
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <span id="distance" style="font-weight: bold;">0.0 Kilómetros</span>
@@ -789,7 +795,7 @@
                                             </div>
                                             <br>
                                         </fieldset>
-                                        
+
                                         <h6><i class="step-icon feather icon-user"></i>Paso 2</h6>
                                         <fieldset>
                                             <div class="row">
@@ -858,7 +864,7 @@
                                                         <input type="text" class="form-control" name="sender_data_alias" id="sender_data_alias">
                                                     </div>
                                                 </div>
-                            
+
                                                 <div class="col-md-8 text-right">
                                                     <ul class="list-unstyled mb-0">
                                                         <li class="d-inline-block mr-2">
@@ -923,7 +929,7 @@
                                                         <input type="text" class="form-control" name="receiver_data_alias" id="receiver_data_alias">
                                                     </div>
                                                 </div>
-                            
+
                                                 <div class="col-md-8 text-right">
                                                     <ul class="list-unstyled mb-0">
                                                         <li class="d-inline-block mr-2">
@@ -1061,7 +1067,7 @@
             </section>
         </div>
     </div>
-    
+
     @if (Auth::user()->financial == 1)
         <div class="row">
             <div class="col-lg-12 col-12">
@@ -1113,3 +1119,4 @@
         </div>
     </div>
 @endsection
+
