@@ -107,120 +107,134 @@ class ServiceController extends Controller
 
     /**** Almacenar nuevo servicio ****/
     public function store(Request $request){
-        $servicio = new Service($request->all());
-        if ($servicio->payment_method == 'reembolso'){
-            $servicio->total = $servicio->rate + $servicio->refund_amount;
-        }else{
-            $servicio->total = $servicio->rate;
-            $servicio->refund_amount = 0;
-            if ($servicio->payment_method == 'efectivo-inicio'){
-                $servicio->payment_method = 'efectivo';
-                $servicio->payment_type = 'inicio';
-            }else if ($servicio->payment_method == 'efectivo-final'){
-                $servicio->payment_method = 'efectivo';
-                $servicio->payment_type = 'final';
-            }
-        }
-        
-        $equipment_type = "";
-        if (!is_null($request->equipment_type)){
-            foreach ($request->equipment_type as $equipo) {
-                if ($equipment_type == ""){
-                    $equipment_type = $equipo;
-                }else{
-                    $equipment_type = $equipment_type."; ".$equipo;
-                }
-                 
-            }
-        }else{
-            $equipment_type = "Maletin; MB; Canasta";
-        }
-        $servicio->equipment_type = $equipment_type;
-
-        if (is_null($servicio->sender_address_opc)){
-            $servicio->sender_address_opc = $servicio->sender_address;
-        }
-        if (is_null($servicio->receiver_address_opc)){
-            $servicio->receiver_address_opc = $servicio->receiver_address;
-        }
-        if (is_null($servicio->sender_address)){
-            $servicio->sender_address= $servicio->sender_address_opc;
-        }
-        if (is_null($servicio->receiver_address)){
-            $servicio->receiver_address = $servicio->receiver_address_opc;
-        }
-        $servicio->save();
-
-        if (!Auth::guest()){
-            //Guardar datos de envío para futuros servicios
-            if (!is_null($request->remember_sender_data)){
-                $datosEnvio = new RememberData();
-                if (Auth::user()->role_id == 1){
-                    $datosEnvio->user_id = Auth::user()->id;
-                    $datosEnvio->alias = $request->sender_data_alias;
-                    $datosEnvio->admin = 0;
-                }else{
-                    $datosEnvio->user_id = $request->user_id;
-                    $datosEnvio->alias_admin = $request->sender_data_alias;
-                    $datosEnvio->admin = 1;
-                }
-                $datosEnvio->identification = $request->sender;
-                /*$datosEnvio->name = $request->sender_name;
-                $datosEnvio->phone = $request->sender_phone;*/
-                $datosEnvio->neighborhood = $request->sender_neighborhood;
-                $datosEnvio->address_opc = $request->sender_address_opc;
-                $datosEnvio->type = 'sender';
-                $datosEnvio->save();
-            } 
-            //Guardar datos de recogida para futuros servicios
-            if (!is_null($request->remember_receiver_data)){
-                $datosRecogida = new RememberData();
-                if (Auth::user()->role_id == 1){
-                    $datosRecogida->user_id = Auth::user()->id;
-                    $datosRecogida->alias = $request->receiver_data_alias;
-                    $datosRecogida->admin = 0;
-                }else{
-                    $datosRecogida->user_id = $request->user_id;
-                    $datosRecogida->alias_admin = $request->receiver_data_alias;
-                    $datosRecogida->admin = 1;
-                }
-                $datosRecogida->identification = $request->receiver;
-                /*$datosRecogida->name = $request->receiver_name;
-                $datosRecogida->phone = $request->receiver_phone;*/
-                $datosRecogida->neighborhood = $request->receiver_neighborhood;
-                $datosRecogida->address_opc = $request->receiver_address_opc;
-                $datosRecogida->type = 'receiver';
-                $datosRecogida->save();
-            }
-
-            if (!is_null($request->remember_markers)){
-                $domicilio = new Address($request->all());
-                $domicilio->user_id = Auth::user()->id;
-                $domicilio->sender_address = $servicio->sender_address;
-                $domicilio->receiver_address = $servicio->receiver_address;
-                $domicilio->name = $request->markers_alias;
-                $domicilio->save();
-            }
-        }
-        
-        if ( (Auth::guest()) || (Auth::user()->role_id != 3) ){
-            $notificacion = new Notification();
-            $notificacion->user_id = 0;
-            $notificacion->service_id = $servicio->id;
-            $notificacion->title = 'Nueva solicitud de servicio';
-            $notificacion->icon = 'feather icon-plus-square';
-            $notificacion->status = 0;
-            $notificacion->save();
-        }
-
         if (Auth::guest()){
-            return redirect("https://api.whatsapp.com/send?phone=573508663301&text=He%20programado%20la%20solicitud%20de%20servicio%20n%C3%BAmero%20*".$servicio->id."*.%20Estar%C3%A9%20pendiente%20a%20la%20tarifa.");
+            $checkService = Service::where('user_id', '=', 0)
+                                ->where('client_name', '=', $request->client_name)
+                                ->where('date', '=', $request->date)
+                                ->where('time', '=', $request->time)
+                                ->first();
         }else{
-            if (Auth::user()->role_id == 1){
-                return redirect('services/show/'.$servicio->id)->with('msj-exitoso', 'Su servicio ha sido añadido con éxito');
+            $checkService = NULL;
+        }
+        
+        if (is_null($checkService)){
+            $servicio = new Service($request->all());
+            if ($servicio->payment_method == 'reembolso'){
+                $servicio->total = $servicio->rate + $servicio->refund_amount;
             }else{
-                return redirect('admin/services/show/'.$servicio->id)->with('msj-exitoso', 'El servicio ha sido creado con éxito');
+                $servicio->total = $servicio->rate;
+                $servicio->refund_amount = 0;
+                if ($servicio->payment_method == 'efectivo-inicio'){
+                    $servicio->payment_method = 'efectivo';
+                    $servicio->payment_type = 'inicio';
+                }else if ($servicio->payment_method == 'efectivo-final'){
+                    $servicio->payment_method = 'efectivo';
+                    $servicio->payment_type = 'final';
+                }
             }
+            
+            $equipment_type = "";
+            if (!is_null($request->equipment_type)){
+                foreach ($request->equipment_type as $equipo) {
+                    if ($equipment_type == ""){
+                        $equipment_type = $equipo;
+                    }else{
+                        $equipment_type = $equipment_type."; ".$equipo;
+                    }
+                     
+                }
+            }else{
+                $equipment_type = "Maletin; MB; Canasta";
+            }
+            $servicio->equipment_type = $equipment_type;
+    
+            if (is_null($servicio->sender_address_opc)){
+                $servicio->sender_address_opc = $servicio->sender_address;
+            }
+            if (is_null($servicio->receiver_address_opc)){
+                $servicio->receiver_address_opc = $servicio->receiver_address;
+            }
+            if (is_null($servicio->sender_address)){
+                $servicio->sender_address= $servicio->sender_address_opc;
+            }
+            if (is_null($servicio->receiver_address)){
+                $servicio->receiver_address = $servicio->receiver_address_opc;
+            }
+            $servicio->save();
+    
+            if (!Auth::guest()){
+                //Guardar datos de envío para futuros servicios
+                if (!is_null($request->remember_sender_data)){
+                    $datosEnvio = new RememberData();
+                    if (Auth::user()->role_id == 1){
+                        $datosEnvio->user_id = Auth::user()->id;
+                        $datosEnvio->alias = $request->sender_data_alias;
+                        $datosEnvio->admin = 0;
+                    }else{
+                        $datosEnvio->user_id = $request->user_id;
+                        $datosEnvio->alias_admin = $request->sender_data_alias;
+                        $datosEnvio->admin = 1;
+                    }
+                    $datosEnvio->identification = $request->sender;
+                    /*$datosEnvio->name = $request->sender_name;
+                    $datosEnvio->phone = $request->sender_phone;*/
+                    $datosEnvio->neighborhood = $request->sender_neighborhood;
+                    $datosEnvio->address_opc = $request->sender_address_opc;
+                    $datosEnvio->type = 'sender';
+                    $datosEnvio->save();
+                } 
+                //Guardar datos de recogida para futuros servicios
+                if (!is_null($request->remember_receiver_data)){
+                    $datosRecogida = new RememberData();
+                    if (Auth::user()->role_id == 1){
+                        $datosRecogida->user_id = Auth::user()->id;
+                        $datosRecogida->alias = $request->receiver_data_alias;
+                        $datosRecogida->admin = 0;
+                    }else{
+                        $datosRecogida->user_id = $request->user_id;
+                        $datosRecogida->alias_admin = $request->receiver_data_alias;
+                        $datosRecogida->admin = 1;
+                    }
+                    $datosRecogida->identification = $request->receiver;
+                    /*$datosRecogida->name = $request->receiver_name;
+                    $datosRecogida->phone = $request->receiver_phone;*/
+                    $datosRecogida->neighborhood = $request->receiver_neighborhood;
+                    $datosRecogida->address_opc = $request->receiver_address_opc;
+                    $datosRecogida->type = 'receiver';
+                    $datosRecogida->save();
+                }
+    
+                if (!is_null($request->remember_markers)){
+                    $domicilio = new Address($request->all());
+                    $domicilio->user_id = Auth::user()->id;
+                    $domicilio->sender_address = $servicio->sender_address;
+                    $domicilio->receiver_address = $servicio->receiver_address;
+                    $domicilio->name = $request->markers_alias;
+                    $domicilio->save();
+                }
+            }
+            
+            if ( (Auth::guest()) || (Auth::user()->role_id != 3) ){
+                $notificacion = new Notification();
+                $notificacion->user_id = 0;
+                $notificacion->service_id = $servicio->id;
+                $notificacion->title = 'Nueva solicitud de servicio';
+                $notificacion->icon = 'feather icon-plus-square';
+                $notificacion->status = 0;
+                $notificacion->save();
+            }
+    
+            if (Auth::guest()){
+                return redirect("https://api.whatsapp.com/send?phone=573508663301&text=He%20programado%20la%20solicitud%20de%20servicio%20n%C3%BAmero%20*".$servicio->id."*.%20Estar%C3%A9%20pendiente%20a%20la%20tarifa.");
+            }else{
+                if (Auth::user()->role_id == 1){
+                    return redirect('services/show/'.$servicio->id)->with('msj-exitoso', 'Su servicio ha sido añadido con éxito');
+                }else{
+                    return redirect('admin/services/show/'.$servicio->id)->with('msj-exitoso', 'El servicio ha sido creado con éxito');
+                }
+            }
+        }else{
+            return redirect("https://api.whatsapp.com/send?phone=573508663301&text=He%20programado%20la%20solicitud%20de%20servicio%20n%C3%BAmero%20*".$checkService->id."*.%20Estar%C3%A9%20pendiente%20a%20la%20tarifa.");
         }
     }
 
@@ -333,7 +347,6 @@ class ServiceController extends Controller
             return view('admin.showService')->with(compact('servicio'));
         }
     }
-
 
     /**** Editar un Servicio ****/
     /**** Admin / Servicios / Listado de Servicios / Ver / Editar ****/
@@ -712,12 +725,18 @@ class ServiceController extends Controller
         
         $servicio->status = 2;
         $servicio->save();
-
-        $log = new Log();
-        $log->service_id = $servicio->id;
-        $log->user_id = Auth::user()->id;
-        $log->action = 'Llegada al punto inicial';
-        $log->save();
+        
+        $checkLog = Log::where('service_id', '=', $servicio->id)
+                        ->where('action', '=', 'Llegada al punto inicial')
+                        ->first();
+        
+        if (is_null($checkLog)){
+             $log = new Log();
+            $log->service_id = $servicio->id;
+            $log->user_id = Auth::user()->id;
+            $log->action = 'Llegada al punto inicial';
+            $log->save();
+        }
 
         if (Auth::user()->role_id == 2){
             if ($servicio->user_id != 0){
@@ -803,12 +822,18 @@ class ServiceController extends Controller
         }
         $servicio->status = 3;
         $servicio->save();
-
-        $log = new Log();
-        $log->service_id = $servicio->id;
-        $log->user_id = Auth::user()->id;
-        $log->action = 'Servicio Iniciado';
-        $log->save();
+        
+        $checkLog = Log::where('service_id', '=', $servicio->id)
+                        ->where('action', '=', 'Servicio Iniciado')
+                        ->first();
+        
+        if (is_null($checkLog)){
+            $log = new Log();
+            $log->service_id = $servicio->id;
+            $log->user_id = Auth::user()->id;
+            $log->action = 'Servicio Iniciado';
+            $log->save();
+        }
 
         if (Auth::user()->role_id == 2){
             if ($servicio->user_id != 0){
@@ -926,12 +951,18 @@ class ServiceController extends Controller
                 $datosBrever->balance = $saldoBrever->brever_balance;
                 $datosBrever->save();
         }
-
-        $log = new Log();
-        $log->service_id = $servicio->id;
-        $log->user_id = Auth::user()->id;
-        $log->action = 'Servicio Completado';
-        $log->save();
+        
+        $checkLog = Log::where('service_id', '=', $servicio->id)
+                        ->where('action', '=', 'Servicio Completado')
+                        ->first();
+        
+        if (is_null($checkLog)){
+            $log = new Log();
+            $log->service_id = $servicio->id;
+            $log->user_id = Auth::user()->id;
+            $log->action = 'Servicio Completado';
+            $log->save();
+        }
 
         if (Auth::user()->role_id == 2){
             if ($servicio->user_id != 0){
@@ -1063,12 +1094,18 @@ class ServiceController extends Controller
         $servicio->brever_id = Auth::user()->id;
         $servicio->status = 1;
         $servicio->save();
-
-        $log = new Log();
-        $log->service_id = $servicio->id;
-        $log->user_id = Auth::user()->id;
-        $log->action = 'Servicio tomado por Brever';
-        $log->save();
+        
+        $checkLog = Log::where('service_id', '=', $servicio->id)
+                        ->where('action', '=', 'Servicio tomado por Brever')
+                        ->first();
+        
+        if (is_null($checkLog)){
+            $log = new Log();
+            $log->service_id = $servicio->id;
+            $log->user_id = Auth::user()->id;
+            $log->action = 'Servicio tomado por Brever';
+            $log->save();
+        }
 
         if ($servicio->user_id != 0){
             $notificacion = new Notification();
@@ -1156,11 +1193,17 @@ class ServiceController extends Controller
         $servicio->save();
 
         if ($request->status == 1){
-            $log = new Log();
-            $log->service_id = $servicio->id;
-            $log->user_id = Auth::user()->id;
-            $log->action = 'Servicio Asignado a Brever';
-            $log->save();
+            $checkLog = Log::where('service_id', '=', $servicio->id)
+                        ->where('action', '=', 'Servicio Asignado a Brever')
+                        ->first();
+        
+            if (is_null($checkLog)){
+                $log = new Log();
+                $log->service_id = $servicio->id;
+                $log->user_id = Auth::user()->id;
+                $log->action = 'Servicio Asignado a Brever';
+                $log->save();
+            }
 
             if ($servicio->user_id != 0){
                 $notificacion = new Notification();
@@ -1180,11 +1223,17 @@ class ServiceController extends Controller
             $notificacion->status = 0;
             $notificacion->save();
         }else if ($request->status == 2){
-            $log = new Log();
-            $log->service_id = $servicio->id;
-            $log->user_id = Auth::user()->id;
-            $log->action = 'Llegada al punto inicial';
-            $log->save();
+            $checkLog = Log::where('service_id', '=', $servicio->id)
+                        ->where('action', '=', 'Llegada al punto inicial')
+                        ->first();
+        
+            if (is_null($checkLog)){
+                $log = new Log();
+                $log->service_id = $servicio->id;
+                $log->user_id = Auth::user()->id;
+                $log->action = 'Llegada al punto inicial';
+                $log->save();
+            }
 
             if ($servicio->user_id != 0){
                 $notificacion = new Notification();
@@ -1196,11 +1245,17 @@ class ServiceController extends Controller
                 $notificacion->save();
             }
         }else if ($request->status == 3){
-            $log = new Log();
-            $log->service_id = $servicio->id;
-            $log->user_id = Auth::user()->id;
-            $log->action = 'Servicio Iniciado';
-            $log->save();
+            $checkLog = Log::where('service_id', '=', $servicio->id)
+                        ->where('action', '=', 'Servicio Iniciado')
+                        ->first();
+        
+            if (is_null($checkLog)){
+                $log = new Log();
+                $log->service_id = $servicio->id;
+                $log->user_id = Auth::user()->id;
+                $log->action = 'Servicio Iniciado';
+                $log->save();
+            }
 
             if ($servicio->user_id != 0){
                 $notificacion = new Notification();
@@ -1212,11 +1267,17 @@ class ServiceController extends Controller
                 $notificacion->save();
             }
         }else if ($request->status == 4 ){
-            $log = new Log();
-            $log->service_id = $servicio->id;
-            $log->user_id = Auth::user()->id;
-            $log->action = 'Servicio Completado';
-            $log->save();
+             $checkLog = Log::where('service_id', '=', $servicio->id)
+                        ->where('action', '=', 'Servicio Completado')
+                        ->first();
+        
+            if (is_null($checkLog)){
+                $log = new Log();
+                $log->service_id = $servicio->id;
+                $log->user_id = Auth::user()->id;
+                $log->action = 'Servicio Completado';
+                $log->save();
+            }
 
             if ($servicio->user_id != 0){
                 $notificacion = new Notification();
@@ -1236,11 +1297,17 @@ class ServiceController extends Controller
             $notificacion2->status = 0;
             $notificacion2->save();
         }else if ($request->status == 5){
-            $log = new Log();
-            $log->service_id = $servicio->id;
-            $log->user_id = Auth::user()->id;
-            $log->action = 'Servicio Cancelado';
-            $log->save();
+            $checkLog = Log::where('service_id', '=', $servicio->id)
+                        ->where('action', '=', 'Servicio Cancelado')
+                        ->first();
+        
+            if (is_null($checkLog)){
+                $log = new Log();
+                $log->service_id = $servicio->id;
+                $log->user_id = Auth::user()->id;
+                $log->action = 'Servicio Cancelado';
+                $log->save();
+            }
 
             if ($servicio->user_id != 0){
                 $notificacion = new Notification();
