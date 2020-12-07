@@ -107,7 +107,7 @@ class ServiceController extends Controller
 
     /**** Almacenar nuevo servicio ****/
     public function store(Request $request){
-        if (Auth::guest()){
+        /*if (Auth::guest()){
             $checkService = Service::where('user_id', '=', 0)
                                 ->where('client_name', '=', $request->client_name)
                                 ->where('date', '=', $request->date)
@@ -115,9 +115,9 @@ class ServiceController extends Controller
                                 ->first();
         }else{
             $checkService = NULL;
-        }
+        }*/
         
-        if (is_null($checkService)){
+        //if (is_null($checkService)){
             $servicio = new Service($request->all());
             if ($servicio->payment_method == 'reembolso'){
                 $servicio->total = $servicio->rate + $servicio->refund_amount;
@@ -233,9 +233,9 @@ class ServiceController extends Controller
                     return redirect('admin/services/show/'.$servicio->id)->with('msj-exitoso', 'El servicio ha sido creado con éxito');
                 }
             }
-        }else{
+        /*}else{
             return redirect("https://api.whatsapp.com/send?phone=573508663301&text=He%20programado%20la%20solicitud%20de%20servicio%20n%C3%BAmero%20*".$checkService->id."*.%20Estar%C3%A9%20pendiente%20a%20la%20tarifa.");
-        }
+        }*/
     }
 
     /**** Admin / Crear Nuevo Servicio / Cargar Datos Recordados de un Usuario ****/
@@ -739,7 +739,7 @@ class ServiceController extends Controller
         }
 
         if (Auth::user()->role_id == 2){
-            if ($servicio->user_id != 0){
+            /*if ($servicio->user_id != 0){
                 $notificacion = new Notification();
                 $notificacion->user_id = $servicio->user_id;
                 $notificacion->service_id = $servicio->id;
@@ -755,11 +755,11 @@ class ServiceController extends Controller
             $notificacion2->title = 'El brever ha llegado al punto inicial';
             $notificacion2->icon = 'feather icon-check-circle';
             $notificacion2->status = 0;
-            $notificacion2->save();
+            $notificacion2->save();*/
 
             return redirect('brever')->with('msj-exitoso', 'La llegada al punto inicial ha sido marcada con éxito.');
         }else{
-            if ($servicio->user_id != 0){
+            /*if ($servicio->user_id != 0){
                 $notificacion = new Notification();
                 $notificacion->user_id = $servicio->user_id;
                 $notificacion->service_id = $servicio->id;
@@ -767,7 +767,7 @@ class ServiceController extends Controller
                 $notificacion->icon = 'feather icon-check-circle';
                 $notificacion->status = 0;
                 $notificacion->save();
-            }
+            }*/
 
             return redirect('admin/services/confirmed')->with('msj-exitoso', 'El servicio ha sido iniciado con éxito.');
         }
@@ -836,7 +836,7 @@ class ServiceController extends Controller
         }
 
         if (Auth::user()->role_id == 2){
-            if ($servicio->user_id != 0){
+            /*if ($servicio->user_id != 0){
                 $notificacion = new Notification();
                 $notificacion->user_id = $servicio->user_id;
                 $notificacion->service_id = $servicio->id;
@@ -852,11 +852,11 @@ class ServiceController extends Controller
             $notificacion2->title = 'El brever ha iniciado el servicio';
             $notificacion2->icon = 'feather icon-check-circle';
             $notificacion2->status = 0;
-            $notificacion2->save();
+            $notificacion2->save();*/
 
             return redirect('brever')->with('msj-exitoso', 'El servicio ha sido marcado como iniciado con éxito.');
         }else{
-            if ($servicio->user_id != 0){
+            /*if ($servicio->user_id != 0){
                 $notificacion = new Notification();
                 $notificacion->user_id = $servicio->user_id;
                 $notificacion->service_id = $servicio->id;
@@ -864,7 +864,7 @@ class ServiceController extends Controller
                 $notificacion->icon = 'feather icon-check-circle';
                 $notificacion->status = 0;
                 $notificacion->save();
-            }
+            }*/
 
             return redirect('admin/services/assigned')->with('msj-exitoso', 'El servicio ha sido confirmado con éxito.');
         }

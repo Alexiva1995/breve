@@ -256,7 +256,7 @@
                                                                                             </div>
                                                                                         </div>
                                                                                         <div class="col-md-12 text-center">
-                                                                                            <button type="submit" class="btn btn-primary">Crear Servicio</button>
+                                                                                            <button type="submit" class="btn btn-primary" id="btn-submit">Crear Servicio</button>
                                                                                         </div>
                                                                                     </div>
                                                                                 </fieldset>
@@ -307,6 +307,8 @@
         <!-- BEGIN: Page JS-->
         <!-- END: Page JS-->
        <script>
+            var checkSsubmit = 0;
+            
             function checkPaymentMethod() {
                 if (document.getElementById("payment_method").value == 'reembolso') {
                     document.getElementById('refund_div').style.display = 'block';
@@ -328,6 +330,7 @@
             }
             
              $("#main-form").submit(function(){
+                $("#btn-submit").prop('disabled', true);
                 var contador = 0;
                 $("input[type=checkbox]").each(function(){
                     if($(this).is(":checked")){
@@ -338,6 +341,7 @@
                 if (contador > 0){
                     return true;
                 }else{
+                    $("#btn-submit").prop('disabled', false);
                     alert("Debe seleccionar un tipo de equipamiento");
                     return false;
                 }
