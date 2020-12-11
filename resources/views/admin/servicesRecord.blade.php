@@ -81,6 +81,7 @@
                                                 <option value="">Mostrar Todos</option>
                                                 <option value="0">Pendiente</option>
                                                 <option value="1">Asignado</option>
+                                                <option value="6">En Punto Inicial</option>
                                                 <option value="2">Iniciado</option>
                                                 <option value="3">Confirmado</option>
                                                 <option value="4">Completado</option>
@@ -153,8 +154,10 @@
                                                         <i class="fa fa-circle font-small-3 text-primary mr-50"></i> Confirmado
                                                     @elseif ($servicio->status == 4)
                                                         <i class="fa fa-circle font-small-3 text-success mr-50"></i> Completado
-                                                    @else
+                                                    @elseif ($servicio->status == 5)
                                                         <i class="fa fa-circle font-small-3 text-danger mr-50"></i> Declinado
+                                                    @elseif ($servicio->status == 6)
+                                                        <i class="fa fa-circle font-small-3 text-info mr-50"></i> En Punto Inicial
                                                     @endif
                                                 </td>
                                            </tr>

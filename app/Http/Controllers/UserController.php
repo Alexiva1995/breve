@@ -121,7 +121,8 @@ class UserController extends Controller
                 array_push($datosGraficoServiciosCancelados, $sca->total);
             }
 
-            $serviciosProximos = Service::where('status', '<=', 3)
+            $statusProximos = [1, 2, 3, 6];
+            $serviciosProximos = Service::whereIn('status', $statusProximos)
                                     ->orderBy('date', 'ASC')
                                     ->orderBy('time', 'ASC')
                                     ->get();
@@ -156,7 +157,7 @@ class UserController extends Controller
            return view('admin.index')->with(compact('cantServiciosNuevos', 'datosGraficoServiciosNuevos', 'cantServiciosAsignados', 'datosGraficoServiciosAsignados', 'cantServiciosCompletados', 'datosGraficoServiciosCompletados', 'cantServiciosCancelados', 'datosGraficoServiciosCancelados', 'serviciosProximos', 'datosIngreso', 'datosGanancia', 'datosHora', 'breves', 'clientes'));
        }else if (Auth::user()->role_id == 2){
             //Inicio Brever
-            $status = [1, 2, 3];
+            $status = [1, 2, 3, 6];
 
             $serviciosAsignados = Service::where('brever_id', '=', Auth::user()->id)
                                     ->whereIn('status', $status)
@@ -228,9 +229,11 @@ class UserController extends Controller
             return view('brever.index')->with(compact('serviciosAsignados', 'cantServiciosAsignados', 'datosGraficoServiciosAsignados', 'cantServiciosCompletados', 'datosGraficoServiciosCompletados', 'datosGraficoGananciasFecha', 'datosGraficoGananciasMonto'));
        }else{
             //Inicio Cliente
+            $statusClient = [0, 1, 2, 3, 6];
+
             $cantServiciosPendientes = DB::table('services')
                                         ->where('user_id', '=', Auth::user()->id)
-                                        ->where('status', '<=', 3)
+                                        ->whereIn('status', $statusClient)
                                         ->count();
 
             $graficaServiciosPendientes = DB::table('services')
@@ -246,7 +249,7 @@ class UserController extends Controller
             }
 
             $serviciosPendientes = Service::where('user_id', '=', Auth::user()->id)
-                                        ->where('status', '<=', 3)
+                                        ->whereIn('status', $statusClient)
                                         ->orderBy('date', 'ASC')
                                         ->orderBy('time', 'ASC')
                                         ->take(5)

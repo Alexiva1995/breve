@@ -16,8 +16,10 @@ class ServiceController extends Controller
     /**** Admin / Servicios / Listado de Servicios Pendientes ****/
     public function index(Request $request){
         if (Auth::user()->role_id == 1){
+            $statusClient = [0, 1, 2, 3, 6];
+
             $servicios = Service::where('user_id', '=', Auth::user()->id)
-                            ->where('status', '<=', 3)
+                            ->whereIn('status', $statusClient)
                             ->orderBy('id', 'DESC')
                             ->get();
 
@@ -479,14 +481,14 @@ class ServiceController extends Controller
                 $log = new Log();
                 $log->service_id = $servicio->id;
                 $log->user_id = Auth::user()->id;
-                $log->action = 'Llegada al punto inicial';
+                $log->action = 'Servicio Iniciado';
                 $log->save();
 
                 if ($servicio->user_id != 0){
                     $notificacion2 = new Notification();
                     $notificacion2->user_id = $servicio->user_id;
                     $notificacion2->service_id = $servicio->id;
-                    $notificacion2->title = 'Su servicio ha llegado al punto inicial';
+                    $notificacion2->title = 'Su servicio ha sido iniciado';
                     $notificacion2->icon = 'feather icon-check-circle';
                     $notificacion2->status = 0;
                     $notificacion2->save();
@@ -495,14 +497,14 @@ class ServiceController extends Controller
                 $log = new Log();
                 $log->service_id = $servicio->id;
                 $log->user_id = Auth::user()->id;
-                $log->action = 'Servicio Iniciado y Confirmado';
+                $log->action = 'Servicio Confirmado';
                 $log->save();
 
                 if ($servicio->user_id != 0){
                     $notificacion2 = new Notification();
                     $notificacion2->user_id = $servicio->user_id;
                     $notificacion2->service_id = $servicio->id;
-                    $notificacion2->title = 'Su servicio ha sido iniciado y confirmado';
+                    $notificacion2->title = 'Su servicio ha sido confirmado';
                     $notificacion2->icon = 'feather icon-check-circle';
                     $notificacion2->status = 0;
                     $notificacion2->save();
@@ -678,7 +680,7 @@ class ServiceController extends Controller
     /**** Brever / Servicios / Servicios Asignados ****/
     public function assigned(Request $request){
         if (Auth::user()->role_id == 2){
-            $status = [1, 2, 3];
+            $status = [1, 2, 3, 6];
             $servicios = Service::where('brever_id', '=', Auth::user()->id)
                             ->whereIn('status', $status)
                             ->orderBy('date', 'ASC')
@@ -710,8 +712,30 @@ class ServiceController extends Controller
                             ->get();
 
             return view('admin.servicesAssigned')->with(compact('servicios', 'clientes', 'brevers'));
-        }
+        }   
        
+    }
+
+    /**** Brever / Detalles de Servicio / Llegada a punto inicial ****/
+    public function arrive(Request $request){
+        $servicio = Service::find($request->service_id);
+
+        $servicio->status = 6;
+        $servicio->save();
+        
+        $checkLog = Log::where('service_id', '=', $servicio->id)
+                        ->where('action', '=', 'Llegada al punto inicial')
+                        ->first();
+        
+        if (is_null($checkLog)){
+            $log = new Log();
+            $log->service_id = $servicio->id;
+            $log->user_id = Auth::user()->id;
+            $log->action = 'Llegada al punto inicial';
+            $log->save();
+        }
+
+        return redirect('brever')->with('msj-exitoso', 'La llegada al punto inicial ha sido marcada con éxito.'); 
     }
 
     /**** Admin / Servicios / Servicios Asignados / Iniciar ****/
@@ -727,48 +751,20 @@ class ServiceController extends Controller
         $servicio->save();
         
         $checkLog = Log::where('service_id', '=', $servicio->id)
-                        ->where('action', '=', 'Llegada al punto inicial')
+                        ->where('action', '=', 'Servicio Iniciado')
                         ->first();
         
         if (is_null($checkLog)){
-             $log = new Log();
+            $log = new Log();
             $log->service_id = $servicio->id;
             $log->user_id = Auth::user()->id;
-            $log->action = 'Llegada al punto inicial';
+            $log->action = 'Servicio Iniciado';
             $log->save();
         }
 
         if (Auth::user()->role_id == 2){
-            /*if ($servicio->user_id != 0){
-                $notificacion = new Notification();
-                $notificacion->user_id = $servicio->user_id;
-                $notificacion->service_id = $servicio->id;
-                $notificacion->title = 'El brever ha llegado al punto inicial';
-                $notificacion->icon = 'feather icon-check-circle';
-                $notificacion->status = 0;
-                $notificacion->save();
-            }
-
-            $notificacion2 = new Notification();
-            $notificacion2->user_id = 0;
-            $notificacion2->service_id = $servicio->id;
-            $notificacion2->title = 'El brever ha llegado al punto inicial';
-            $notificacion2->icon = 'feather icon-check-circle';
-            $notificacion2->status = 0;
-            $notificacion2->save();*/
-
             return redirect('brever')->with('msj-exitoso', 'La llegada al punto inicial ha sido marcada con éxito.');
         }else{
-            /*if ($servicio->user_id != 0){
-                $notificacion = new Notification();
-                $notificacion->user_id = $servicio->user_id;
-                $notificacion->service_id = $servicio->id;
-                $notificacion->title = 'El brever ha llegado al punto inicial';
-                $notificacion->icon = 'feather icon-check-circle';
-                $notificacion->status = 0;
-                $notificacion->save();
-            }*/
-
             return redirect('admin/services/confirmed')->with('msj-exitoso', 'El servicio ha sido iniciado con éxito.');
         }
         
@@ -786,12 +782,13 @@ class ServiceController extends Controller
 
             return view('brever.servicesStarted')->with(compact('servicios'));
         }else{
+            $status = [2, 6];
             $servicios = Service::client($request->get('client'))
                             ->brever($request->get('brever'))
                             ->rate($request->get('rate'))
                             ->date($request->get('date'))
                             ->time($request->get('time'))
-                            ->where('status', '=', 2)
+                            ->whereIn('status', $status)
                             ->orderBy('date', 'ASC')
                             ->orderBy('time', 'ASC')
                             ->get();
@@ -813,62 +810,24 @@ class ServiceController extends Controller
     }
 
     /**** Admin / Servicios / Servicios Asignados / Confirmar ****/
-    /**** Brever / Detalles de Servicio / Confirmar Servicio  (Iniciar Servicio) ****/
-    public function confirm($id = 0, Request $request){
-        if ($id == 0){
-            $servicio = Service::find($request->service_id);
-        }else{
-           $servicio = Service::find($id); 
-        }
+    public function confirm($id = 0){
+        $servicio = Service::find($id); 
         $servicio->status = 3;
         $servicio->save();
         
         $checkLog = Log::where('service_id', '=', $servicio->id)
-                        ->where('action', '=', 'Servicio Iniciado')
+                        ->where('action', '=', 'Servicio Confirmado')
                         ->first();
         
         if (is_null($checkLog)){
             $log = new Log();
             $log->service_id = $servicio->id;
             $log->user_id = Auth::user()->id;
-            $log->action = 'Servicio Iniciado';
+            $log->action = 'Servicio Confirmado';
             $log->save();
         }
 
-        if (Auth::user()->role_id == 2){
-            /*if ($servicio->user_id != 0){
-                $notificacion = new Notification();
-                $notificacion->user_id = $servicio->user_id;
-                $notificacion->service_id = $servicio->id;
-                $notificacion->title = 'El brever ha iniciado el servicio';
-                $notificacion->icon = 'feather icon-check-circle';
-                $notificacion->status = 0;
-                $notificacion->save();
-            }
-
-            $notificacion2 = new Notification();
-            $notificacion2->user_id = 0;
-            $notificacion2->service_id = $servicio->id;
-            $notificacion2->title = 'El brever ha iniciado el servicio';
-            $notificacion2->icon = 'feather icon-check-circle';
-            $notificacion2->status = 0;
-            $notificacion2->save();*/
-
-            return redirect('brever')->with('msj-exitoso', 'El servicio ha sido marcado como iniciado con éxito.');
-        }else{
-            /*if ($servicio->user_id != 0){
-                $notificacion = new Notification();
-                $notificacion->user_id = $servicio->user_id;
-                $notificacion->service_id = $servicio->id;
-                $notificacion->title = 'Su servicio ha sido iniciado';
-                $notificacion->icon = 'feather icon-check-circle';
-                $notificacion->status = 0;
-                $notificacion->save();
-            }*/
-
-            return redirect('admin/services/assigned')->with('msj-exitoso', 'El servicio ha sido confirmado con éxito.');
-        }
-        
+        return redirect('admin/services/assigned')->with('msj-exitoso', 'El servicio ha sido confirmado con éxito.');  
     }
 
     /**** Listado de Servicios Confirmados ****/
@@ -1224,28 +1183,6 @@ class ServiceController extends Controller
             $notificacion->save();
         }else if ($request->status == 2){
             $checkLog = Log::where('service_id', '=', $servicio->id)
-                        ->where('action', '=', 'Llegada al punto inicial')
-                        ->first();
-        
-            if (is_null($checkLog)){
-                $log = new Log();
-                $log->service_id = $servicio->id;
-                $log->user_id = Auth::user()->id;
-                $log->action = 'Llegada al punto inicial';
-                $log->save();
-            }
-
-            if ($servicio->user_id != 0){
-                $notificacion = new Notification();
-                $notificacion->user_id = $servicio->user_id;
-                $notificacion->service_id = $servicio->id;
-                $notificacion->title = 'El Brever ha lleado al punto inicial';
-                $notificacion->icon = 'feather icon-check-circle';
-                $notificacion->status = 0;
-                $notificacion->save();
-            }
-        }else if ($request->status == 3){
-            $checkLog = Log::where('service_id', '=', $servicio->id)
                         ->where('action', '=', 'Servicio Iniciado')
                         ->first();
         
@@ -1262,6 +1199,28 @@ class ServiceController extends Controller
                 $notificacion->user_id = $servicio->user_id;
                 $notificacion->service_id = $servicio->id;
                 $notificacion->title = 'Su servicio ha sido iniciado';
+                $notificacion->icon = 'feather icon-check-circle';
+                $notificacion->status = 0;
+                $notificacion->save();
+            }
+        }else if ($request->status == 3){
+            $checkLog = Log::where('service_id', '=', $servicio->id)
+                        ->where('action', '=', 'Servicio Confirmado')
+                        ->first();
+        
+            if (is_null($checkLog)){
+                $log = new Log();
+                $log->service_id = $servicio->id;
+                $log->user_id = Auth::user()->id;
+                $log->action = 'Servicio Confirmado';
+                $log->save();
+            }
+
+            if ($servicio->user_id != 0){
+                $notificacion = new Notification();
+                $notificacion->user_id = $servicio->user_id;
+                $notificacion->service_id = $servicio->id;
+                $notificacion->title = 'Su servicio ha sido confirmado';
                 $notificacion->icon = 'feather icon-check-circle';
                 $notificacion->status = 0;
                 $notificacion->save();
@@ -1327,6 +1286,28 @@ class ServiceController extends Controller
                 $notificacion2->icon = 'feather icon-check-circle';
                 $notificacion2->status = 0;
                 $notificacion2->save();
+            }
+        }else if ($request->status == 6){
+            $checkLog = Log::where('service_id', '=', $servicio->id)
+                        ->where('action', '=', 'Llegada a Punto Inicial')
+                        ->first();
+        
+            if (is_null($checkLog)){
+                $log = new Log();
+                $log->service_id = $servicio->id;
+                $log->user_id = Auth::user()->id;
+                $log->action = 'Llegada a Punto Inicial';
+                $log->save();
+            }
+
+            if ($servicio->user_id != 0){
+                $notificacion = new Notification();
+                $notificacion->user_id = $servicio->user_id;
+                $notificacion->service_id = $servicio->id;
+                $notificacion->title = 'El brever ha marcado la llegada al Punto Inicial';
+                $notificacion->icon = 'fa fa-times';
+                $notificacion->status = 0;
+                $notificacion->save();
             }
         }
 

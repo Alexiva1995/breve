@@ -116,7 +116,7 @@
 	                                        <p class="float-left mb-0">
 	                                            <i class="feather icon-disc mr-1"></i>
 	                                        </p>
-	                                        <span>Estado: <b>@if ($servicio->status == 0) Pendiente @elseif ($servicio->status == 1) Asignado @elseif ($servicio->status == 2) Iniciado @elseif ($servicio->status == 3) Confirmado @elseif ($servicio->status == 4) Completado @else Declinado @endif</b></span>
+	                                        <span>Estado: <b>@if ($servicio->status == 0) Pendiente @elseif ($servicio->status == 1) Asignado @elseif ($servicio->status == 2) Iniciado @elseif ($servicio->status == 3) Confirmado @elseif ($servicio->status == 4) Completado @elseif ($servicio->status == 5) Declinado @else En Punto Inicial @endif</b></span>
 	                                    </li>
 	                                    @if (!is_null($servicio->brever_id))
                                         	<li class="list-group-item d-flex">
@@ -173,12 +173,10 @@
                                         </li>
                                     </ul>
                                     
-                                    @if ( ($servicio->status == 4) && ($servicio->logs_count > 0) )
-                                        <div class="text-center">
-                                            <br>
-                                            <a href="#reportModal" data-toggle="modal" type="button" class="btn btn-icon btn-primary mr-1 mb-1 waves-effect waves-light"><i class="feather icon-check"></i> Ver Reporte de Entrega</a>
-                                        </div>
-                                    @endif
+                                    <div class="text-center">
+                                        <br>
+                                        <a href="#reportModal" data-toggle="modal" type="button" class="btn btn-icon btn-primary mr-1 mb-1 waves-effect waves-light"><i class="feather icon-check"></i> Ver Reporte de Entrega</a>
+                                    </div>
                             	</div>
                             </div>
                         </div>

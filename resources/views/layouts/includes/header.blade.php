@@ -14,7 +14,7 @@
     $cantNotificaciones = $notificaciones->count();
 
     if (Auth::user()->role_id == 2){
-        $statusHeader = [1, 2, 3];
+        $statusHeader = [1, 2, 3, 6];
 
         $serviciosAsignadosHeader = DB::table('services')
                                         ->where('brever_id', '=', Auth::user()->id)

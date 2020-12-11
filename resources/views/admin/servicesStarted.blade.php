@@ -98,6 +98,7 @@
                                             <th>Tarifa</th>
                                             <th>Descripción</th>
                                             <th>Brever Delegado</th>
+                                            <th>Estado</th>
                                             <th>Acciones</th>
                                         </tr>
                                     </thead>
@@ -128,6 +129,13 @@
                                                 <td>{{ $servicio->sender_neighborhood }} - {{ $servicio->receiver_neighborhood }}</td>
                                                 <td>
                                                     {{ $servicio->brever->name }}
+                                                </td>
+                                                <td>
+                                                    @if ($servicio->status == 6)
+                                                        En Punto Inicial
+                                                    @else
+                                                        En Curso
+                                                    @endif
                                                 </td>
                                                 <td class="text-center">
                                                     <div class="btn-group" role="group" aria-label="Basic example">
@@ -161,6 +169,7 @@
                                             <th>Tarifa</th>
                                             <th>Descripción</th>
                                             <th>Brever Delegado</th>
+                                            <th>Estado</th>
                                             <th>Acciones</th>
                                         </tr>
                                     </tfoot>

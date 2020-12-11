@@ -42,12 +42,12 @@
         function loadConfirmModal($servicio, $accion){
             document.getElementById("service_id").value = $servicio;
             if ($accion == 1){
-                document.getElementById("confirm-form").setAttribute('action', ' {{ route('brever.services.start') }}');
+                document.getElementById("confirm-form").setAttribute('action', ' {{ route('brever.services.arrive') }}');
                 document.getElementById("confirm-text").innerHTML = "¿Está seguro de marcar la llegada al punto inicial?";
                 document.getElementById("photo_div").style.display = 'none';
                 $("#photo").prop('required', false);
             }else if($accion == 2){
-                document.getElementById("confirm-form").setAttribute('action', '{{ route('brever.services.confirm') }}');
+                document.getElementById("confirm-form").setAttribute('action', '{{ route('brever.services.start') }}');
                 document.getElementById("confirm-text").innerHTML = "¿Está seguro de iniciar este servicio?";
                 document.getElementById("photo_div").style.display = 'none';
                 $("#photo").prop('required', false);
@@ -200,7 +200,7 @@
 	                                        <p class="float-left mb-0">
 	                                            <i class="feather icon-disc mr-1"></i>
 	                                        </p>
-	                                        <span>Estado: <b>@if ($servicio->status == 0) Pendiente @elseif ($servicio->status == 1) Asignado @elseif ($servicio->status == 2) Iniciado @elseif ($servicio->status == 3) Confirmado @elseif ($servicio->status == 4) Completado @else Declinado @endif</b></span>
+	                                        <span>Estado: <b>@if ($servicio->status == 0) Pendiente @elseif ($servicio->status == 1) Asignado @elseif ($servicio->status == 2) Iniciado @elseif ($servicio->status == 3) Confirmado @elseif ($servicio->status == 4) Completado @elseif ($servicio->status == 5) Declinado @else En Punto Inicial @endif</b></span>
 	                                    </li>
                                     </ul><br>
                             	</div>
@@ -250,11 +250,11 @@
                             </div>
                             <div class="col-md-12 text-right">
                                 <br>
-                                @if ($servicio->status == 1)
+                                @if ($servicio->status  == 3)
                                     <a href="javascript:;" type="button" class="btn btn-icon btn-primary mr-1 mb-1 waves-effect waves-light" onclick="loadConfirmModal({{$servicio->id}},1);"><i class="feather icon-check"></i> Llegada a Punto Inicial</a>
-                                @elseif ($servicio->status == 2)  
+                                @elseif ($servicio->status == 6)  
                                     <a href="javascript:;" type="button" class="btn btn-icon btn-primary mr-1 mb-1 waves-effect waves-light" onclick="loadConfirmModal({{$servicio->id}},2);"><i class="feather icon-check"></i> Iniciar Servicio</a>  
-                                @elseif ($servicio->status == 3)
+                                @elseif ($servicio->status == 2)
                                     <a href="javascript:;" type="button" class="btn btn-icon btn-primary mr-1 mb-1 waves-effect waves-light" onclick="loadConfirmModal({{$servicio->id}},3);"><i class="feather icon-check"></i> Entrega en Punto Final</a>
                                 @endif
                             </div>

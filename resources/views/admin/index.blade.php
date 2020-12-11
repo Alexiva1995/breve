@@ -679,6 +679,7 @@
                                                 <option value="0" @if ($servicio->status == 0) selected @endif>Pendiente</option>
                                                 <option value="1"@if ($servicio->status == 1) selected @endif>Asignado</option>
                                                 <option value="3"@if ($servicio->status == 3) selected @endif>Confirmado</option>
+                                                <option value="3"@if ($servicio->status == 6) selected @endif>En Punto Inicial</option>
                                                 <option value="2"@if ($servicio->status == 2) selected @endif>En Curso</option>
                                                 <option value="4"@if ($servicio->status == 4) selected @endif>Completado</option>
                                                 <option value="5"@if ($servicio->status == 5) selected @endif>Declinado</option>

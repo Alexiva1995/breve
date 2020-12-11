@@ -139,7 +139,7 @@
 	                                        <p class="float-left mb-0">
 	                                            <i class="feather icon-disc mr-1"></i>
 	                                        </p>
-	                                        <span>Estado: <b>@if ($servicio->status == 0) Pendiente @elseif ($servicio->status == 1) Asignado @elseif ($servicio->status == 2) Iniciado @elseif ($servicio->status == 3) Confirmado @elseif ($servicio->status == 4) Completado @else Declinado @endif</b></span>
+	                                        <span>Estado: <b>@if ($servicio->status == 0) Pendiente @elseif ($servicio->status == 1) Asignado @elseif ($servicio->status == 2) Iniciado @elseif ($servicio->status == 3) Confirmado @elseif ($servicio->status == 4) Completado @elseif ($servicio->status == 6) En Punto Inicial @else Declinado @endif</b></span>
 	                                    </li>
 	                                    @if (!is_null($servicio->brever_id))
                                         	<li class="list-group-item d-flex">
@@ -207,7 +207,7 @@
                             		</ul>
                                 </div>
                                 
-                                @if (!is_null($servicio->brever_id) && $servicio->status < 4)
+                                @if ( ($servicio->status == 1) || ( $servicio->status == 2) || ($servicio->status == 3) || ($servicio->status == 6) )
                                     <div class="col-md-12 mt-2">
                                         <ul class="list-group">
                                             <a href="#" class="list-group-item active"><strong>Datos del brever asignado</strong></a>

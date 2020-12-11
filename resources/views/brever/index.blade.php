@@ -231,12 +231,12 @@
         function loadConfirmModal($servicio, $accion){
             document.getElementById("service_id").value = $servicio;
             if ($accion == 1){
-                document.getElementById("confirm-form").setAttribute('action', ' {{ route('brever.services.start') }}');
+                document.getElementById("confirm-form").setAttribute('action', ' {{ route('brever.services.arrive') }}');
                 document.getElementById("confirm-text").innerHTML = "¿Está seguro de marcar la llegada al punto inicial?";
                 document.getElementById("photo_div").style.display = 'none';
                 $("#photo").prop('required', false);
             }else if($accion == 2){
-                document.getElementById("confirm-form").setAttribute('action', '{{ route('brever.services.confirm') }}');
+                document.getElementById("confirm-form").setAttribute('action', '{{ route('brever.services.start') }}');
                 document.getElementById("confirm-text").innerHTML = "¿Está seguro de iniciar este servicio?";
                 document.getElementById("photo_div").style.display = 'none';
                 $("#photo").prop('required', false);
@@ -464,7 +464,7 @@
                                                                         <p class="float-left mb-0">
                                                                             <i class="feather icon-disc mr-1"></i>
                                                                         </p>
-                                                                        <span>Estado: <b>@if ($servicioAsignado->status == 0) Pendiente @elseif ($servicioAsignado->status == 1) Asignado @elseif ($servicioAsignado->status == 2) Iniciado @elseif ($servicioAsignado->status == 3) Confirmado @elseif ($servicioAsignado->status == 4) Completado @else Declinado @endif</b></span>
+                                                                        <span>Estado: <b>@if ($servicioAsignado->status == 0) Pendiente @elseif ($servicioAsignado->status == 1) Asignado @elseif ($servicioAsignado->status == 2) Iniciado @elseif ($servicioAsignado->status == 3) Confirmado @elseif ($servicioAsignado->status == 4) Completado @elseif ($servicioAsignado->status == 5) Declinado @else En Punto Inicial @endif</b></span>
                                                                     </li>
                                                                 </ul>
                                                             </div>
@@ -513,11 +513,11 @@
                                                             </div>
                                                             <div class="col-12 col-md-12 text-right">
                                                                 <br>
-                                                                @if ($servicioAsignado->status == 1)
+                                                                @if ($servicioAsignado->status == 3)
                                                                     <a href="javascript:;" type="button" class="btn btn-icon btn-primary mr-1 mb-1 waves-effect waves-light" onclick="loadConfirmModal({{$servicioAsignado->id}},1);"><i class="feather icon-check"></i> Llegada a Punto Inicial</a>
-                                                                @elseif ($servicioAsignado->status == 2)  
+                                                                @elseif ($servicioAsignado->status == 6)  
                                                                     <a href="javascript:;" type="button" class="btn btn-icon btn-primary mr-1 mb-1 waves-effect waves-light" onclick="loadConfirmModal({{$servicioAsignado->id}},2);"><i class="feather icon-check"></i> Iniciar Servicio</a>  
-                                                                @elseif ($servicioAsignado->status == 3)
+                                                                @elseif ($servicioAsignado->status == 2)
                                                                     <a href="javascript:;" type="button" class="btn btn-icon btn-primary mr-1 mb-1 waves-effect waves-light" onclick="loadConfirmModal({{$servicioAsignado->id}},3);"><i class="feather icon-check"></i> Entrega en Punto Final</a>
                                                                 @endif
                                                             </div>
@@ -551,17 +551,15 @@
                                     @if ($cantServiciosAsignados > 0)
                                         @foreach ($serviciosAsignados as $servicioAsignadoMovil)
                                             <tr>
-                                                <td>
+                                                <td class="text-center" data-toggle="collapse" href="#collapse-movil-{{$servicioAsignadoMovil->id}}">
                                                     {{ date('Y-m-d', strtotime($servicioAsignadoMovil->date)) }} - {{ date('H:i', strtotime($servicioAsignadoMovil->time)) }} <br>
                                                     {{ $servicioAsignadoMovil->sender_neighborhood }} - {{ $servicioAsignadoMovil->receiver_neighborhood }} <br>
-                                                    ({{ $servicioAsignadoMovil->equipment_type }})
-                                                </td>
-                                                <td class="text-center">
-                                                    <a data-toggle="collapse" href="#collapse-movil-{{$servicioAsignadoMovil->id}}"><i class="far fa-caret-square-down" style="font-size: 22px;"></i></a>
+                                                    ({{ $servicioAsignadoMovil->equipment_type }})&nbsp;
+                                                     <a data-toggle="collapse" href="#collapse-movil-{{$servicioAsignadoMovil->id}}"><i class="far fa-caret-square-down" style="font-size: 22px;"></i></a>
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td colspan="2">
+                                                <td>
                                                     <div id="collapse-movil-{{$servicioAsignadoMovil->id}}" class="collapse">
                                                         <div class="row">
                                                             <div class="col-12 col-md-4">
@@ -648,7 +646,7 @@
                                                                         <p class="float-left mb-0">
                                                                             <i class="feather icon-disc mr-1"></i>
                                                                         </p>
-                                                                        <span>Estado: <br><b>@if ($servicioAsignadoMovil->status == 0) Pendiente @elseif ($servicioAsignadoMovil->status == 1) Asignado @elseif ($servicioAsignadoMovil->status == 2) Iniciado @elseif ($servicioAsignadoMovil->status == 3) Confirmado @elseif ($servicioAsignadoMovil->status == 4) Completado @else Declinado @endif</b></span>
+                                                                        <span>Estado: <br><b>@if ($servicioAsignadoMovil->status == 0) Pendiente @elseif ($servicioAsignadoMovil->status == 1) Asignado @elseif ($servicioAsignadoMovil->status == 2) Iniciado @elseif ($servicioAsignadoMovil->status == 3) Confirmado @elseif ($servicioAsignadoMovil->status == 4) Completado @elseif ($servicioAsignadoMovil->status == 5) Declinado @else En Punto Inicial @endif</b></span>
                                                                     </li>
                                                                 </ul>
                                                             </div>
@@ -697,11 +695,11 @@
                                                             </div>
                                                             <div class="col-12 col-md-12 text-right">
                                                                 <br>
-                                                                @if ($servicioAsignadoMovil->status == 1)
+                                                                @if ($servicioAsignadoMovil->status == 3)
                                                                     <a href="javascript:;" type="button" class="btn btn-icon btn-primary mr-1 mb-1 waves-effect waves-light" onclick="loadConfirmModal({{$servicioAsignadoMovil->id}},1);"><i class="feather icon-check"></i> Llegada a Punto Inicial</a>
-                                                                @elseif ($servicioAsignadoMovil->status == 2)  
+                                                                @elseif ($servicioAsignadoMovil->status == 6)  
                                                                     <a href="javascript:;" type="button" class="btn btn-icon btn-primary mr-1 mb-1 waves-effect waves-light" onclick="loadConfirmModal({{$servicioAsignadoMovil->id}},2);"><i class="feather icon-check"></i> Iniciar Servicio</a>  
-                                                                @elseif ($servicioAsignadoMovil->status == 3)
+                                                                @elseif ($servicioAsignadoMovil->status == 2)
                                                                     <a href="javascript:;" type="button" class="btn btn-icon btn-primary mr-1 mb-1 waves-effect waves-light" onclick="loadConfirmModal({{$servicioAsignadoMovil->id}},3);"><i class="feather icon-check"></i> Entrega en Punto Final</a>
                                                                 @endif
                                                             </div>

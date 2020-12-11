@@ -713,6 +713,8 @@
                                                         <i class="fa fa-circle font-small-3 text-info mr-50"></i> Asignado
                                                     @elseif ($servicio->status == 2)
                                                         <i class="fa fa-circle font-small-3 text-info mr-50"></i> Iniciado
+                                                    @elseif ($servicio->status == 6)
+                                                        <i class="fa fa-circle font-small-3 text-info mr-50"></i> En Punto Inicial
                                                     @else
                                                         <i class="fa fa-circle font-small-3 text-success mr-50"></i> Confirmado
                                                     @endif

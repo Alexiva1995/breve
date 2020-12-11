@@ -74,9 +74,11 @@
                                                     @if ($servicio->status == 1)
                                                         <i class="fa fa-circle font-small-3 text-warning mr-50"></i> Asignado
                                                     @elseif ($servicio->status == 2)
-                                                        <i class="fa fa-circle font-small-3 text-info mr-50"></i> Iniciado
+                                                        <i class="fa fa-circle font-small-3 text-success mr-50"></i> Iniciado
                                                     @elseif ($servicio->status == 3)
-                                                        <i class="fa fa-circle font-small-3 text-success mr-50"></i> Confirmado
+                                                        <i class="fa fa-circle font-small-3 text-danger mr-50"></i> Confirmado
+                                                    @elseif ($servicio->status == 6)
+                                                        <i class="fa fa-circle font-small-3 text-info mr-50"></i> En Punto Inicial
                                                     @endif
                                                 </td>
                                                 <td>
