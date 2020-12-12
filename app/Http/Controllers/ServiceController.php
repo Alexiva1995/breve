@@ -735,7 +735,7 @@ class ServiceController extends Controller
             $log->save();
         }
 
-        return redirect('brever')->with('msj-exitoso', 'La llegada al punto inicial ha sido marcada con éxito.'); 
+        return redirect(redirect()->getUrlGenerator()->previous())->with('msj-exitoso', 'La llegada al punto inicial ha sido marcada con éxito.');
     }
 
     /**** Admin / Servicios / Servicios Asignados / Iniciar ****/
@@ -763,7 +763,7 @@ class ServiceController extends Controller
         }
 
         if (Auth::user()->role_id == 2){
-            return redirect('brever')->with('msj-exitoso', 'La llegada al punto inicial ha sido marcada con éxito.');
+            return redirect(redirect()->getUrlGenerator()->previous())->with('msj-exitoso', 'La llegada al punto inicial ha sido marcada con éxito.');
         }else{
             return redirect('admin/services/confirmed')->with('msj-exitoso', 'El servicio ha sido iniciado con éxito.');
         }
@@ -942,7 +942,7 @@ class ServiceController extends Controller
             $notificacion2->status = 0;
             $notificacion2->save();
 
-            return redirect('brever')->with('msj-exitoso', 'El servicio ha sido completado con éxito.');
+            return redirect(redirect()->getUrlGenerator()->previous())->with('msj-exitoso', 'El servicio ha sido completado con éxito.');
         }else{
             $notificacion = new Notification();
             $notificacion->user_id = $servicio->brever_id;

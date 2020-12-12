@@ -34,7 +34,7 @@ Route::group(['middleware' => 'https'], function(){
 
 	Route::get('/', 'HomeController@index')->name('home');
 	Route::get('home', 'HomeController@index');
-	Route::get('new-service', 'HomeController@guest_service');
+	Route::get('programardomicilio', 'HomeController@guest_service');
 	Route::post('new-service', 'ServiceController@store')->name('guest.new-service');
 
 	Route::group(['middleware' => ['auth', 'noti.chat']], function(){

@@ -121,7 +121,7 @@ class UserController extends Controller
                 array_push($datosGraficoServiciosCancelados, $sca->total);
             }
 
-            $statusProximos = [1, 2, 3, 6];
+            $statusProximos = [0, 1, 2, 3, 6];
             $serviciosProximos = Service::whereIn('status', $statusProximos)
                                     ->orderBy('date', 'ASC')
                                     ->orderBy('time', 'ASC')

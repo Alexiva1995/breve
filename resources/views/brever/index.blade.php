@@ -551,7 +551,7 @@
                                     @if ($cantServiciosAsignados > 0)
                                         @foreach ($serviciosAsignados as $servicioAsignadoMovil)
                                             <tr>
-                                                <td class="text-center" data-toggle="collapse" href="#collapse-movil-{{$servicioAsignadoMovil->id}}">
+                                                <td data-toggle="collapse" href="#collapse-movil-{{$servicioAsignadoMovil->id}}">
                                                     {{ date('Y-m-d', strtotime($servicioAsignadoMovil->date)) }} - {{ date('H:i', strtotime($servicioAsignadoMovil->time)) }} <br>
                                                     {{ $servicioAsignadoMovil->sender_neighborhood }} - {{ $servicioAsignadoMovil->receiver_neighborhood }} <br>
                                                     ({{ $servicioAsignadoMovil->equipment_type }})&nbsp;
