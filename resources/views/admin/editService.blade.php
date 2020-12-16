@@ -409,6 +409,20 @@
                 document.getElementById("brever_div").style.display = 'block';
             }
         }
+
+        $("#service-form").submit(function() {
+            if (document.getElementById("initial_rate").value != document.getElementById("rate").value){
+                $("#confirmModal").modal("show");
+                return false;
+            }else{
+                return true;
+            }
+        });
+
+        function submitForm($opcion){
+            document.getElementById("change_rate").value = $opcion;
+            document.getElementById('service-form').submit();
+        }
 	</script>
 @endpush
 
@@ -491,14 +505,22 @@
                                 </div>
 
                                 <div class="tab-pane" id="datos" role="tabpanel">
-                                	<form action="{{ route('admin.services.update') }}" method="POST">
+                                	<form action="{{ route('admin.services.update') }}" method="POST" id="service-form">
                                         @csrf
+                                        <input type="hidden" id="initial_rate" name="initial_rate" value="{{ $servicio->rate }}">
+                                        <input type="hidden" id="change_rate" name="change_rate" value="0">
                                         <input type="hidden" name="rate_status" id="rate_status" value="{{ $servicio->rate_status }}">
-                                		<input type="hidden" name="service_id" value="{{ $servicio->id }}">
+                                        <input type="hidden" name="service_id" value="{{ $servicio->id }}">
+                                        <input type="hidden" name="initial_sender_latitude" value="{{ $servicio->sender_latitude }}">
+                                        <input type="hidden" name="initial_sender_longitude" value="{{ $servicio->sender_longitude }}">
+                                        <input type="hidden" name="initial_receiver_latitude" value="{{ $servicio->receiver_latitude }}">
+                                        <input type="hidden" name="initial_receiver_longitude" value="{{ $servicio->receiver_longitude }}">
                                         <input type="hidden" name="sender_latitude" id="sender_latitude" value="{{ $servicio->sender_latitude }}">
                                         <input type="hidden" name="sender_longitude" id="sender_longitude" value="{{ $servicio->sender_longitude }}">
                                         <input type="hidden" name="receiver_latitude" id="receiver_latitude" value="{{ $servicio->receiver_latitude }}">
                                         <input type="hidden" name="receiver_longitude" id="receiver_longitude" value="{{ $servicio->receiver_longitude }}">
+                                        <input type="hidden" name="initial_sender_address" value="{{ $servicio->sender_address }}">
+                                        <input type="hidden" name="initial_receiver_address" value="{{ $servicio->receiver_address }}">
                                         <input type="hidden" name="sender_address" id="sender_address" value="{{ $servicio->sender_address }}">
                                         <input type="hidden" name="receiver_address" id="receiver_address" value="{{ $servicio->receiver_address }}">
 						                <input type="hidden" class="form-control" name="rate" id="rate" value="{{ $servicio->rate }}">
@@ -783,4 +805,23 @@
             </div>
         </div>
     </section>
+
+    <div class="modal fade text-left show" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel110" aria-modal="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-success white">
+                    <h5 class="modal-title" id="myModalLabel110">Actualizar Datos de Tarifa</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center">
+                        Se ha cambiado la tarifa del servicio. <br> ¿Quiere mantener este cambio?
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger waves-effect waves-light" onclick="submitForm(0);">NO</button>
+                    <button type="button" class="btn btn-success waves-effect waves-light" onclick="submitForm(1);">SI</button>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection

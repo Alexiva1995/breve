@@ -389,6 +389,16 @@ class ServiceController extends Controller
         }
 
         $servicio->fill($request->all());
+        if ($request->change_rate == 0){
+            $servicio->rate = $request->initial_rate;
+            $servicio->sender_latitude = $request->initial_sender_latitude;
+            $servicio->sender_longitude = $request->initial_sender_longitude;
+            $servicio->receiver_latitude = $request->initial_receiver_latitude;
+            $servicio->receiver_longitude = $request->initial_receiver_longitude;
+            $servicio->sender_address = $request->initial_sender_address;
+            $servicio->receiver_address = $request->initial_receiver_address;
+        }
+
         if ($request->status == "0"){
             $servicio->brever_id = null;
         }
@@ -544,7 +554,7 @@ class ServiceController extends Controller
                     $notificacion = new Notification();
                     $notificacion->user_id = $servicio->brever_id;
                     $notificacion->service_id = $servicio->id;
-                    $notificacion->title = 'Su servicio ha sido cancelado';
+                    $notificacion->title = 'Su servicio ha sido declinado';
                     $notificacion->icon = 'fa fa-times';
                     $notificacion->status = 0;
                     $notificacion->save();
@@ -554,7 +564,7 @@ class ServiceController extends Controller
                     $notificacion2 = new Notification();
                     $notificacion2->user_id = $servicio->user_id;
                     $notificacion2->service_id = $servicio->id;
-                    $notificacion2->title = 'Su servicio ha sido cancelado';
+                    $notificacion2->title = 'Su servicio ha sido declinado';
                     $notificacion2->icon = 'fa fa-times';
                     $notificacion2->status = 0;
                     $notificacion2->save();
@@ -648,15 +658,17 @@ class ServiceController extends Controller
 
             return view('brever.servicesCompleted')->with(compact('servicios'));
         }else{
+            $fechaActual = Carbon::now();
+            $fechaLimite = $fechaActual->subDays(45);
             $servicios = Service::client($request->get('client'))
                             ->brever($request->get('brever'))
                             ->rate($request->get('rate'))
                             ->date($request->get('date'))
                             ->time($request->get('time'))
                             ->where('status', '=', 4)
+                            ->where('date', '>=', $fechaLimite)
                             ->orderBy('date', 'DESC')
                             ->orderBy('time', 'DESC')
-                            ->take(100)
                             ->get();
 
             $brevers = DB::table('users')
@@ -735,7 +747,7 @@ class ServiceController extends Controller
             $log->save();
         }
 
-        return redirect(redirect()->getUrlGenerator()->previous())->with('msj-exitoso', 'La llegada al punto inicial ha sido marcada con éxito.');
+        return redirect(redirect()->getUrlGenerator()->previous())->with('msj-exitoso', 'La llegada al punto inicial ha sido marcada con éxito.'); 
     }
 
     /**** Admin / Servicios / Servicios Asignados / Iniciar ****/
@@ -763,7 +775,7 @@ class ServiceController extends Controller
         }
 
         if (Auth::user()->role_id == 2){
-            return redirect(redirect()->getUrlGenerator()->previous())->with('msj-exitoso', 'La llegada al punto inicial ha sido marcada con éxito.');
+            return redirect(redirect()->getUrlGenerator()->previous())->with('msj-exitoso', 'El servicio ha sido iniciado con éxito.');
         }else{
             return redirect('admin/services/confirmed')->with('msj-exitoso', 'El servicio ha sido iniciado con éxito.');
         }
@@ -933,14 +945,22 @@ class ServiceController extends Controller
                 $notificacion->status = 0;
                 $notificacion->save();
             }
-
-            $notificacion2 = new Notification();
-            $notificacion2->user_id = 0;
-            $notificacion2->service_id = $servicio->id;
-            $notificacion2->title = 'El Brever ha completado el servicio';
-            $notificacion2->icon = 'feather icon-check-circle';
-            $notificacion2->status = 0;
-            $notificacion2->save();
+            
+            $checkNot = DB::table('notifications')
+                            ->where('user_id', '=', 0)
+                            ->where('service_id', '=', $servicio->id)
+                            ->where('title', '=', 'El Brever ha completado el servicio')
+                            ->first();
+            
+            if (is_null($checkNot)){             
+                $notificacion2 = new Notification();
+                $notificacion2->user_id = 0;
+                $notificacion2->service_id = $servicio->id;
+                $notificacion2->title = 'El Brever ha completado el servicio';
+                $notificacion2->icon = 'feather icon-check-circle';
+                $notificacion2->status = 0;
+                $notificacion2->save();
+            }
 
             return redirect(redirect()->getUrlGenerator()->previous())->with('msj-exitoso', 'El servicio ha sido completado con éxito.');
         }else{
