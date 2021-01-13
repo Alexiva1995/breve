@@ -123,6 +123,7 @@ class UserController extends Controller
 
             $statusProximos = [0, 1, 2, 3, 6];
             $serviciosProximos = Service::whereIn('status', $statusProximos)
+                                    ->orderBy('type', 'ASC')
                                     ->orderBy('date', 'ASC')
                                     ->orderBy('time', 'ASC')
                                     ->get();

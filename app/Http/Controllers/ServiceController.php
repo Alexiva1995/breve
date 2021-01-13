@@ -38,8 +38,13 @@ class ServiceController extends Controller
                             ->where('time', '<=', $horaFinal)
                             ->orderBy('time', 'ASC')
                             ->get();
+            
+            $serviciosInmediatos = Service::where('type', '=', 'Inmediato')
+                                        ->where('status', '=', 0)
+                                        ->orderBy('id', 'ASC')
+                                        ->get();
 
-            return view('brever.services')->with(compact('servicios'));
+            return view('brever.services')->with(compact('servicios', 'serviciosInmediatos'));
         }else{
             $servicios = Service::client($request->get('client'))
                             ->date($request->get('date'))
@@ -109,135 +114,119 @@ class ServiceController extends Controller
 
     /**** Almacenar nuevo servicio ****/
     public function store(Request $request){
-        /*if (Auth::guest()){
-            $checkService = Service::where('user_id', '=', 0)
-                                ->where('client_name', '=', $request->client_name)
-                                ->where('date', '=', $request->date)
-                                ->where('time', '=', $request->time)
-                                ->first();
+        $servicio = new Service($request->all());
+        if ($servicio->payment_method == 'reembolso'){
+            $servicio->total = $servicio->rate + $servicio->refund_amount;
         }else{
-            $checkService = NULL;
-        }*/
-        
-        //if (is_null($checkService)){
-            $servicio = new Service($request->all());
-            if ($servicio->payment_method == 'reembolso'){
-                $servicio->total = $servicio->rate + $servicio->refund_amount;
-            }else{
-                $servicio->total = $servicio->rate;
-                $servicio->refund_amount = 0;
-                if ($servicio->payment_method == 'efectivo-inicio'){
-                    $servicio->payment_method = 'efectivo';
-                    $servicio->payment_type = 'inicio';
-                }else if ($servicio->payment_method == 'efectivo-final'){
-                    $servicio->payment_method = 'efectivo';
-                    $servicio->payment_type = 'final';
-                }
+            $servicio->total = $servicio->rate;
+            $servicio->refund_amount = 0;
+            if ($servicio->payment_method == 'efectivo-inicio'){
+                $servicio->payment_method = 'efectivo';
+                $servicio->payment_type = 'inicio';
+            }else if ($servicio->payment_method == 'efectivo-final'){
+                $servicio->payment_method = 'efectivo';
+                $servicio->payment_type = 'final';
             }
+        }
             
-            $equipment_type = "";
-            if (!is_null($request->equipment_type)){
-                foreach ($request->equipment_type as $equipo) {
-                    if ($equipment_type == ""){
-                        $equipment_type = $equipo;
-                    }else{
-                        $equipment_type = $equipment_type."; ".$equipo;
-                    }
-                     
-                }
-            }else{
-                $equipment_type = "Maletin; MB; Canasta";
+        $equipment_type = "";
+        if (!is_null($request->equipment_type)){
+            foreach ($request->equipment_type as $equipo) {
+                if ($equipment_type == ""){
+                    $equipment_type = $equipo;
+                }else{
+                    $equipment_type = $equipment_type."; ".$equipo;
+                }    
             }
-            $servicio->equipment_type = $equipment_type;
+        }else{
+            $equipment_type = "Maletin; MB; Canasta";
+        }
+        $servicio->equipment_type = $equipment_type;
     
-            if (is_null($servicio->sender_address_opc)){
-                $servicio->sender_address_opc = $servicio->sender_address;
-            }
-            if (is_null($servicio->receiver_address_opc)){
-                $servicio->receiver_address_opc = $servicio->receiver_address;
-            }
-            if (is_null($servicio->sender_address)){
-                $servicio->sender_address= $servicio->sender_address_opc;
-            }
-            if (is_null($servicio->receiver_address)){
-                $servicio->receiver_address = $servicio->receiver_address_opc;
-            }
-            $servicio->save();
+        if (is_null($servicio->sender_address_opc)){
+            $servicio->sender_address_opc = $servicio->sender_address;
+        }
+        if (is_null($servicio->receiver_address_opc)){
+            $servicio->receiver_address_opc = $servicio->receiver_address;
+        }
+        if (is_null($servicio->sender_address)){
+            $servicio->sender_address= $servicio->sender_address_opc;
+        }
+        if (is_null($servicio->receiver_address)){
+            $servicio->receiver_address = $servicio->receiver_address_opc;
+        }
+
+        $servicio->save();
     
-            if (!Auth::guest()){
-                //Guardar datos de envío para futuros servicios
-                if (!is_null($request->remember_sender_data)){
-                    $datosEnvio = new RememberData();
-                    if (Auth::user()->role_id == 1){
-                        $datosEnvio->user_id = Auth::user()->id;
-                        $datosEnvio->alias = $request->sender_data_alias;
-                        $datosEnvio->admin = 0;
-                    }else{
-                        $datosEnvio->user_id = $request->user_id;
-                        $datosEnvio->alias_admin = $request->sender_data_alias;
-                        $datosEnvio->admin = 1;
-                    }
-                    $datosEnvio->identification = $request->sender;
-                    /*$datosEnvio->name = $request->sender_name;
-                    $datosEnvio->phone = $request->sender_phone;*/
-                    $datosEnvio->neighborhood = $request->sender_neighborhood;
-                    $datosEnvio->address_opc = $request->sender_address_opc;
-                    $datosEnvio->type = 'sender';
-                    $datosEnvio->save();
-                } 
-                //Guardar datos de recogida para futuros servicios
-                if (!is_null($request->remember_receiver_data)){
-                    $datosRecogida = new RememberData();
-                    if (Auth::user()->role_id == 1){
-                        $datosRecogida->user_id = Auth::user()->id;
-                        $datosRecogida->alias = $request->receiver_data_alias;
-                        $datosRecogida->admin = 0;
-                    }else{
-                        $datosRecogida->user_id = $request->user_id;
-                        $datosRecogida->alias_admin = $request->receiver_data_alias;
-                        $datosRecogida->admin = 1;
-                    }
-                    $datosRecogida->identification = $request->receiver;
-                    /*$datosRecogida->name = $request->receiver_name;
-                    $datosRecogida->phone = $request->receiver_phone;*/
-                    $datosRecogida->neighborhood = $request->receiver_neighborhood;
-                    $datosRecogida->address_opc = $request->receiver_address_opc;
-                    $datosRecogida->type = 'receiver';
-                    $datosRecogida->save();
+        if (!Auth::guest()){
+            //Guardar datos de envío para futuros servicios
+            if (!is_null($request->remember_sender_data)){
+                $datosEnvio = new RememberData();
+                if (Auth::user()->role_id == 1){
+                    $datosEnvio->user_id = Auth::user()->id;
+                    $datosEnvio->alias = $request->sender_data_alias;
+                    $datosEnvio->admin = 0;
+                }else{
+                    $datosEnvio->user_id = $request->user_id;
+                    $datosEnvio->alias_admin = $request->sender_data_alias;
+                    $datosEnvio->admin = 1;
                 }
-    
-                if (!is_null($request->remember_markers)){
-                    $domicilio = new Address($request->all());
-                    $domicilio->user_id = Auth::user()->id;
-                    $domicilio->sender_address = $servicio->sender_address;
-                    $domicilio->receiver_address = $servicio->receiver_address;
-                    $domicilio->name = $request->markers_alias;
-                    $domicilio->save();
+                $datosEnvio->identification = $request->sender;
+                $datosEnvio->neighborhood = $request->sender_neighborhood;
+                $datosEnvio->address_opc = $request->sender_address_opc;
+                $datosEnvio->type = 'sender';
+                $datosEnvio->save();
+            } 
+            //Guardar datos de recogida para futuros servicios
+            if (!is_null($request->remember_receiver_data)){
+                $datosRecogida = new RememberData();
+                if (Auth::user()->role_id == 1){
+                    $datosRecogida->user_id = Auth::user()->id;
+                    $datosRecogida->alias = $request->receiver_data_alias;
+                    $datosRecogida->admin = 0;
+                }else{
+                    $datosRecogida->user_id = $request->user_id;
+                    $datosRecogida->alias_admin = $request->receiver_data_alias;
+                    $datosRecogida->admin = 1;
                 }
+                $datosRecogida->identification = $request->receiver;
+                $datosRecogida->neighborhood = $request->receiver_neighborhood;
+                $datosRecogida->address_opc = $request->receiver_address_opc;
+                $datosRecogida->type = 'receiver';
+                $datosRecogida->save();
             }
+    
+            if (!is_null($request->remember_markers)){
+                $domicilio = new Address($request->all());
+                $domicilio->user_id = Auth::user()->id;
+                $domicilio->sender_address = $servicio->sender_address;
+                $domicilio->receiver_address = $servicio->receiver_address;
+                $domicilio->name = $request->markers_alias;
+                $domicilio->save();
+            }
+        }
             
-            if ( (Auth::guest()) || (Auth::user()->role_id != 3) ){
-                $notificacion = new Notification();
-                $notificacion->user_id = 0;
-                $notificacion->service_id = $servicio->id;
-                $notificacion->title = 'Nueva solicitud de servicio';
-                $notificacion->icon = 'feather icon-plus-square';
-                $notificacion->status = 0;
-                $notificacion->save();
-            }
+        if ( (Auth::guest()) || (Auth::user()->role_id != 3) ){
+            $notificacion = new Notification();
+            $notificacion->user_id = 0;
+            $notificacion->service_id = $servicio->id;
+            $notificacion->title = 'Nueva solicitud de servicio';
+            $notificacion->icon = 'feather icon-plus-square';
+            $notificacion->status = 0;
+            $notificacion->save();
+        }
     
-            if (Auth::guest()){
+        if (Auth::guest()){
+            return redirect("https://api.whatsapp.com/send?phone=573508663301&text=He%20programado%20la%20solicitud%20de%20servicio%20n%C3%BAmero%20*".$servicio->id."*.%20Estar%C3%A9%20pendiente%20a%20la%20tarifa.");
+        }else{
+            if (Auth::user()->role_id == 1){
+                return redirect('services/show/'.$servicio->id)->with('msj-exitoso', 'Su servicio ha sido añadido con éxito');
+            }else if (Auth::user()->role_id == 2){
                 return redirect("https://api.whatsapp.com/send?phone=573508663301&text=He%20programado%20la%20solicitud%20de%20servicio%20n%C3%BAmero%20*".$servicio->id."*.%20Estar%C3%A9%20pendiente%20a%20la%20tarifa.");
             }else{
-                if (Auth::user()->role_id == 1){
-                    return redirect('services/show/'.$servicio->id)->with('msj-exitoso', 'Su servicio ha sido añadido con éxito');
-                }else{
-                    return redirect('admin/services/show/'.$servicio->id)->with('msj-exitoso', 'El servicio ha sido creado con éxito');
-                }
+                return redirect('admin/services/show/'.$servicio->id)->with('msj-exitoso', 'El servicio ha sido creado con éxito');
             }
-        /*}else{
-            return redirect("https://api.whatsapp.com/send?phone=573508663301&text=He%20programado%20la%20solicitud%20de%20servicio%20n%C3%BAmero%20*".$checkService->id."*.%20Estar%C3%A9%20pendiente%20a%20la%20tarifa.");
-        }*/
+        }
     }
 
     /**** Admin / Crear Nuevo Servicio / Cargar Datos Recordados de un Usuario ****/
@@ -266,7 +255,15 @@ class ServiceController extends Controller
     public function add_brever(Request $request){
         $servicio = Service::find($request->service_id);
         $servicio->brever_id = $request->brever_id;
-        $servicio->status = 1;
+        if (isset($request->status)){
+            $servicio->status = $request->status;
+        }else{
+            $servicio->status = 1;
+        }
+        if ($servicio->type == 'Inmediato'){
+            $servicio->date = date('Y-m-d');
+            $servicio->time = date('H:i:s');
+        }
         $servicio->save();
 
         $notificacion = new Notification();
@@ -569,6 +566,11 @@ class ServiceController extends Controller
                     $notificacion2->status = 0;
                     $notificacion2->save();
                 }
+            }
+
+            if ( ($servicio->type == 'Inmediato') && (is_null($servicio->date)) ){
+                $servicio->date = date('Y-m-d');
+                $servicio->time = date('H:i:s');
             }
         }
 
@@ -962,7 +964,7 @@ class ServiceController extends Controller
                 $notificacion2->save();
             }
 
-            return redirect(redirect()->getUrlGenerator()->previous())->with('msj-exitoso', 'El servicio ha sido completado con éxito.');
+            return redirect('brever')->with('msj-exitoso', 'El servicio ha sido completado con éxito.');
         }else{
             $notificacion = new Notification();
             $notificacion->user_id = $servicio->brever_id;
@@ -1071,40 +1073,81 @@ class ServiceController extends Controller
     public function take(Request $request){
         $servicio = Service::find($request->service_id);
         $servicio->brever_id = Auth::user()->id;
-        $servicio->status = 1;
+        if ($servicio->type == 'Inmediato'){
+            $servicio->date = date('Y-m-d');
+            $servicio->time = date('H:i:s');
+            $servicio->status = 2;
+        }else{
+            $servicio->status = 1;
+        }
         $servicio->save();
         
-        $checkLog = Log::where('service_id', '=', $servicio->id)
+        if ($servicio->type == 'Inmediato'){
+            $checkLog = Log::where('service_id', '=', $servicio->id)
+                        ->where('action', '=', 'Servicio Iniciado')
+                        ->first();
+        
+            if (is_null($checkLog)){
+                $log = new Log();
+                $log->service_id = $servicio->id;
+                $log->user_id = Auth::user()->id;
+                $log->action = 'Servicio Iniciado';
+                $log->save();
+            }
+
+            if ($servicio->user_id != 0){
+                $notificacion = new Notification();
+                $notificacion->user_id = $servicio->user_id;
+                $notificacion->service_id = $servicio->id;
+                $notificacion->title = 'Su servicio ha sido iniciado';
+                $notificacion->icon = 'feather icon-check-circle';
+                $notificacion->status = 0;
+                $notificacion->save();
+            }
+
+            $notificacion2 = new Notification();
+            $notificacion2->user_id = 0;
+            $notificacion2->service_id = $servicio->id;
+            $notificacion2->title = 'Un brever ha iniciado un servicio inmediato';
+            $notificacion2->icon = 'feather icon-check-circle';
+            $notificacion2->status = 0;
+            $notificacion2->save();
+
+            return redirect('brever')->with('msj-exitoso', 'El servicio ha sido iniciado con éxito');
+        }else{
+            $checkLog = Log::where('service_id', '=', $servicio->id)
                         ->where('action', '=', 'Servicio tomado por Brever')
                         ->first();
         
-        if (is_null($checkLog)){
-            $log = new Log();
-            $log->service_id = $servicio->id;
-            $log->user_id = Auth::user()->id;
-            $log->action = 'Servicio tomado por Brever';
-            $log->save();
+            if (is_null($checkLog)){
+                $log = new Log();
+                $log->service_id = $servicio->id;
+                $log->user_id = Auth::user()->id;
+                $log->action = 'Servicio tomado por Brever';
+                $log->save();
+            }
+
+            if ($servicio->user_id != 0){
+                $notificacion = new Notification();
+                $notificacion->user_id = $servicio->user_id;
+                $notificacion->service_id = $servicio->id;
+                $notificacion->title = 'Su servicio ha sido asignado';
+                $notificacion->icon = 'feather icon-check-circle';
+                $notificacion->status = 0;
+                $notificacion->save();
+            }
+
+            $notificacion2 = new Notification();
+            $notificacion2->user_id = 0;
+            $notificacion2->service_id = $servicio->id;
+            $notificacion2->title = 'Un brever ha tomado el servicio';
+            $notificacion2->icon = 'feather icon-check-circle';
+            $notificacion2->status = 0;
+            $notificacion2->save();
+
+            return redirect('brever')->with('msj-exitoso', 'El servicio le ha sido asignado con éxito');
         }
-
-        if ($servicio->user_id != 0){
-            $notificacion = new Notification();
-            $notificacion->user_id = $servicio->user_id;
-            $notificacion->service_id = $servicio->id;
-            $notificacion->title = 'Su servicio ha sido asignado';
-            $notificacion->icon = 'feather icon-check-circle';
-            $notificacion->status = 0;
-            $notificacion->save();
-        }
-
-        $notificacion2 = new Notification();
-        $notificacion2->user_id = 0;
-        $notificacion2->service_id = $servicio->id;
-        $notificacion2->title = 'Un brever ha tomado el servicio';
-        $notificacion2->icon = 'feather icon-check-circle';
-        $notificacion2->status = 0;
-        $notificacion2->save();
-
-        return redirect('brever')->with('msj-exitoso', 'El servicio le ha sido asignado con éxito');
+        
     }
 
     public function load_address($id){
@@ -1329,6 +1372,12 @@ class ServiceController extends Controller
                 $notificacion->status = 0;
                 $notificacion->save();
             }
+        }
+
+        if ( ($servicio->type == 'Inmediato') && (is_null($servicio->date)) ){
+            $servicio->date = date('Y-m-d');
+            $servicio->date = date('H:i:s');
+            $servicio->save();
         }
 
         return redirect('admin')->with('msj-exitoso', 'El estado del servicio ha sido cambiado con éxito');

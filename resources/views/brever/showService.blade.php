@@ -110,6 +110,16 @@
                     <div class="card-content">
                         <div class="card-body">
                             <div class="row">
+                                <div class="col-md-12 text-center">
+                                    <br>
+                                    @if ($servicio->status  == 3)
+                                        <a href="javascript:;" type="button" class="btn btn-icon btn-primary mr-1 mb-1 waves-effect waves-light" onclick="loadConfirmModal({{$servicio->id}},1);"><i class="feather icon-check"></i> Llegada a Punto Inicial</a>
+                                    @elseif ($servicio->status == 6)  
+                                        <a href="javascript:;" type="button" class="btn btn-icon btn-primary mr-1 mb-1 waves-effect waves-light" onclick="loadConfirmModal({{$servicio->id}},2);"><i class="feather icon-check"></i> Iniciar Servicio</a>  
+                                    @elseif ($servicio->status == 2)
+                                        <a href="javascript:;" type="button" class="btn btn-icon btn-primary mr-1 mb-1 waves-effect waves-light" onclick="loadConfirmModal({{$servicio->id}},3);"><i class="feather icon-check"></i> Entrega en Punto Final</a>
+                                    @endif
+                                </div>
                             	<div class="col-md-6">
                             		<ul class="list-group">
                             			<a href="#" class="list-group-item active"><strong>Datos de Envío</strong></a>
@@ -247,16 +257,6 @@
                                         </li>
                             		</ul>
                             	</div>
-                            </div>
-                            <div class="col-md-12 text-right">
-                                <br>
-                                @if ($servicio->status  == 3)
-                                    <a href="javascript:;" type="button" class="btn btn-icon btn-primary mr-1 mb-1 waves-effect waves-light" onclick="loadConfirmModal({{$servicio->id}},1);"><i class="feather icon-check"></i> Llegada a Punto Inicial</a>
-                                @elseif ($servicio->status == 6)  
-                                    <a href="javascript:;" type="button" class="btn btn-icon btn-primary mr-1 mb-1 waves-effect waves-light" onclick="loadConfirmModal({{$servicio->id}},2);"><i class="feather icon-check"></i> Iniciar Servicio</a>  
-                                @elseif ($servicio->status == 2)
-                                    <a href="javascript:;" type="button" class="btn btn-icon btn-primary mr-1 mb-1 waves-effect waves-light" onclick="loadConfirmModal({{$servicio->id}},3);"><i class="feather icon-check"></i> Entrega en Punto Final</a>
-                                @endif
                             </div>
                         </div>
                     </div>

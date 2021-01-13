@@ -105,8 +105,8 @@
                                         @foreach ($servicios as $servicio)
                                             <tr>
                                                 <td>{{ $servicio->id }}</td>
-                                                <td>{{ date('Y-m-d', strtotime($servicio->date)) }}</td>
-                                                <td>{{ date('H:i', strtotime($servicio->time)) }}</td>
+                                                <td>@if (!is_null($servicio->date)) {{ date('Y-m-d', strtotime($servicio->date)) }} @else 0000-00-00 (Inmediato) @endif</td>
+                                                <td>@if (!is_null($servicio->time)) {{ date('H:i', strtotime($servicio->time)) }} @else 00:00 (Inmediato) @endif</td>
                                                 <td>
                                                     @if ($servicio->user_id == 0)
                                                         {{ $servicio->client_name }} (No Registrado)

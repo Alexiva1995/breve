@@ -380,6 +380,15 @@
                                                 <td colspan="6">
                                                     <div id="collapse-{{$servicioAsignado->id}}" class="collapse">
                                                         <div class="row">
+                                                            <div class="col-12 col-md-12 text-center">
+                                                                @if ($servicioAsignado->status == 3)
+                                                                    <a href="javascript:;" type="button" class="btn btn-icon btn-primary mr-1 mb-1 waves-effect waves-light" onclick="loadConfirmModal({{$servicioAsignado->id}},1);"><i class="feather icon-check"></i> Llegada a Punto Inicial</a>
+                                                                @elseif ($servicioAsignado->status == 6)  
+                                                                    <a href="javascript:;" type="button" class="btn btn-icon btn-primary mr-1 mb-1 waves-effect waves-light" onclick="loadConfirmModal({{$servicioAsignado->id}},2);"><i class="feather icon-check"></i> Iniciar Servicio</a>  
+                                                                @elseif ($servicioAsignado->status == 2)
+                                                                    <a href="javascript:;" type="button" class="btn btn-icon btn-primary mr-1 mb-1 waves-effect waves-light" onclick="loadConfirmModal({{$servicioAsignado->id}},3);"><i class="feather icon-check"></i> Entrega en Punto Final</a>
+                                                                @endif
+                                                            </div>
                                                             <div class="col-12 col-md-4">
                                                                 <ul class="list-group">
                                                                     <a href="#" class="list-group-item"><strong>Datos de Envío y Recogida</strong></a>
@@ -511,16 +520,6 @@
                                                                     </li>
                                                                 </ul>
                                                             </div>
-                                                            <div class="col-12 col-md-12 text-right">
-                                                                <br>
-                                                                @if ($servicioAsignado->status == 3)
-                                                                    <a href="javascript:;" type="button" class="btn btn-icon btn-primary mr-1 mb-1 waves-effect waves-light" onclick="loadConfirmModal({{$servicioAsignado->id}},1);"><i class="feather icon-check"></i> Llegada a Punto Inicial</a>
-                                                                @elseif ($servicioAsignado->status == 6)  
-                                                                    <a href="javascript:;" type="button" class="btn btn-icon btn-primary mr-1 mb-1 waves-effect waves-light" onclick="loadConfirmModal({{$servicioAsignado->id}},2);"><i class="feather icon-check"></i> Iniciar Servicio</a>  
-                                                                @elseif ($servicioAsignado->status == 2)
-                                                                    <a href="javascript:;" type="button" class="btn btn-icon btn-primary mr-1 mb-1 waves-effect waves-light" onclick="loadConfirmModal({{$servicioAsignado->id}},3);"><i class="feather icon-check"></i> Entrega en Punto Final</a>
-                                                                @endif
-                                                            </div>
                                                         </div>
                                                     </div>
                                                 </td>
@@ -562,6 +561,15 @@
                                                 <td>
                                                     <div id="collapse-movil-{{$servicioAsignadoMovil->id}}" class="collapse">
                                                         <div class="row">
+                                                            <div class="col-12 col-md-12 text-center">
+                                                                @if ($servicioAsignadoMovil->status == 3)
+                                                                    <a href="javascript:;" type="button" class="btn btn-icon btn-primary mr-1 mb-1 waves-effect waves-light" onclick="loadConfirmModal({{$servicioAsignadoMovil->id}},1);"><i class="feather icon-check"></i> Llegada a Punto Inicial</a>
+                                                                @elseif ($servicioAsignadoMovil->status == 6)  
+                                                                    <a href="javascript:;" type="button" class="btn btn-icon btn-primary mr-1 mb-1 waves-effect waves-light" onclick="loadConfirmModal({{$servicioAsignadoMovil->id}},2);"><i class="feather icon-check"></i> Iniciar Servicio</a>  
+                                                                @elseif ($servicioAsignadoMovil->status == 2)
+                                                                    <a href="javascript:;" type="button" class="btn btn-icon btn-primary mr-1 mb-1 waves-effect waves-light" onclick="loadConfirmModal({{$servicioAsignadoMovil->id}},3);"><i class="feather icon-check"></i> Entrega en Punto Final</a>
+                                                                @endif
+                                                            </div>
                                                             <div class="col-12 col-md-4">
                                                                 <ul class="list-group">
                                                                     <a href="#" class="list-group-item"><strong>Datos de Envío y Recogida</strong></a>
@@ -692,16 +700,6 @@
                                                                         <span>Total: <br><b> @if ($servicioAsignadoMovil->rate_status == 1) ${{ $servicioAsignadoMovil->total }} @else Sin Calcular @endif</b></span>
                                                                     </li>
                                                                 </ul>
-                                                            </div>
-                                                            <div class="col-12 col-md-12 text-right">
-                                                                <br>
-                                                                @if ($servicioAsignadoMovil->status == 3)
-                                                                    <a href="javascript:;" type="button" class="btn btn-icon btn-primary mr-1 mb-1 waves-effect waves-light" onclick="loadConfirmModal({{$servicioAsignadoMovil->id}},1);"><i class="feather icon-check"></i> Llegada a Punto Inicial</a>
-                                                                @elseif ($servicioAsignadoMovil->status == 6)  
-                                                                    <a href="javascript:;" type="button" class="btn btn-icon btn-primary mr-1 mb-1 waves-effect waves-light" onclick="loadConfirmModal({{$servicioAsignadoMovil->id}},2);"><i class="feather icon-check"></i> Iniciar Servicio</a>  
-                                                                @elseif ($servicioAsignadoMovil->status == 2)
-                                                                    <a href="javascript:;" type="button" class="btn btn-icon btn-primary mr-1 mb-1 waves-effect waves-light" onclick="loadConfirmModal({{$servicioAsignadoMovil->id}},3);"><i class="feather icon-check"></i> Entrega en Punto Final</a>
-                                                                @endif
                                                             </div>
                                                         </div>
                                                     </div>

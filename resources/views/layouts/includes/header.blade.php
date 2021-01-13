@@ -39,8 +39,15 @@
                                     ->orderBy('time', 'ASC')
                                     ->take(10)
                                     ->get();
+        
+        $serviciosInmediatos = DB::table('services')
+                                    ->where('type', '=', 'Inmediato')
+                                    ->where('status', '=', 0)
+                                    ->orderBy('id', 'ASC')
+                                    ->get();
 
         $cantServiciosNuevosHeader = $serviciosNuevosHeader->count();
+        $cantServiciosInmediatos = $serviciosInmediatos->count();
     }
 @endphp
 
@@ -90,16 +97,31 @@
                         @if (Auth::user()->vip == 1)
                             <li class="dropdown dropdown-notification nav-item d-block d-sm-none" style="padding-right: 10px;">
                                 <a class="nav-link nav-link-label" href="#" data-toggle="dropdown">
-                                    <i class="ficon far fa-plus-square"></i><span class="badge badge-pill badge-success badge-up" style="right: -10px !important;">{{ $cantServiciosNuevosHeader }}</span></a>
+                                    <i class="ficon far fa-plus-square"></i><span class="badge badge-pill badge-success badge-up" style="right: -10px !important;">{{ $cantServiciosNuevosHeader + $cantServiciosInmediatos }}</span></a>
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-media dropdown-menu-right">
                                     <li class="dropdown-menu-header">
                                         <div class="dropdown-header m-0 p-2">
-                                            <h3 class="white">{{ $cantServiciosNuevosHeader }}</h3>
+                                            <h3 class="white">{{ $cantServiciosNuevosHeader + $cantServiciosInmediatos }}</h3>
                                             <span class="notification-title">Servicios Disponibles</span>
                                         </div>
                                     </li>
                                     <li class="scrollable-container media-list">
+                                        @foreach ($serviciosInmediatos as $servicioInmediato)
+                                            <div class="media d-flex align-items-start">
+                                                <div class="media-body">
+                                                    <div>
+                                                        Fecha: <b>De Inmediato</b>
+                                                    </div>
+                                                    <div style="padding-top: 10px;">
+                                                        {{ $servicioInmediato->sender_neighborhood }} - {{ $servicioInmediato->receiver_neighborhood }} ({{ $servicioInmediato->equipment_type }})
+                                                    </div>
+                                                </div>
+                                                <div class="media-right">
+                                                    <a class="btn btn-success btn-sm" href="javascript:;" onclick="loadModal({{$servicioInmediato->id}});">TOMAR <br>SERVICIO</a> 
+                                                </div>
+                                            </div>
+                                        @endforeach
                                         @foreach ($serviciosNuevosHeader as $servicioNuevoHeader)
                                             <div class="media d-flex align-items-start">
                                                 <div class="media-body">

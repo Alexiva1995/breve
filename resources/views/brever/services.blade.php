@@ -45,6 +45,18 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        @foreach ($serviciosInmediatos as $servicioInmediato)
+                                            <tr>
+                                                <td>De Inmediato</td>
+                                                <td>{{ $servicioInmediato->sender_neighborhood }} - {{ $servicioInmediato->receiver_neighborhood }}</td>
+                                                <td>{{ $servicioInmediato->equipment_type }}</td>
+                                                <td>
+                                                    <div class="btn-group" role="group" aria-label="Basic example">
+                                                        <a type="button" class="btn btn-outline-success" onclick="loadModal({{$servicioInmediato->id}});" style="color: green;"><i class="far fa-arrow-alt-circle-right"></i> Tomar Sevicio</a>
+                                                    </div>
+                                                </td>
+                                           </tr>
+                                        @endforeach
                                         @foreach ($servicios as $servicio)
                                             <tr>
                                                 <td>{{ date('H:i', strtotime($servicio->time)) }}</td>

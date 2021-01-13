@@ -56,8 +56,8 @@
                                     <tbody>
                                         @foreach ($servicios as $servicio)
                                             <tr>
-                                                <td>{{ date('Y-m-d', strtotime($servicio->date)) }}</td>
-                                                <td>{{ date('H:i', strtotime($servicio->time)) }}</td>
+                                                <td>@if (is_null($servicio->date)) 0000-00-00 (Inmediato) @else {{ date('Y-m-d', strtotime($servicio->date)) }} @endif</td>
+                                                <td>@if (is_null($servicio->time)) 00:00 (Inmediato) @else {{ date('H:i', strtotime($servicio->time)) }} @endif</td>
                                                 <td>{{ $servicio->sender_neighborhood }} - {{ $servicio->receiver_neighborhood }}</td>
                                                 <td>
                                                     @if ($servicio->rate_status == 1)

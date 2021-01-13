@@ -105,17 +105,18 @@
                             	<div class="col-md-6">
                             		<ul class="list-group">
                                         <a href="#" class="list-group-item active"><strong>Datos del Servicio</strong></a>
+                                        
                                         <li class="list-group-item d-flex">
                                             <p class="float-left mb-0">
                                                 <i class="feather icon-calendar mr-1"></i>
                                             </p>
-                                            <span>Fecha: <b>{{ date('d-m-Y', strtotime($servicio->date)) }}</b></span>
+                                            <span>Fecha: <b>@if (!is_null($servicio->date)) {{ date('d-m-Y', strtotime($servicio->date)) }} @else 0000-00-00 (Inmediato) @endif</b></span>
                                         </li>
                                         <li class="list-group-item d-flex">
                                             <p class="float-left mb-0">
                                                 <i class="feather icon-clock mr-1"></i>
                                             </p>
-                                            <span>Hora: <b>{{ date('H:i', strtotime($servicio->time)) }}</b></span>
+                                            <span>Hora: <b>@if (!is_null($servicio->time)) {{ date('H:i', strtotime($servicio->time)) }} @else 00:00 (Inmediato) @endif</b></span>
                                         </li>
                                         <li class="list-group-item d-flex">
                                             <p class="float-left mb-0">

@@ -139,17 +139,27 @@
                                                                                                 <label class="label-small">Con este nombre registraremos el servicio</label>
                                                                                             </div>
                                                                                         </div>
-                                                                                        <div class="col-md-6">
+                                                                                        <div class="col-md-4">
+                                                                                            <div class="form-group">
+                                                                                                <label for="type">Tipo de Servicio </label>
+                                                                                                <select name="type" id="type" class="form-control">
+                                                                                                    <option value="Inmediato">Inmediato</option>
+                                                                                                    <option value="Programado">Programado</option>
+                                                                                                </select>
+                                                                                                <label class="label-small">¿Desea el servicio de inmediato o en una hora programada?</label>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="col-md-4">
                                                                                             <div class="form-group">
                                                                                                 <label for="date">Fecha</label>
-                                                                                                <input type="date" class="form-control" id="date" name="date" min="{{ date('Y-m-d') }}" value="{{ date('Y-m-d') }}" required>
+                                                                                                <input type="date" class="form-control" id="date" name="date" min="{{ date('Y-m-d') }}" value="{{ date('Y-m-d') }}" disabled>
                                                                                                 <label class="label-small">¿Que día debemos estar en el punto inicial?</label>
                                                                                             </div>
                                                                                         </div>
-                                                                                        <div class="col-md-6">
+                                                                                        <div class="col-md-4">
                                                                                             <div class="form-group">
                                                                                                 <label for="time">Hora <i class="fas fa-info-circle" data-toggle="tooltip" title="2 Horas de Anticipación"></i></label>
-                                                                                                <input type="time" class="form-control" id="time" name="time" min="07:00" max="19:00" value="{{ date('H:i') }}" required>
+                                                                                                <input type="time" class="form-control" id="time" name="time" min="07:00" max="19:00" value="{{ date('H:i') }}" disabled>
                                                                                                 <label class="label-small">¿A qué hora debemos estar en el punto inicial?</label>
                                                                                             </div>
                                                                                         </div>
@@ -157,10 +167,17 @@
                                                                                             <div class="form-group">
                                                                                                 <label for="sender_address">Dirección inicial: (*)</label>
                                                                                                 <input type="text" class="form-control" id="sender_address" name="sender_address" required>
-                                                                                                <label class="label-small">Dirección Completa, nombre del barrio (no olvides unidad, bloque, apto u oficina, si aplica)</label>
+                                                                                                <label class="label-small">Dirección Completa (no olvides unidad, bloque, apto u oficina, si aplica)</label>
                                                                                             </div>
                                                                                         </div>
-                                                                                        <div class="col-md-12">
+                                                                                        <div class="col-md-6">
+                                                                                            <div class="form-group">
+                                                                                                <label for="sender_neighborhood">Barrio inicial: (*)</label>
+                                                                                                <input type="text" class="form-control" id="sender_neighborhood" name="sender_neighborhood" required>
+                                                                                                <label class="label-small">Barrio inicial</label>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="col-md-6">
                                                                                             <div class="form-group">
                                                                                                 <label for="sender"> Nombre & número de 📲 de quien entrega: (*)</label>
                                                                                                 <input type="text" class="form-control" id="sender" name="sender" required>
@@ -214,10 +231,17 @@
                                                                                             <div class="form-group">
                                                                                                 <label for="receiver_address">Dirección final: (*)</label>
                                                                                                 <input type="text" class="form-control" id="receiver_address" name="receiver_address" required>
-                                                                                                <label class="label-small">Dirección Completa, nombre del barrio (no olvides unidad, bloque, apto u oficina, si aplica)</label>
+                                                                                                <label class="label-small">Dirección Completa (no olvides unidad, bloque, apto u oficina, si aplica)</label>
                                                                                             </div>
                                                                                         </div>
-                                                                                        <div class="col-md-12">
+                                                                                        <div class="col-md-6">
+                                                                                            <div class="form-group">
+                                                                                                <label for="receiver_neighborhood">Barrio final: (*)</label>
+                                                                                                <input type="text" class="form-control" id="receiver_neighborhood" name="receiver_neighborhood" required>
+                                                                                                <label class="label-small">Barrio Final</label>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="col-md-6">
                                                                                             <div class="form-group">
                                                                                                 <label for="receiver"> Nombre & número de 📲 de quien recibe: (*)</label>
                                                                                                 <input type="text" class="form-control" id="receiver" name="receiver" required>
@@ -329,7 +353,7 @@
                 document.getElementById("refund_amount2").value = parseInt(document.getElementById("refund_amount").value) + parseInt(document.getElementById("rate").value);
             }
             
-             $("#main-form").submit(function(){
+            $("#main-form").submit(function(){
                 $("#btn-submit").prop('disabled', true);
                 var contador = 0;
                 $("input[type=checkbox]").each(function(){
@@ -346,6 +370,20 @@
                     return false;
                 }
                
+            });
+
+            $("#type").on('change', function(){
+                if ($("#type").val() == 'Inmediato'){
+                    $("#time").prop('required', false);
+                    $("#time").prop('disabled', true);
+                    $("#date").prop('required', false);
+                    $("#date").prop('disabled', true);
+                }else{
+                    $("#time").prop('required', true);
+                    $("#time").prop('disabled', false);
+                    $("#date").prop('required', true);
+                    $("#date").prop('disabled', false);
+                }
             });
 
         </script>
