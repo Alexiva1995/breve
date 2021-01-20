@@ -1079,7 +1079,11 @@ class ServiceController extends Controller
         if ($servicio->type == 'Inmediato'){
             $servicio->date = date('Y-m-d');
             $servicio->time = date('H:i:s');
-            $servicio->status = 2;
+            if ( (Auth::user()->vip == 1) && ($servicio->user_id != 0) ){
+                $servicio->status = 3;
+            }else{
+                $servicio->status = 1;
+            }
         }else{
             $servicio->status = 1;
         }
@@ -1116,7 +1120,7 @@ class ServiceController extends Controller
             $notificacion2->status = 0;
             $notificacion2->save();
 
-            return redirect('brever')->with('msj-exitoso', 'El servicio ha sido iniciado con éxito');
+            return redirect('brever')->with('msj-exitoso', 'El servicio le ha sido asignado con éxito.');
         }else{
             $checkLog = Log::where('service_id', '=', $servicio->id)
                         ->where('action', '=', 'Servicio tomado por Brever')
