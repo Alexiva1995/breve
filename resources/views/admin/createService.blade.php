@@ -531,19 +531,23 @@
         });
     }
 
-    $("#type").on('change', function() {
-            if ($("#type").val() == 'Inmediato') {
-                $("#time").prop('required', false);
-                $("#time").prop('disabled', true);
-                $("#date").prop('required', false);
-                $("#date").prop('disabled', true);
-            } else {
-                $("#time").prop('required', true);
-                $("#time").prop('disabled', false);
-                $("#date").prop('required', true);
-                $("#date").prop('disabled', false);
-            }
-        });
+    $("#type").on('change', function(){
+        if ($("#type").val() == 'Inmediato'){
+            $("#date").prop('required', false);
+            $("#time").prop('required', false);
+            $("#time").removeAttr("min");
+            $("#time").removeAttr("max");
+            $("#date_div").css('display', 'none');
+            $("#time_div").css('display', 'none');
+        }else{
+            $("#date").prop('required', true);
+            $("#time").prop('required', true);
+            $("#time").attr("min", "7:00");
+            $("#time").attr("max", "18:00");
+            $("#date_div").css('display', 'block');
+            $("#time_div").css('display', 'block');
+        }
+    });
 </script>
 @endpush
 
@@ -652,17 +656,17 @@
                                             <label class="label-small">¿Desea el servicio de inmediato o en una hora programada?</label>
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-4" id="date_div" style="display: none;">
                                         <div class="form-group">
                                             <label for="date">Fecha</label>
-                                            <input type="date" class="form-control" id="date" name="date" min="{{ date('Y-m-d') }}" value="{{ date('Y-m-d') }}" disabled>
+                                            <input type="date" class="form-control" id="date" name="date" min="{{ date('Y-m-d') }}" value="{{ date('Y-m-d') }}">
                                             <label class="label-small">¿Que día debemos estar en el punto inicial?</label>
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-4" id="time_div" style="display: none;">
                                         <div class="form-group">
                                             <label for="time">Hora <i class="fas fa-info-circle" data-toggle="tooltip" title="2 Horas de Anticipación"></i></label>
-                                            <input type="time" class="form-control" id="time" name="time" min="07:00" max="19:00" value="{{ date('H:i') }}" disabled>
+                                            <input type="time" class="form-control" id="time" name="time" value="{{ date('H:i') }}">
                                             <label class="label-small">¿A qué hora debemos estar en el punto inicial?</label>
                                         </div>
                                     </div>

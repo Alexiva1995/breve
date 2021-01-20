@@ -650,17 +650,21 @@
         $("#confirmModal").modal("show");
     }
 
-    $("#type").on('change', function() {
-        if ($("#type").val() == 'Inmediato') {
-            $("#time").prop('required', false);
-            $("#time").prop('disabled', true);
+    $("#type").on('change', function(){
+        if ($("#type").val() == 'Inmediato'){
             $("#date").prop('required', false);
-            $("#date").prop('disabled', true);
-        } else {
-            $("#time").prop('required', true);
-            $("#time").prop('disabled', false);
+            $("#time").prop('required', false);
+            $("#time").removeAttr("min");
+            $("#time").removeAttr("max");
+            $("#date_div").css('display', 'none');
+            $("#time_div").css('display', 'none');
+        }else{
             $("#date").prop('required', true);
-            $("#date").prop('disabled', false);
+            $("#time").prop('required', true);
+            $("#time").attr("min", "7:00");
+            $("#time").attr("max", "18:00");
+            $("#date_div").css('display', 'block');
+            $("#time_div").css('display', 'block');
         }
     });
 
@@ -941,49 +945,7 @@
                                     <h6><i class="step-icon feather icon-briefcase"></i> Servicio</h6>
                                     <fieldset>
                                         <div class="row">
-                                            @if ($cantDatosEnvio > 0)
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for="address">Datos de Envío Guardados</label>
-                                                    <div class="position-relative has-icon-left">
-                                                        <select class="form-control" id="sender_data" onchange="loadSenderData();">
-                                                            <option value="">Seleccione una opción</option>
-                                                            @foreach($datosEnvio as $datoEnvio)
-                                                            <option value="{{ $datoEnvio->id }}">{{ $datoEnvio->alias }}</option>
-                                                            @endforeach
-                                                        </select>
-                                                        <div class="form-control-position">
-                                                            <i class="feather icon-map-pin"></i>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            @endif
-                                            @if ($cantDatosRecogida > 0)
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for="address">Datos de Entrega Guardados</label>
-                                                    <div class="position-relative has-icon-left">
-                                                        <select class="form-control" id="receiver_data" onchange="loadReceiverData();">
-                                                            <option value="">Seleccione una opción</option>
-                                                            @foreach($datosRecogida as $datoRecogida)
-                                                            <option value="{{ $datoRecogida->id }}">{{ $datoRecogida->alias }}</option>
-                                                            @endforeach
-                                                        </select>
-                                                        <div class="form-control-position">
-                                                            <i class="feather icon-map-pin"></i>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            @endif
-                                            <div class="col-md-12">
-                                                <div class="form-group">
-                                                    <label for="client_name"> Tu Nombre (o el de tu Negocio/Emprendimiento) (*)</label>
-                                                    <input type="text" class="form-control" id="client_name" name="client_name" required>
-                                                    <label class="label-small">Con este nombre registraremos el servicio</label>
-                                                </div>
-                                            </div>
+                                            <div class="col-md-12 text-center" style="font-size: 16px; font-weight: bold;">TIPO DE SERVICIO</div>
                                             <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label for="type">Tipo de Servicio </label>
@@ -995,19 +957,38 @@
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
-                                                <div class="form-group">
+                                                <div class="form-group" id="date_div" style="display: none;">
                                                     <label for="date">Fecha</label>
-                                                    <input type="date" class="form-control" id="date" name="date" min="{{ date('Y-m-d') }}" value="{{ date('Y-m-d') }}" disabled>
+                                                    <input type="date" class="form-control" id="date" name="date" min="{{ date('Y-m-d') }}" value="{{ date('Y-m-d') }}">
                                                     <label class="label-small">¿Que día debemos estar en el punto inicial?</label>
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
-                                                <div class="form-group">
+                                                <div class="form-group" id="time_div" style="display: none;">
                                                     <label for="time">Hora <i class="fas fa-info-circle" data-toggle="tooltip" title="2 Horas de Anticipación"></i></label>
-                                                    <input type="time" class="form-control" id="time" name="time" min="07:00" max="19:00" value="{{ date('H:i') }}" disabled>
+                                                    <input type="time" class="form-control" id="time" name="time" value="{{ date('H:i') }}">
                                                     <label class="label-small">¿A qué hora debemos estar en el punto inicial?</label>
                                                 </div>
                                             </div>
+                                            <div class="col-md-12 text-center" style="font-size: 16px; font-weight: bold;">DATOS DE INICIO</div>
+                                            @if ($cantDatosEnvio > 0)
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <label for="address">Datos de Envío Guardados</label>
+                                                        <div class="position-relative has-icon-left">
+                                                            <select class="form-control" id="sender_data" onchange="loadSenderData();">
+                                                                <option value="">Seleccione una opción</option>
+                                                                @foreach($datosEnvio as $datoEnvio)
+                                                                <option value="{{ $datoEnvio->id }}">{{ $datoEnvio->alias }}</option>
+                                                                @endforeach
+                                                            </select>
+                                                            <div class="form-control-position">
+                                                                <i class="feather icon-map-pin"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @endif
                                             <div class="col-md-12">
                                                 <div class="form-group">
                                                     <label for="sender_address">Dirección inicial: (*)</label>
@@ -1096,6 +1077,25 @@
                                                     </li>
                                                 </ul>
                                             </div>
+                                            <div class="col-md-12 text-center" style="font-size: 16px; font-weight: bold;">DATOS DE ENTREGA</div>
+                                            @if ($cantDatosRecogida > 0)
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <label for="address">Datos de Entrega Guardados</label>
+                                                        <div class="position-relative has-icon-left">
+                                                            <select class="form-control" id="receiver_data" onchange="loadReceiverData();">
+                                                                <option value="">Seleccione una opción</option>
+                                                                @foreach($datosRecogida as $datoRecogida)
+                                                                <option value="{{ $datoRecogida->id }}">{{ $datoRecogida->alias }}</option>
+                                                                @endforeach
+                                                            </select>
+                                                            <div class="form-control-position">
+                                                                <i class="feather icon-map-pin"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @endif
                                             <div class="col-md-12">
                                                 <div class="form-group">
                                                     <label for="receiver_address">Dirección final: (*)</label>
@@ -1141,6 +1141,7 @@
                                                     </li>
                                                 </ul><br>
                                             </div>
+                                            <div class="col-md-12 text-center" style="font-size: 16px; font-weight: bold;">MEDIO DE PAGO</div>
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label for="payment_method">La tarifa se paga en</label>
@@ -1165,9 +1166,9 @@
                                                     <input type="number" class="form-control" id="refund_amount2" disabled>
                                                 </div>
                                             </div>
+                                            <div class="col-md-12 text-center" style="font-size: 16px; font-weight: bold;">OBSERVACIONES</div>
                                             <div class="col-md-12">
                                                 <div class="form-group">
-                                                    <label for="observations">Nota</label>
                                                     <textarea name="observations" id="observations" rows="4" class="form-control"></textarea>
                                                     <label class="label-small">Nota especial para el Brever que realizará el servicio</label>
                                                 </div>
