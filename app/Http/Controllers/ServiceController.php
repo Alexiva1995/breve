@@ -882,6 +882,9 @@ class ServiceController extends Controller
         }
 
         $servicio->status = 4;
+        if (isset($request->brever_observations)){
+            $servicio->brever_observations = $request->brever_observations;
+        }
         if ($request->hasFile('photo')){
             $file = $request->file('photo');
             $name = time().$file->getClientOriginalName();

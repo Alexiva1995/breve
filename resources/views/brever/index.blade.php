@@ -786,9 +786,15 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <div class="form-group" id="photo_div" style="display:none;">
-                            <label for="photo">Foto de Entrega</label>
-                            <input type="file" class="form-control" name="photo" id="photo" capture="camera" accept="image/*">
+                        <div id="photo_div" style="display:none;">
+                            <div class="form-group">
+                                <label for="photo">Foto de Entrega (*)</label>
+                                <input type="file" class="form-control" name="photo" id="photo" capture="camera" accept="image/*">
+                            </div>
+                            <div class="form-group">
+                                <label for="photo">Observaciones (Opcional)</label>
+                                <textarea class="form-control" name="brever_observations"></textarea>
+                            </div>
                         </div>
                         <div class="text-center" id="confirm-text"></div>
                     </div>

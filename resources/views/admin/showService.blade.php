@@ -206,8 +206,16 @@
                         </li>
                     @endforeach
                 </ul><br>
+                @if (!is_null($servicio->brever_observations))
+                    <ul class="list-group">
+                        <a href="#" class="list-group-item active"><strong>Observaciones del Brever</strong></a>
+                        <li class="list-group-item d-flex ">
+                            {{ $servicio->brever_observations }}
+                        </li>
+                    </ul><br>
+                @endif
                 @if (!is_null($servicio->delivery_photo))
-                    <ul class="list-group text-center">
+                    <ul class="list-group">
                         <a href="#" class="list-group-item active"><strong>Foto de Entrega</strong></a>
                         <li class="list-group-item d-flex ">
                             <img src="{{ asset('images/services/'.$servicio->delivery_photo) }}" alt="" style="width: 100%; height: 250px;">
