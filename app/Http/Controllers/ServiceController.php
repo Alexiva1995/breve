@@ -115,6 +115,11 @@ class ServiceController extends Controller
     /**** Almacenar nuevo servicio ****/
     public function store(Request $request){
         $servicio = new Service($request->all());
+
+        if ($servicio->type == 'Inmediato'){
+            $servicio->date = NULL;
+            $servicio->time = NULL;
+        }
         if ($servicio->payment_method == 'reembolso'){
             $servicio->total = $servicio->rate + $servicio->refund_amount;
         }else{

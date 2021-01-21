@@ -547,7 +547,7 @@
                             <h6><i class="step-icon feather icon-briefcase"></i>Servicio</h6>
                             <fieldset>
                                 <div class="row">
-                                    <div class="col-md-12 text-center" style="font-size: 16px; font-weight: bold;">TIPO DE SERVICIO</div>
+                                    <div class="col-md-12 text-center" style="font-size: 18px; font-weight: bold; color: black;">TIPO DE SERVICIO</div>
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="type">Tipo de Servicio </label>
@@ -572,7 +572,7 @@
                                             <label class="label-small">¿A qué hora debemos estar en el punto inicial?</label>
                                         </div>
                                     </div>
-                                    <div class="col-md-12 text-center" style="font-size: 16px; font-weight: bold;">DATOS DE INICIO</div>
+                                    <div class="col-md-12 text-center" style="font-size: 18px; font-weight: bold; color: black;">DATOS DE INICIO</div>
                                     @if ($cantDatosEnvio > 0)
                                         <div class="col-md-12">
                                             <div class="form-group">
@@ -591,7 +591,7 @@
                                             </div>
                                         </div>
                                     @endif
-                                    <div class="col-md-12">
+                                    <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="sender_address">Dirección inicial: (*)</label>
                                             <input type="text" class="form-control" id="sender_address_opc" name="sender_address_opc" required>
@@ -605,7 +605,7 @@
                                             <label class="label-small">Barrio inicial</label>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-12">
                                         <div class="form-group">
                                             <label for="sender"> Nombre & número de 📲 de quien entrega: (*)</label>
                                             <input type="text" class="form-control" id="sender" name="sender" required>
@@ -636,14 +636,14 @@
                                             </li>
                                         </ul><br>
                                     </div>
-                                    <div class="col-md-12">
+                                    <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="article">Articulo a transportar: (*) <i class="fas fa-info-circle" data-toggle="tooltip" title="CANASTA: 40cm de ancho. 60cm de largo. 20cm de profundidad. (Máximo 18kg de peso). MALETA BREVE: 42cm de ancho. 38cm de largo. 50cm de profundidad. (Máximo 15kg de peso). MALETÍN CONVENCIONAL: 27cm de ancho. 14cm de largo. 40cm de profundidad. (Máximo 15kg de peso)."></i></label>
                                             <input type="text" class="form-control" id="article" name="article" required>
                                             <label class="label-small">¿Qué vas a enviar?</label>
                                         </div>
                                     </div>
-                                    <div class="col-md-12">
+                                    <div class="col-md-6">
                                         <label for="equipment_type">Equipo Breve</label><br>
                                         <label class="label-small">Para transportar tu artículo (Puedes elegir dos o más💚)</label>
                                         <ul class="list-unstyled mb-0">
@@ -679,7 +679,7 @@
                                             </li>
                                         </ul>
                                     </div>
-                                    <div class="col-md-12 text-center" style="font-size: 16px; font-weight: bold;">DATOS DE ENTREGA</div>
+                                    <div class="col-md-12 text-center" style="font-size: 18px; font-weight: bold; color: black;">DATOS DE ENTREGA</div>
                                     @if ($cantDatosRecogida > 0)
                                         <div class="col-md-12">
                                             <div class="form-group">
@@ -698,7 +698,7 @@
                                             </div>
                                         </div>
                                     @endif
-                                    <div class="col-md-12">
+                                    <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="receiver_address">Dirección final: (*)</label>
                                             <input type="text" class="form-control" id="receiver_address_opc" name="receiver_address_opc" required>
@@ -712,7 +712,7 @@
                                             <label class="label-small">Barrio Final</label>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-12">
                                         <div class="form-group">
                                             <label for="receiver"> Nombre & número de 📲 de quien recibe: (*)</label>
                                             <input type="text" class="form-control" id="receiver" name="receiver" required>
@@ -743,7 +743,7 @@
                                             </li>
                                         </ul><br>
                                     </div>
-                                    <div class="col-md-12 text-center" style="font-size: 16px; font-weight: bold;">MEDIO DE PAGO</div>
+                                    <div class="col-md-12 text-center" style="font-size: 18px; font-weight: bold; color: black;">MEDIO DE PAGO</div>
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="payment_method">La tarifa se paga en</label>
@@ -768,7 +768,7 @@
                                             <input type="number" class="form-control" id="refund_amount2" disabled>
                                         </div>
                                     </div>
-                                    <div class="col-md-12 text-center" style="font-size: 16px; font-weight: bold;">OBSERVACIONES</div>
+                                    <div class="col-md-12 text-center" style="font-size: 18px; font-weight: bold; color: black;">OBSERVACIONES</div>
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <textarea name="observations" id="observations" rows="4" class="form-control"></textarea>
