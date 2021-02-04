@@ -266,8 +266,10 @@ class ServiceController extends Controller
             $servicio->status = 1;
         }
         if ($servicio->type == 'Inmediato'){
-            $servicio->date = date('Y-m-d');
-            $servicio->time = date('H:i:s');
+            $fecha = Carbon::now()->timezone("America/Bogota");
+            $hora = Carbon::now()->timezone("America/Bogota");
+            $servicio->date = $fecha->format('Y-m-d');
+            $servicio->time = $hora->format('H:i:s');
         }
         $servicio->save();
 
@@ -574,8 +576,10 @@ class ServiceController extends Controller
             }
 
             if ( ($servicio->type == 'Inmediato') && (is_null($servicio->date)) ){
-                $servicio->date = date('Y-m-d');
-                $servicio->time = date('H:i:s');
+                $fecha = Carbon::now()->timezone("America/Bogota");
+                $hora = Carbon::now()->timezone("America/Bogota");
+                $servicio->date = $fecha->format('Y-m-d');
+                $servicio->time = $hora->format('H:i:s');
             }
         }
 
@@ -1082,8 +1086,10 @@ class ServiceController extends Controller
         $servicio = Service::find($request->service_id);
         $servicio->brever_id = Auth::user()->id;
         if ($servicio->type == 'Inmediato'){
-            $servicio->date = date('Y-m-d');
-            $servicio->time = date('H:i:s');
+            $fecha = Carbon::now()->timezone("America/Bogota");
+            $hora = Carbon::now()->timezone("America/Bogota");
+            $servicio->date = $fecha->format('Y-m-d');
+            $servicio->time = $hora->format('H:i:s');
             if ( (Auth::user()->vip == 1) && ($servicio->user_id != 0) ){
                 $servicio->status = 3;
             }else{
@@ -1387,8 +1393,10 @@ class ServiceController extends Controller
         }
 
         if ( ($servicio->type == 'Inmediato') && (is_null($servicio->date)) ){
-            $servicio->date = date('Y-m-d');
-            $servicio->date = date('H:i:s');
+            $fecha = Carbon::now()->timezone("America/Bogota");
+            $hora = Carbon::now()->timezone("America/Bogota");
+            $servicio->date = $fecha->format('Y-m-d');
+            $servicio->time = $hora->format('H:i:s');
             $servicio->save();
         }
 
