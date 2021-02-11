@@ -97,7 +97,7 @@
                     $("#receiver_data_div").css('display', 'none');
                 }else{
                     //var path = "http://localhost:8000/admin/services/load-remember-data/"+id;
-                    var path = "https://www.breve.com.co/breve2/admin/services/load-remember-data/"+id;
+                    var path = "https://www.breve.com.co/admin/services/load-remember-data/"+id;
 
                     $.ajax({
                         type:"GET",
@@ -522,7 +522,7 @@
 
         function loadSenderData(){
             //var path = "http://localhost:8000/admin/services/load-data/"+$("#sender_data").val();
-            var path = "https://www.breve.com.co/breve2/admin/services/load-data/"+$("#sender_data").val();
+            var path = "https://www.breve.com.co/admin/services/load-data/"+$("#sender_data").val();
 
             $.ajax({
                 type:"GET",
@@ -537,7 +537,7 @@
 
         function loadReceiverData(){
             //var path = "http://localhost:8000/admin/services/load-data/"+$("#receiver_data").val();
-            var path = "https://www.breve.com.co/breve2/admin/services/load-data/"+$("#receiver_data").val();
+            var path = "https://www.breve.com.co/admin/services/load-data/"+$("#receiver_data").val();
 
             $.ajax({
                 type:"GET",
@@ -563,17 +563,27 @@
             if ($("#type").val() == 'Inmediato'){
                 $("#date").prop('required', false);
                 $("#time").prop('required', false);
-                $("#time").removeAttr("min");
-                $("#time").removeAttr("max");
                 $("#date_div").css('display', 'none');
                 $("#time_div").css('display', 'none');
             }else{
                 $("#date").prop('required', true);
                 $("#time").prop('required', true);
-                $("#time").attr("min", "7:00");
-                $("#time").attr("max", "18:00");
                 $("#date_div").css('display', 'block');
                 $("#time_div").css('display', 'block');
+            }
+        });
+
+        $("#time").on('change', function(){
+            var minTime = 700;
+            var maxTime = 1800;
+            var timeArr = $("#time").val().split(":");
+            var time = timeArr[0]+timeArr[1];
+            if ( (parseInt(time) < parseInt(minTime)) || (parseInt(time) > parseInt(maxTime)) ){
+                $("#time-error").css('display', 'block');
+                $("#time-error-check").val(1);
+            }else{
+                $("#time-error").css('display', 'none');
+                $("#time-error-check").val(0);
             }
         });
     </script>
@@ -867,10 +877,12 @@
                                                         <label class="label-small">¿Que día debemos estar en el punto inicial?</label>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-4" id="date_div" style="display: none;">
+                                                <div class="col-md-4" id="time_div" style="display: none;">
                                                     <div class="form-group">
                                                         <label for="time">Hora <i class="fas fa-info-circle" data-toggle="tooltip" title="2 Horas de Anticipación"></i></label>
                                                         <input type="time" class="form-control" id="time" name="time" value="{{ date('H:i') }}">
+                                                        <label id="time-error" style="color: red; display: none;">Por favor, ingrese una hora válida. (De 7:00 a 18:00)</label>
+                                                        <input type="hidden" id="time-error-check" value="0">
                                                         <label class="label-small">¿A qué hora debemos estar en el punto inicial?</label>
                                                     </div>
                                                 </div>

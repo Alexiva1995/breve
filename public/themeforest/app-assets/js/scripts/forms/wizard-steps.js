@@ -71,17 +71,31 @@ $(".steps-validation").steps({
         // alert("Submitted!");
         var contador = 0;
         var equipos = document.getElementsByClassName("equipment-checkbox");
-        console.log(equipos);
         for (i = 0; i < equipos.length; i++) {
             if (equipos[i].checked) {
                 contador++;
             }
         }
-        if (contador > 0) {
-            $('#form-validation').submit();
-        } else {
-            alert("Debe seleccionar un tipo de equipamiento");
-            return false;
+
+        if (document.getElementById("type").value == 'Programado'){
+            if (document.getElementById("time-error-check").value == 0){
+                if (contador > 0) {
+                    $('#form-validation').submit();
+                } else {
+                    alert("Debe seleccionar un tipo de equipamiento");
+                    return false;
+                }
+            }else{
+                alert("Por favor, ingrese una hora válida. (De 7:00 a 18:00)");
+                return false;
+            }
+        }else{
+            if (contador > 0) {
+                $('#form-validation').submit();
+            } else {
+                alert("Debe seleccionar un tipo de equipamiento");
+                return false;
+            }
         }
     }
 });

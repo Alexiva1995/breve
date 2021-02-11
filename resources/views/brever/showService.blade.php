@@ -284,7 +284,7 @@
                                 <input type="file" class="form-control" name="photo" id="photo" capture="camera" accept="image/*">
                             </div>
                             <div class="form-group">
-                                <label for="photo">Observaciones (Opcional)</label>
+                                <label for="photo">Observaciones</label>
                                 <textarea class="form-control" name="brever_observations"></textarea>
                             </div>
                         </div>

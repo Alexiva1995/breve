@@ -42,6 +42,7 @@
         
         $serviciosInmediatos = DB::table('services')
                                     ->where('type', '=', 'Inmediato')
+                                    ->where('date', '=', NULL)
                                     ->where('status', '=', 0)
                                     ->orderBy('id', 'ASC')
                                     ->get();

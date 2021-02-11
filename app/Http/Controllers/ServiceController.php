@@ -40,6 +40,7 @@ class ServiceController extends Controller
                             ->get();
             
             $serviciosInmediatos = Service::where('type', '=', 'Inmediato')
+                                        ->where('date', '=', NULL)
                                         ->where('status', '=', 0)
                                         ->orderBy('id', 'ASC')
                                         ->get();

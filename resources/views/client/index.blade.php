@@ -568,7 +568,7 @@
 
     function cargarDomicilio() {
         //var path = "http://localhost:8000/services/load-address/"+document.getElementById("address").value;
-        var path = "https://www.breve.com.co/breve2/services/load-address/" + document.getElementById("address").value;
+        var path = "https://www.breve.com.co/services/load-address/" + document.getElementById("address").value;
 
         $.ajax({
             type: "GET",
@@ -615,7 +615,7 @@
 
     function loadSenderData() {
         //var path = "http://localhost:8000/services/load-data/"+document.getElementById("sender_data").value;
-        var path = "https://www.breve.com.co/breve2/services/load-data/" + document.getElementById("sender_data").value;
+        var path = "https://www.breve.com.co/services/load-data/" + document.getElementById("sender_data").value;
 
         $.ajax({
             type: "GET",
@@ -631,7 +631,7 @@
 
     function loadReceiverData() {
         //var path = "http://localhost:8000/services/load-data/"+document.getElementById("receiver_data").value;
-        var path = "https://www.breve.com.co/breve2/services/load-data/" + document.getElementById("receiver_data").value;
+        var path = "https://www.breve.com.co/services/load-data/" + document.getElementById("receiver_data").value;
 
         $.ajax({
             type: "GET",
@@ -654,17 +654,27 @@
         if ($("#type").val() == 'Inmediato'){
             $("#date").prop('required', false);
             $("#time").prop('required', false);
-            $("#time").removeAttr("min");
-            $("#time").removeAttr("max");
             $("#date_div").css('display', 'none');
             $("#time_div").css('display', 'none');
         }else{
             $("#date").prop('required', true);
             $("#time").prop('required', true);
-            $("#time").attr("min", "7:00");
-            $("#time").attr("max", "18:00");
             $("#date_div").css('display', 'block');
             $("#time_div").css('display', 'block');
+        }
+    });
+
+    $("#time").on('change', function(){
+        var minTime = 700;
+        var maxTime = 1800;
+        var timeArr = $("#time").val().split(":");
+        var time = timeArr[0]+timeArr[1];
+        if ( (parseInt(time) < parseInt(minTime)) || (parseInt(time) > parseInt(maxTime)) ){
+            $("#time-error").css('display', 'block');
+            $("#time-error-check").val(1);
+        }else{
+            $("#time-error").css('display', 'none');
+            $("#time-error-check").val(0);
         }
     });
 
@@ -967,6 +977,8 @@
                                                 <div class="form-group" id="time_div" style="display: none;">
                                                     <label for="time">Hora <i class="fas fa-info-circle" data-toggle="tooltip" title="2 Horas de Anticipación"></i></label>
                                                     <input type="time" class="form-control" id="time" name="time" value="{{ date('H:i') }}">
+                                                    <label id="time-error" style="color: red; display: none;">Por favor, ingrese una hora válida. (De 7:00 a 18:00)</label>
+                                                    <input type="hidden" id="time-error-check" value="0">
                                                     <label class="label-small">¿A qué hora debemos estar en el punto inicial?</label>
                                                 </div>
                                             </div>
