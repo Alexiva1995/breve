@@ -114,7 +114,16 @@
                                     <tbody>
                                         @foreach ($servicios as $servicio)
                                             <tr>
-                                                <td>{{ $servicio->id }}</td>
+                                                <td class="text-center">
+                                                    {{ $servicio->id }}<br>
+                                                    @if (!is_null($servicio->landing)) 
+                                                        @if ($servicio->landing == 1)
+                                                            <span style="color: #1a5d1c;">(Landing)</span>
+                                                        @else
+                                                            <span style="color: #11ec1a;">(Plataforma)</span>
+                                                        @endif
+                                                    @endif
+                                                </td>
                                                 <td>{{ date('Y-m-d', strtotime($servicio->date)) }}</td>
                                                 <td>{{ date('H:i', strtotime($servicio->time)) }}</td>
                                                 <td>
@@ -165,6 +174,7 @@
                                     </tbody>
                                     <tfoot>
                                         <tr>
+                                            <th>#</th>
                                             <th>Fecha</th>
                                             <th>Hora</th>
                                             <th>Cliente</th>

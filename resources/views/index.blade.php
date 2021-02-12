@@ -129,7 +129,8 @@
                                                                     <div class="card-content">
                                                                         <div class="card-body">
                                                                             <form action="{{ route('guest.new-service') }}" method="POST" id="main-form">
-                                                                                @csrf                      
+                                                                                @csrf     
+                                                                                <input type="hidden" name="landing" value="1">                 
                                                                                 <fieldset>
                                                                                     <div class="row">
                                                                                         <div class="col-md-12">

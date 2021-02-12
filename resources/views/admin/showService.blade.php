@@ -80,7 +80,22 @@
                                             <p class="float-left mb-0">
                                                 <i class="feather icon-calendar mr-1"></i>
                                             </p>
-                                            <span>Cliente: @if ($servicio->user_id == 0) <b>{{ $servicio->client_name }}</b> (No Registrado) @else @if (!is_null($servicio->user->tradename)) <b>{{ $servicio->user->tradename}}</b> @else <b>{{ $servicio->user->name }}</b> @endif @endif</span>
+                                            <span>Cliente: 
+                                                @if ($servicio->user_id == 0) 
+                                                    <b>{{ $servicio->client_name }}</b> (No Registrado) 
+                                                @elseif (!is_null($servicio->user->tradename)) 
+                                                    <b>{{ $servicio->user->tradename}}</b> 
+                                                @else 
+                                                    <b>{{ $servicio->user->name }}</b> 
+                                                @endif
+                                                @if (!is_null($servicio->landing)) 
+                                                    @if ($servicio->landing == 1)
+                                                        <span style="color: #1a5d1c;">(Landing)</span>
+                                                    @else
+                                                        <span style="color: #11ec1a;">(Plataforma)</span>
+                                                    @endif
+                                                @endif
+                                            </span>
                                         </li>
                                         <li class="list-group-item d-flex">
                                             <p class="float-left mb-0">

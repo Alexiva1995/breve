@@ -164,7 +164,22 @@
                                         <div class="media d-flex align-items-start">
                                             <div class="media-left"><i class="{{ $notificacion->icon }} font-medium-5 primary"></i></div>
                                             <div class="media-body">
-                                                <h6 class="primary media-heading">{{ $notificacion->title }}</h6><small class="notification-text">{{ $notificacion->service->sender_neighborhood }} - {{ $notificacion->service->receiver_neighborhood }} ( {{ date('d-m-Y', strtotime($notificacion->service->date)) }} {{ date('H:i A', strtotime($notificacion->service->time)) }})</small>
+                                                <h6 class="primary media-heading">{{ $notificacion->title }}</h6>
+                                                <small class="notification-text">
+                                                    {{ $notificacion->service->sender_neighborhood }} - {{ $notificacion->service->receiver_neighborhood }} ( {{ date('d-m-Y', strtotime($notificacion->service->date)) }} {{ date('H:i A', strtotime($notificacion->service->time)) }})
+                                                </small>
+                                                <br>
+                                                @if (Auth::user()->role_id == 3)
+                                                    @if (!is_null($notificacion->service->landing)) 
+                                                        <div style="padding-top: 5px;">
+                                                            @if ($notificacion->service->landing == 1)
+                                                                <span style="color: #1a5d1c;">(Landing)</span>
+                                                            @else
+                                                                <span style="color: #11ec1a;">(Plataforma)</span>
+                                                            @endif
+                                                        </div>
+                                                    @endif
+                                                @endif
                                             </div>
                                             <small><time class="media-meta">{{ date('d-m-Y', strtotime($notificacion->created_at)) }}</time></small>
                                         </div>

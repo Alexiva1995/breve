@@ -116,6 +116,11 @@ class ServiceController extends Controller
     /**** Almacenar nuevo servicio ****/
     public function store(Request $request){
         $servicio = new Service($request->all());
+        if (isset($request->landing)){
+            $servicio->landing = 1;
+        }else{
+            $servicio->landing = 0;
+        }
 
         if ($servicio->type == 'Inmediato'){
             $servicio->date = NULL;

@@ -699,7 +699,16 @@
                             <tbody>
                                 @foreach ($serviciosProximos as $servicio)
                                     <tr>
-                                        <td>{{ $servicio->id }}</td>
+                                        <td class="text-center">
+                                            {{ $servicio->id }} <br>
+                                            @if (!is_null($servicio->landing)) 
+                                                @if ($servicio->landing == 1)
+                                                    <span style="color: #1a5d1c;">(Landing)</span>
+                                                @else
+                                                    <span style="color: #11ec1a;">(Plataforma)</span>
+                                                @endif
+                                            @endif
+                                        </td>
                                         <td>@if (!is_null($servicio->date)) {{ date('Y-m-d', strtotime($servicio->date)) }} @else 0000-00-00 (Inmediato)@endif </td>
                                         <td>@if (!is_null($servicio->time)) {{ date('H:i', strtotime($servicio->time)) }} @else 00:00 (Inmediato)@endif </td>
                                         <td>
