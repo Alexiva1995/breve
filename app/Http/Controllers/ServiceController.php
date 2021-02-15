@@ -271,7 +271,7 @@ class ServiceController extends Controller
         }else{
             $servicio->status = 1;
         }
-        if ($servicio->type == 'Inmediato'){
+        if ( ($servicio->type == 'Inmediato') && (is_null($servicio->date)) ){
             $fecha = Carbon::now()->timezone("America/Bogota");
             $hora = Carbon::now()->timezone("America/Bogota");
             $servicio->date = $fecha->format('Y-m-d');
